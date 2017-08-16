@@ -12,8 +12,10 @@
 #define KScreen_Width [UIScreen mainScreen].bounds.size.width
 #define KScreen_Height [UIScreen mainScreen].bounds.size.height
 
+//相册列表高度
 #define KAlbumViewRowHeight 58
 
+//底部栏高度
 #define bottomViewHeight 46
 
 #endif /* DMDefine_h */

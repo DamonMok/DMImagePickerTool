@@ -35,10 +35,21 @@
 /**在DMAlbumModel模型里面提取DMAssetModel数组*/
 - (NSArray<DMAssetModel *> *)getAssetModelArrayFromAlbumModel:(DMAlbumModel *)albumModel;
 
-/**通过PHAsset请求照片*/
-- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetWidth:(CGFloat)width complete:(void(^)(UIImage *, NSDictionary *))completion;
+/**
+ 通过PHAsset请求照片
+ @param asset PHAsset
+ @param targetSize 照片尺寸，当传入的height=MAXFLOAT的时候：根据宽度进行高度自适应
+ @param completion 回调
+ @return 图片异步请求标识符
+ */
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(UIImage *, NSDictionary *))completion;
 
-/**获取相册封面图*/
+/**
+ 获取相册封面图
+ @param albumModel 相册模型
+ @param completion 回调
+ @return 图片异步请求标识符
+ */
 - (PHImageRequestID)requestCoverImageWithAlbumModel:(DMAlbumModel *)albumModel completion:(void(^)(UIImage *, NSDictionary *))completion;
 
 

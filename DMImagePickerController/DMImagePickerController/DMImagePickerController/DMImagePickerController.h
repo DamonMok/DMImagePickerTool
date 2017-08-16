@@ -34,7 +34,7 @@
 - (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource;
 
 /**根据selectArray同步dataArray模型*/
-- (void)asyncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;
+- (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;
 
 
 /**当从已选照片数组中删除元素后，重新调整assetModel的index*/

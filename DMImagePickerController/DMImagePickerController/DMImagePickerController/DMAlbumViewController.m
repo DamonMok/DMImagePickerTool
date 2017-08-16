@@ -40,12 +40,6 @@
     
     [super viewWillAppear:animated];
     
-    //请求相册列表数据
-    [[DMPhotoManager shareManager] getAllAlbumsCompletion:^(NSArray<DMAlbumModel *> *arrAblum) {
-        
-        self.arrAlbumModel = [NSArray arrayWithArray:arrAblum];
-        [self.tableView reloadData];
-    }];
 }
 
 - (void)viewDidLoad {
@@ -55,8 +49,15 @@
     
     self.view.backgroundColor = [UIColor redColor];
     
-    //    [self initTableView];
+//        [self initTableView];
     [self initNavigationBar];
+    
+    //请求相册列表数据
+    [[DMPhotoManager shareManager] getAllAlbumsCompletion:^(NSArray<DMAlbumModel *> *arrAblum) {
+        
+        self.arrAlbumModel = [NSArray arrayWithArray:arrAblum];
+        [self.tableView reloadData];
+    }];
 }
 
 #pragma mark 初始化tableView
@@ -123,6 +124,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    DMAlbumCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selected = NO;
+    
     DMAlbumModel *albumModel = self.arrAlbumModel[indexPath.row];
     
     DMThumbnailController *thumbnailsController = [[DMThumbnailController alloc] init];
@@ -130,6 +134,8 @@
     thumbnailsController.isFromTapAlbum = YES;
     
     [self.navigationController pushViewController:thumbnailsController animated:YES];
+    
+    
     
 }
 

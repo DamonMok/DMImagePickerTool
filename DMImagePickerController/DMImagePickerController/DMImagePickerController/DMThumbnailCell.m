@@ -61,7 +61,7 @@
     
     _assetModel = assetModel;
     
-    [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetWidth:self.contentView.dm_width complete:^(UIImage *image, NSDictionary *info) {
+    [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(self.contentView.dm_width, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info) {
         
         self.ivImageView.image = image;
         

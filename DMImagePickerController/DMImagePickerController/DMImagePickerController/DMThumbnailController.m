@@ -121,7 +121,7 @@ static NSString *reusedID = @"thumbnail";
         self.arrAssetModel = [[DMPhotoManager shareManager] getAssetModelArrayFromAlbumModel:self.albumModel];
         
         //同步模型
-        [_imagePickerVC asyncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
+        [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
         [self.collectionView reloadData];
         
     }

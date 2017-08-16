@@ -70,7 +70,7 @@
 
 - (void)initViews {
     
-    self.ivCoverImage.frame = CGRectMake(0, 0, 58, 58);
+    self.ivCoverImage.frame = CGRectMake(0, 0, KAlbumViewRowHeight, KAlbumViewRowHeight);
     
     self.labTitle.frame = CGRectMake(66, 0, 200, 16);
     self.labTitle.dm_centerY = KAlbumViewRowHeight/2;
@@ -100,5 +100,6 @@
         }
     }];
 }
+
 
 @end

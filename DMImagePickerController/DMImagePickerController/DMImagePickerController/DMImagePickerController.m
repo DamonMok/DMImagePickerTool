@@ -95,13 +95,13 @@
             [self resetAssetModelIndexForArrSelected:self.arrselected];
             
             //根据已选数组同步数据源模型
-            [self asyncModelFromSelectedArray:self.arrselected toDataArray:dataSource];
+            [self syncModelFromSelectedArray:self.arrselected toDataArray:dataSource];
         }
     }
     
 }
 
-- (void)asyncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray {
+- (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray {
     
     for (DMAssetModel *assetModel in dataArray) {
         

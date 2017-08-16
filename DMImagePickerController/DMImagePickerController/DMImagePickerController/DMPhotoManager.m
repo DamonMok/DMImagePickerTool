@@ -149,25 +149,21 @@
     return arrAsset;
 }
 
-- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetWidth:(CGFloat)width complete:(void (^)(UIImage *, NSDictionary *))completion {
-    
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(UIImage *, NSDictionary *))completion {
+
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     option.resizeMode = PHImageRequestOptionsResizeModeFast;
     option.networkAccessAllowed = YES;
     
     CGSize imageSize = CGSizeZero;
-    if (width<[UIScreen mainScreen].bounds.size.width) {
-        //thumbnails
-        imageSize = CGSizeMake(width*_screenScale, width*_screenScale);
-    } else {
-        
-        CGFloat widthPix = width*_screenScale;
-        
-        CGFloat scale = (CGFloat)asset.pixelWidth/asset.pixelHeight;
-        CGFloat heightPix = widthPix/scale;
-        
-        imageSize = CGSizeMake(widthPix, heightPix);
-    }
+    
+    CGFloat widthPix = targetSize.width*_screenScale;
+    
+    CGFloat scale = (CGFloat)asset.pixelWidth/asset.pixelHeight;
+    
+    CGFloat heightPix = targetSize.height == MAXFLOAT ? widthPix/scale : targetSize.height*_screenScale;
+    
+    imageSize = CGSizeMake(widthPix, heightPix);
     
     PHImageRequestID imageRequestID = [[PHCachingImageManager defaultManager] requestImageForAsset:asset targetSize:imageSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable image, NSDictionary * _Nullable info) {
         
@@ -186,7 +182,7 @@
 
 - (PHImageRequestID)requestCoverImageWithAlbumModel:(DMAlbumModel *)albumModel completion:(void (^)(UIImage *, NSDictionary *))completion
 {
-    return [self requestImageForAsset:albumModel.coverImageAsset targetWidth:58.0 complete:completion];
+    return [self requestImageForAsset:albumModel.coverImageAsset targetSize:CGSizeMake(KAlbumViewRowHeight, KAlbumViewRowHeight) complete:completion];
     
 }
 
