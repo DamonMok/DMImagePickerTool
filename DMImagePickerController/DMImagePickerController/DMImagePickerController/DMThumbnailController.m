@@ -139,7 +139,7 @@ static NSString *reusedID = @"thumbnail";
     backBtn.titleLabel.font = [UIFont systemFontOfSize:16.0];
     backBtn.frame = CGRectMake(-5, 0, 48, 30);
     backBtn.imageView.contentMode = UIViewContentModeScaleToFill;
-    [backBtn addTarget:self action:@selector(didClickedBackButton) forControlEvents:UIControlEventTouchUpInside];
+    [backBtn addTarget:self action:@selector(didClickBackButton) forControlEvents:UIControlEventTouchUpInside];
     UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 30)];
     [backView addSubview:backBtn];
     
@@ -148,7 +148,7 @@ static NSString *reusedID = @"thumbnail";
     [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     cancelBtn.titleLabel.font = [UIFont systemFontOfSize:16.0];
     cancelBtn.frame = CGRectMake(5, 0, 48, 30);
-    [cancelBtn addTarget:self action:@selector(didClickedCancelButton) forControlEvents:UIControlEventTouchUpInside];
+    [cancelBtn addTarget:self action:@selector(didClickCancelButton) forControlEvents:UIControlEventTouchUpInside];
     
     UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 30)];
     [rightView addSubview:cancelBtn];
@@ -191,14 +191,14 @@ static NSString *reusedID = @"thumbnail";
 
 #pragma mark 导航栏按钮
 //返回
-- (void)didClickedBackButton {
+- (void)didClickBackButton {
     
     [self.navigationController popViewControllerAnimated:YES];
     
 }
 
 //取消
-- (void)didClickedCancelButton {
+- (void)didClickCancelButton {
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -239,7 +239,7 @@ static NSString *reusedID = @"thumbnail";
 
 #pragma mark - DMThumbnailCell代理方法
 #pragma mark 选择/取消选择图片
-- (void)thumbnailCell:(DMThumbnailCell *)cell DidClickedSelecteButtonWithAsset:(DMAssetModel *)assetModel {
+- (void)thumbnailCell:(DMThumbnailCell *)cell DidClickSelecteButtonWithAsset:(DMAssetModel *)assetModel {
     
     if (assetModel.selected) {
         //添加到已选数组
@@ -259,9 +259,45 @@ static NSString *reusedID = @"thumbnail";
 
 #pragma mark - DMBottomView代理方法
 #pragma mark 点击原图按钮
-- (void)DMBottomViewDidClickedOriginalPicture:(UIButton *)originalPictureBtn {
+- (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
     
     _imagePickerVC.selectedOriginalPicture = originalPictureBtn.selected;
+}
+
+- (void)bottomViewDidClickSendButton {
+
+    NSArray *arrSelected = _imagePickerVC.arrselected;
+    
+    NSMutableArray *arrImage = [NSMutableArray array];
+    NSMutableArray *arrInfo = [NSMutableArray array];
+
+    for (int i = 0; i < _imagePickerVC.arrselected.count; i++) {
+        
+        //因为获取图片是异步，所以预设一个数组，根据回调时候的i进行有序替换
+        [arrImage addObject:@"placeholder"];
+        [arrInfo addObject:@"placeholder"];
+    }
+    
+    for (int i = 0; i < arrSelected.count; i++) {
+        
+        DMAssetModel *assetModel = arrSelected[i];
+        
+        [[DMPhotoManager shareManager] requestImageFoarAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+            
+            if (isDegraded) return ;
+            
+            [arrImage replaceObjectAtIndex:i withObject:image];
+            [arrInfo replaceObjectAtIndex:i withObject:info];
+            
+            for (id asset in arrImage) {
+                if ([asset isKindOfClass:[NSString class]]) return;
+            }
+            
+            if (_imagePickerVC.didFinishPickImageWithHandle) {
+                _imagePickerVC.didFinishPickImageWithHandle(arrImage, arrInfo);
+            }
+        }];
+    }
 }
 
 @end

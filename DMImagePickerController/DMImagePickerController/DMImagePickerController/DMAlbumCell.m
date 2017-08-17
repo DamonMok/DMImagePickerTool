@@ -89,7 +89,7 @@
     [titleAttribute appendAttributedString:countAttribute];
     self.labTitle.attributedText = titleAttribute;
     
-    [[DMPhotoManager shareManager] requestCoverImageWithAlbumModel:albumModel completion:^(UIImage *image, NSDictionary *info) {
+    [[DMPhotoManager shareManager] requestCoverImageWithAlbumModel:albumModel complete:^(UIImage *image, NSDictionary *info) {
         
         if (image) {
             self.ivCoverImage.image = image;

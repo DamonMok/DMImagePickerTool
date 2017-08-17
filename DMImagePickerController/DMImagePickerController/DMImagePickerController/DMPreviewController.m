@@ -124,7 +124,7 @@ static NSString *reusedID = @"preview";
     btnBack.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 15);
     btnBack.frame = CGRectMake(18, 0, 30, 30);
     btnBack.dm_centerY = 64*0.5;
-    [btnBack addTarget:self action:@selector(didClickedBackButton) forControlEvents:UIControlEventTouchUpInside];
+    [btnBack addTarget:self action:@selector(didClickBackButton) forControlEvents:UIControlEventTouchUpInside];
     
     //selectedStatus
     _btnSelected = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -133,7 +133,7 @@ static NSString *reusedID = @"preview";
     _btnSelected.frame = CGRectMake(KScreen_Width-42-14, 0, 42, 42);
     
     _btnSelected.dm_centerY = 64*0.5;
-    [_btnSelected addTarget:self action:@selector(didClickedSelectedButton:) forControlEvents:UIControlEventTouchUpInside];
+    [_btnSelected addTarget:self action:@selector(didClickSelectedButton:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.navigationView addSubview:ivBgImageView];
     [self.navigationView addSubview:btnBack];
@@ -230,13 +230,13 @@ static NSString *reusedID = @"preview";
 }
 
 #pragma mark - 底部栏代理
-- (void)DMBottomViewDidClickedOriginalPicture:(UIButton *)originalPictureBtn {
+- (void)DMBottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
     
     _imagePickerVC.selectedOriginalPicture = originalPictureBtn.selected;
 }
 
 #pragma mark - 导航栏返回按钮
-- (void)didClickedBackButton {
+- (void)didClickBackButton {
     
     self.collectionView.backgroundColor = [UIColor clearColor];
     
@@ -244,7 +244,7 @@ static NSString *reusedID = @"preview";
 }
 
 #pragma mark 导航栏右侧选中按钮
-- (void)didClickedSelectedButton:(UIButton *)button {
+- (void)didClickSelectedButton:(UIButton *)button {
     
     button.selected = !button.selected;
     

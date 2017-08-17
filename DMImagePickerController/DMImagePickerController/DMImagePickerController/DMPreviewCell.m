@@ -174,7 +174,7 @@
     
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
-    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info) {
+    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];

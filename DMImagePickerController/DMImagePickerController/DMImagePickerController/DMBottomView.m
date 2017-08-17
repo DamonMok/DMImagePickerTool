@@ -97,8 +97,7 @@
         _btnSend.titleLabel.font = [UIFont systemFontOfSize:14.0];
         _btnSend.layer.cornerRadius = 5;
         _btnSend.layer.masksToBounds = YES;
-        //        _btnSend.enabled = NO;
-        //        _btnPreview.enabled = NO;
+        [_btnSend addTarget:self action:@selector(didClickSendButton) forControlEvents:UIControlEventTouchUpInside];
         
         [self addSubview:_btnSend];
     }
@@ -160,9 +159,17 @@
     
     btn.selected = !btn.selected;
     
-    if ([self.delegate respondsToSelector:@selector(DMBottomViewDidClickedOriginalPicture:)]) {
+    if ([self.delegate respondsToSelector:@selector(bottomViewDidClickOriginalPicture:)]) {
         
-        [self.delegate DMBottomViewDidClickedOriginalPicture:btn];
+        [self.delegate bottomViewDidClickOriginalPicture:btn];
+    }
+}
+
+#pragma mark 点击发送按钮
+- (void)didClickSendButton {
+
+    if ([self.delegate respondsToSelector:@selector(bottomViewDidClickSendButton)]) {
+        [self.delegate bottomViewDidClickSendButton];
     }
 }
 

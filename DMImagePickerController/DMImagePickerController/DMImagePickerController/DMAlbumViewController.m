@@ -83,7 +83,7 @@
     [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     cancelBtn.titleLabel.font = [UIFont systemFontOfSize:16.0];
     cancelBtn.frame = CGRectMake(5, 0, 48, 30);
-    [cancelBtn addTarget:self action:@selector(didClickedCancelButton) forControlEvents:UIControlEventTouchUpInside];
+    [cancelBtn addTarget:self action:@selector(didClickCancelButton) forControlEvents:UIControlEventTouchUpInside];
     
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 30)];
     [view addSubview:cancelBtn];
@@ -140,7 +140,7 @@
 }
 
 #pragma mark 导航栏取消按钮
-- (void)didClickedCancelButton {
+- (void)didClickCancelButton {
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

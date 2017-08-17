@@ -41,6 +41,7 @@
     self.hideEmptyAlbum = NO;
     self.showHiddenAlbum = YES;
     self.sortAscendingByCreationDate = YES;
+    self.maxWidth = 414;
 }
 
 //6plus/6splus/7plus    屏幕宽度414 -----@3x
@@ -149,10 +150,52 @@
     return arrAsset;
 }
 
-- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(UIImage *, NSDictionary *))completion {
+- (PHImageRequestID)requestCoverImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete
+{
+    
+    return [self requestImageForAsset:albumModel.coverImageAsset targetSize:CGSizeMake(KAlbumViewRowHeight, KAlbumViewRowHeight) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+        
+        if (complete) {
+            complete(image, info);
+        }
+    }];
+    
+}
+
+- (PHImageRequestID)requestImageFoarAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
+
+    CGFloat targetWidth = asset.pixelWidth;
+    if (targetWidth>self.maxWidth) {
+        targetWidth = self.maxWidth;
+    }
+    
+    return [self requestImageForAsset:asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:complete];
+    
+}
+
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
 
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
+    
+    // 不调整
+    //PHImageRequestOptionsResizeModeNone = 0,
+    
+    // 快速调整，性能高，targetSize可能会比定义的偏大
+    //PHImageRequestOptionsResizeModeFast,
+    
+    // 性能比上一个慢，targetSize是准确的
+    //PHImageRequestOptionsResizeModeExact,
     option.resizeMode = PHImageRequestOptionsResizeModeFast;
+    
+    //异步：接收多个结果以平衡图像的质量  同步：接收一个结果
+    //PHImageRequestOptionsDeliveryModeOpportunistic = 0,
+    
+    //无论耗时多长，只返回一个高质量的图片
+    //PHImageRequestOptionsDeliveryModeHighQualityFormat = 1,
+    
+    //只返回一个图片，质量可能会降低
+    //PHImageRequestOptionsDeliveryModeFastFormat = 2
+    option.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
     option.networkAccessAllowed = YES;
     
     CGSize imageSize = CGSizeZero;
@@ -170,9 +213,13 @@
         //判断是否请求完成
         BOOL downloadSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue];
         
-        if (downloadSuccess && completion) {
+        if (downloadSuccess && complete) {
             
-            completion(image, info);
+            complete(image, info, [[info valueForKey:PHImageResultIsDegradedKey] boolValue]);
+        }
+        
+        if ([[info valueForKey:PHImageResultIsInCloudKey] boolValue]) {
+            NSLog(@"download from iCloud");
         }
         
     }];
@@ -180,11 +227,6 @@
     return imageRequestID;
 }
 
-- (PHImageRequestID)requestCoverImageWithAlbumModel:(DMAlbumModel *)albumModel completion:(void (^)(UIImage *, NSDictionary *))completion
-{
-    return [self requestImageForAsset:albumModel.coverImageAsset targetSize:CGSizeMake(KAlbumViewRowHeight, KAlbumViewRowHeight) complete:completion];
-    
-}
 
 - (DMAssetModelType)getAssetMediaTypeFromAsset:(PHAsset *)asset {
     

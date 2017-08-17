@@ -12,7 +12,9 @@
 
 @optional
 
-- (void)DMBottomViewDidClickedOriginalPicture:(UIButton *)originalPictureBtn;
+- (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn;
+
+- (void)bottomViewDidClickSendButton;
 
 @end
 

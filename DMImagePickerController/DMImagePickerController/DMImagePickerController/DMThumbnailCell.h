@@ -14,7 +14,7 @@
 @protocol DMThumbnailCellDelegate <NSObject>
 
 @optional
-- (void)thumbnailCell:(DMThumbnailCell *)cell DidClickedSelecteButtonWithAsset:(DMAssetModel *)assetModel;
+- (void)thumbnailCell:(DMThumbnailCell *)cell DidClickSelecteButtonWithAsset:(DMAssetModel *)assetModel;
 
 @end
 

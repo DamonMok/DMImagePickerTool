@@ -42,7 +42,7 @@
         _btnSelect = [DMExpandButton buttonWithType:UIButtonTypeCustom];
         [_btnSelect setBackgroundImage:[UIImage imageNamed:@"FriendsSendsPicturesSelectIcon_27x27_"] forState:UIControlStateNormal];
         [_btnSelect setBackgroundImage:[UIImage imageNamed:@"FriendsSendsPicturesNumberIcon"] forState:UIControlStateSelected];
-        [_btnSelect addTarget:self action:@selector(didClickedSelecteButton:) forControlEvents:UIControlEventTouchUpInside];
+        [_btnSelect addTarget:self action:@selector(didClickSelecteButton:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:_btnSelect];
     }
     
@@ -61,7 +61,7 @@
     
     _assetModel = assetModel;
     
-    [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(self.contentView.dm_width, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info) {
+    [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(self.contentView.dm_width, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.ivImageView.image = image;
         
@@ -72,7 +72,7 @@
 }
 
 #pragma mark 点击选择图片按钮
-- (void)didClickedSelecteButton:(UIButton *)btn {
+- (void)didClickSelecteButton:(UIButton *)btn {
     
     btn.selected = !btn.selected;
     
@@ -85,9 +85,9 @@
         self.assetModel.selected = NO;
     }
     
-    if ([self.delegate respondsToSelector:@selector(thumbnailCell:DidClickedSelecteButtonWithAsset:)]) {
+    if ([self.delegate respondsToSelector:@selector(thumbnailCell:DidClickSelecteButtonWithAsset:)]) {
         
-        [self.delegate thumbnailCell:self DidClickedSelecteButtonWithAsset:self.assetModel];
+        [self.delegate thumbnailCell:self DidClickSelecteButtonWithAsset:self.assetModel];
     }
 }
 

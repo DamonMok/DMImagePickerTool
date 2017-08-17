@@ -10,7 +10,11 @@
 #import <UIKit/UIKit.h>
 #import "DMAlbumModel.h"
 
+//typedef void(^didFinishPickImage)(NSArray<UIImage *> *, NSArray<NSDictionary *> *);
+
 @interface DMImagePickerController : UINavigationController
+
+@property (nonatomic, copy)void (^didFinishPickImageWithHandle)(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos);
 
 
 /**默认记录之前相册选择的照片，设置为NO则不记录*/

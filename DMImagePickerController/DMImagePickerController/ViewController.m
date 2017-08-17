@@ -26,7 +26,7 @@
     [btn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     btn.frame = CGRectMake(100, 100, 100, 30);
     [self.view addSubview:btn];
-    
+
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
     }];
 }
@@ -34,6 +34,14 @@
 - (void)openImagePickerVC {
     
     DMImagePickerController *imagePickerVC = [[DMImagePickerController alloc] initWithMaxImagesCount:9];
+    
+   [imagePickerVC setDidFinishPickImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
+       
+       for (UIImage *image in images) {
+           
+           NSLog(@"%f-%f", image.size.width, image.size.height);
+       }
+   }];
     
     [self presentViewController:imagePickerVC animated:YES completion:nil];
 }
