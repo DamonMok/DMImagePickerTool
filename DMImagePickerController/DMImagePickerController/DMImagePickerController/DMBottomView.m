@@ -62,6 +62,7 @@
         [_btnPreview setTitleColor:[UIColor colorWithRed:104/255.0 green:108/255.0 blue:112/255.0 alpha:1.0] forState:UIControlStateDisabled];
         [_btnPreview setTitleColor:[UIColor colorWithRed:168/255.0 green:171/255.0 blue:173/255.0 alpha:1.0] forState:UIControlStateHighlighted];
         _btnPreview.titleLabel.font = [UIFont systemFontOfSize:16.0];
+        [_btnPreview addTarget:self action:@selector(didClickPreviewButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_btnPreview];
     }
     
@@ -152,6 +153,15 @@
     self.btnOriginalPicture.frame = CGRectMake(0, 0, btnOriginalWidth, btnOriginalHeight );
     self.btnOriginalPicture.dm_centerY = frame.size.height/2;
     self.btnOriginalPicture.dm_centerX = frame.size.width/2;
+}
+
+#pragma mark 点击预览按钮
+- (void)didClickPreviewButton:(UIButton *)btn {
+
+    if ([self.delegate respondsToSelector:@selector(bottomViewDidClickPreviewButton)]) {
+        
+        [self.delegate bottomViewDidClickPreviewButton];
+    }
 }
 
 #pragma mark 点击原图按钮

@@ -12,6 +12,8 @@
 
 @optional
 
+- (void)bottomViewDidClickPreviewButton;
+
 - (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn;
 
 - (void)bottomViewDidClickSendButton;

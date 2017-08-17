@@ -92,7 +92,7 @@ static NSString *reusedID = @"thumbnail";
     
     [self refreshBottomView];
     
-    [self.collectionView reloadData];
+    [self syncAndReloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -119,10 +119,6 @@ static NSString *reusedID = @"thumbnail";
     } else {
         //通过点击相册进来
         self.arrAssetModel = [[DMPhotoManager shareManager] getAssetModelArrayFromAlbumModel:self.albumModel];
-        
-        //同步模型
-        [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
-        [self.collectionView reloadData];
         
     }
 }
@@ -211,6 +207,14 @@ static NSString *reusedID = @"thumbnail";
     self.bottomView.selectedOriginalPicture = _imagePickerVC.selectedOriginalPicture;
 }
 
+#pragma mark - 同步并刷新数据
+- (void)syncAndReloadData {
+
+    //同步模型
+    [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
+    [self.collectionView reloadData];
+}
+
 #pragma mark - UICollectionView dataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
@@ -258,6 +262,16 @@ static NSString *reusedID = @"thumbnail";
 }
 
 #pragma mark - DMBottomView代理方法
+#pragma mark 点击预览按钮
+- (void)bottomViewDidClickPreviewButton {
+
+    DMPreviewController *previewVC = [[DMPreviewController alloc] init];
+    previewVC.arrAssetModel = [_imagePickerVC.arrselected copy];
+    previewVC.selectedIndex = 0;
+    
+    [self.navigationController pushViewController:previewVC animated:YES];
+}
+
 #pragma mark 点击原图按钮
 - (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
     
@@ -299,5 +313,7 @@ static NSString *reusedID = @"thumbnail";
         }];
     }
 }
+
+
 
 @end
