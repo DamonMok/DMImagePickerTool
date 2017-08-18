@@ -271,7 +271,7 @@ static NSString *reusedID = @"preview";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     _currentPage = (self.collectionView.contentOffset.x+KScreen_Width*0.5)/KScreen_Width + 1;
-    
+    NSLog(@"%d", _currentPage);
     if (_currentPage > self.arrAssetModel.count || _currentPage < 1 )
         return;
     
@@ -280,7 +280,6 @@ static NSString *reusedID = @"preview";
     _btnSelected.selected = _currentAssetModel.selected;
     
     [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)_currentAssetModel.index] forState:UIControlStateSelected];
-    NSLog(@"%d--[%ld]", _currentPage, (long)_currentAssetModel.index);
 }
 
 #pragma mark 进入/退出全屏

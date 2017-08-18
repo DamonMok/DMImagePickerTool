@@ -36,11 +36,11 @@
 
 + (instancetype)assetModelWithAsset:(PHAsset *)asset medieType:(DMAssetModelType)type {
     
-    DMAssetModel *photoModel = [[DMAssetModel alloc] init];
-    photoModel.asset = asset;
-    photoModel.type = type;
-    
-    return photoModel;
+    DMAssetModel *assetModel = [[DMAssetModel alloc] init];
+    assetModel.asset = asset;
+    assetModel.type = type;
+    assetModel.userInteractionEnabled = YES;
+    return assetModel;
 }
 
 @end

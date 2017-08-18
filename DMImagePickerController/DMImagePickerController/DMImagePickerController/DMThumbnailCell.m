@@ -20,6 +20,8 @@
 
 @property (nonatomic, strong)UIButton *btnSelect;
 
+@property (nonatomic, strong)UIView *vCover;
+
 @end
 
 @implementation DMThumbnailCell
@@ -49,12 +51,39 @@
     return _btnSelect;
 }
 
+- (UIView *)vCover {
+
+    if (!_vCover) {
+        _vCover = [[UIView alloc] init];
+        _vCover.backgroundColor = [UIColor whiteColor];
+        _vCover.alpha = 0.8;
+        _vCover.userInteractionEnabled = NO;
+        [self.contentView addSubview:_vCover];
+    }
+    
+    return _vCover;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+
+    if (self = [super initWithFrame:frame]) {
+        
+        self.ivImageView.frame = CGRectMake(0, 0, self.contentView.dm_width, self.contentView.dm_height);
+        
+        self.btnSelect.frame = CGRectMake(self.contentView.dm_width-KbtnSelectWH-KmarginTopRight, KmarginTopRight, KbtnSelectWH, KbtnSelectWH);
+        
+        self.vCover.frame = self.bounds;
+        self.vCover.hidden = YES;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showCover:) name:@"NotificationShowCover" object:nil];
+    }
+    
+    return self;
+}
+
 - (void)layoutSubviews {
     
-    self.ivImageView.frame = CGRectMake(0, 0, self.contentView.dm_width, self.contentView.dm_height);
     
-    
-    self.btnSelect.frame = CGRectMake(self.contentView.dm_width-KbtnSelectWH-KmarginTopRight, KmarginTopRight, KbtnSelectWH, KbtnSelectWH);
 }
 
 - (void)setAssetModel:(DMAssetModel *)assetModel {
@@ -69,31 +98,59 @@
         [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", self.assetModel.index] forState:UIControlStateSelected];
         
     }];
+    
+    if (self.assetModel.userInteractionEnabled) {
+        self.vCover.hidden = YES;
+    } else {
+    
+        self.vCover.hidden = NO;
+    }
 }
 
 #pragma mark 点击选择图片按钮
 - (void)didClickSelecteButton:(UIButton *)btn {
     
-    btn.selected = !btn.selected;
-    
-    if (btn.selected) {
-        [btn.layer addAnimation:[UIView animationForSelectPhoto] forKey:nil];
-        
-        self.assetModel.selected = YES;
-    } else {
-        
-        self.assetModel.selected = NO;
-    }
-    
     if ([self.delegate respondsToSelector:@selector(thumbnailCell:DidClickSelecteButtonWithAsset:)]) {
         
         [self.delegate thumbnailCell:self DidClickSelecteButtonWithAsset:self.assetModel];
     }
+    
+    if (self.assetModel.selected) {
+        btn.selected = YES;
+        [btn.layer addAnimation:[UIView animationForSelectPhoto] forKey:nil];
+        
+    } else {
+        
+        btn.selected = NO;
+    }
+    
 }
 
 - (void)updateSelectedIndex:(NSInteger)index {
     
     [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", (long)index] forState:UIControlStateSelected];
 }
+
+- (void)showCover:(NSNotification *)notification {
+
+    if ([notification.userInfo[@"remove"] isEqualToString:@"remove"]) {
+        self.assetModel.userInteractionEnabled = YES;
+        if (!self.vCover) return;
+        self.vCover.hidden = YES;
+        
+    } else {
+    
+        if (self.assetModel.selected) {
+            self.assetModel.userInteractionEnabled = YES;
+            self.vCover.hidden = YES;
+            
+        } else {
+            self.assetModel.userInteractionEnabled = NO;
+            self.vCover.hidden = NO;
+            
+        }
+    }
+}
+
 
 @end

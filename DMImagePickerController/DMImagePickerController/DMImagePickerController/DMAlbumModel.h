@@ -56,6 +56,9 @@ typedef NS_ENUM(NSUInteger, DMAssetModelType) {
 /**属于第几个被选中,从1开始*/
 @property (nonatomic, assign)NSInteger index;
 
+/**是否可以交互，用于超过最大图片张数的时候控制交互*/
+@property (nonatomic, assign)BOOL userInteractionEnabled;
+
 + (instancetype)assetModelWithAsset:(PHAsset *)asset medieType:(DMAssetModelType)type;
 
 @end

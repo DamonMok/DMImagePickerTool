@@ -26,6 +26,9 @@
 /**默认返回照片的最大宽度为414*/
 @property(nonatomic, assign)CGFloat maxWidth;
 
+/**限制选择照片的最大张数*/
+@property(nonatomic, assign)NSInteger maxImagesCount;
+
 
 /**获取相册权限状态*/
 - (BOOL)getAuthorizationStatus;

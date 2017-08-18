@@ -221,7 +221,7 @@ static NSString *reusedID = @"thumbnail";
     return self.arrAssetModel.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (DMThumbnailCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
@@ -234,6 +234,9 @@ static NSString *reusedID = @"thumbnail";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
+    DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
+    if (!assetModel.userInteractionEnabled) return;
+    
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
     previewVC.arrAssetModel = self.arrAssetModel;
     previewVC.selectedIndex = indexPath.row;
@@ -245,16 +248,29 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 选择/取消选择图片
 - (void)thumbnailCell:(DMThumbnailCell *)cell DidClickSelecteButtonWithAsset:(DMAssetModel *)assetModel {
     
-    if (assetModel.selected) {
+    if (!assetModel.selected) {
         //添加到已选数组
+        if (_imagePickerVC.arrselected.count >= _imagePickerVC.maxImagesCount) return;
+        
+        assetModel.selected = YES;
         [_imagePickerVC addAssetModel:assetModel];
         [cell updateSelectedIndex:assetModel.index];
         
+        if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
+            //发送通知添加蒙版
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil];
+        }
+        
     } else {
         //移除
+        if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
+            //发送通知移除蒙版
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil userInfo:@{@"remove":@"remove"}];
+        }
+        
+        assetModel.selected = NO;
         [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel];
         
-        [self.collectionView reloadData];
     }
     
     [self refreshBottomView];

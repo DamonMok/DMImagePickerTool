@@ -25,6 +25,12 @@
 
 @property (nonatomic, assign)id<DMThumbnailCellDelegate> delegate;
 
+@property (nonatomic, assign)BOOL isShowCover;
+
+//更新索引
 - (void)updateSelectedIndex:(NSInteger)index;
+
+//显示蒙版
+- (void)showCover;
 
 @end

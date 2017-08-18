@@ -18,6 +18,12 @@
 
 @implementation DMImagePickerController
 
+- (void)setMaxImagesCount:(NSInteger)maxImagesCount {
+
+    _maxImagesCount = maxImagesCount;
+    [DMPhotoManager shareManager].maxImagesCount = maxImagesCount;
+}
+
 - (NSMutableArray<DMAssetModel *> *)arrselected {
     
     if (!_arrselected) {
@@ -43,6 +49,7 @@
     if (self = [super initWithRootViewController:albumViewController]) {
         
         self.recordPreviousSelections = YES;
+        self.maxImagesCount = maxImagesCount>0?maxImagesCount:9;
         
         if ([[DMPhotoManager shareManager] getAuthorizationStatus]) {
             //授权
@@ -110,11 +117,14 @@
             if ([assetModel.asset.localIdentifier isEqualToString:assetModelSelected.asset.localIdentifier]) {
                 
                 assetModel.selected = YES;
+                assetModel.userInteractionEnabled = YES;
                 assetModel.index = assetModelSelected.index;
                 break;
             } else {
                 
                 assetModel.selected = NO;
+                //少于照片最大张数，为可交互
+                assetModel.userInteractionEnabled = self.arrselected.count< self.maxImagesCount;
             }
         }
     }
