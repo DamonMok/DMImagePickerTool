@@ -247,6 +247,15 @@ static NSString *reusedID = @"preview";
 #pragma mark 导航栏右侧选中按钮
 - (void)didClickSelectedButton:(UIButton *)button {
     
+    if (_imagePickerVC.arrselected.count >= _imagePickerVC.maxImagesCount && !_currentAssetModel.selected) {
+        
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"你最多只能选择%ld张照片",(long)_imagePickerVC.maxImagesCount] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleCancel handler:nil];
+        [alertVC addAction:action];
+        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+        return;
+    }
+    
     button.selected = !button.selected;
     
     if (button.selected) {

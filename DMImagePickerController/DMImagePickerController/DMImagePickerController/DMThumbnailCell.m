@@ -68,22 +68,18 @@
 
     if (self = [super initWithFrame:frame]) {
         
-        self.ivImageView.frame = CGRectMake(0, 0, self.contentView.dm_width, self.contentView.dm_height);
+        self.ivImageView.frame = CGRectMake(0, 0, self.contentView.dm_width-1, self.contentView.dm_height);
         
-        self.btnSelect.frame = CGRectMake(self.contentView.dm_width-KbtnSelectWH-KmarginTopRight, KmarginTopRight, KbtnSelectWH, KbtnSelectWH);
+        self.btnSelect.frame = CGRectMake(self.contentView.dm_width-KbtnSelectWH-KmarginTopRight-1, KmarginTopRight, KbtnSelectWH, KbtnSelectWH);
         
         self.vCover.frame = self.bounds;
         self.vCover.hidden = YES;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showCover:) name:@"NotificationShowCover" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSelectionIndex) name:@"NotificationSelectionIndexChanged" object:nil];
     }
     
     return self;
-}
-
-- (void)layoutSubviews {
-    
-    
 }
 
 - (void)setAssetModel:(DMAssetModel *)assetModel {
@@ -126,9 +122,10 @@
     
 }
 
-- (void)updateSelectedIndex:(NSInteger)index {
+//更新已选择的索引
+- (void)updateSelectionIndex {
     
-    [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", (long)index] forState:UIControlStateSelected];
+    [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", (long)self.assetModel.index] forState:UIControlStateSelected];
 }
 
 - (void)showCover:(NSNotification *)notification {

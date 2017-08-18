@@ -250,11 +250,18 @@ static NSString *reusedID = @"thumbnail";
     
     if (!assetModel.selected) {
         //添加到已选数组
-        if (_imagePickerVC.arrselected.count >= _imagePickerVC.maxImagesCount) return;
+        if (_imagePickerVC.arrselected.count >= _imagePickerVC.maxImagesCount) {
+        
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"你最多只能选择%ld张照片",(long)_imagePickerVC.maxImagesCount] preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleCancel handler:nil];
+            [alertVC addAction:action];
+            [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+            return;
+        }
         
         assetModel.selected = YES;
         [_imagePickerVC addAssetModel:assetModel];
-        [cell updateSelectedIndex:assetModel.index];
+//        [cell updateSelectedIndex:assetModel.index];
         
         if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
             //发送通知添加蒙版
@@ -272,6 +279,8 @@ static NSString *reusedID = @"thumbnail";
         [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel];
         
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationSelectionIndexChanged" object:nil];
     
     [self refreshBottomView];
     
