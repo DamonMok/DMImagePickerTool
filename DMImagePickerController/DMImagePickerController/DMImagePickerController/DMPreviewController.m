@@ -26,6 +26,7 @@ static NSString *reusedID = @"preview";
     
     UIButton *_btnSelected;
     
+    int _currentIndex;//当前索引
     int _currentPage;//当前页数
     
     DMAssetModel *_currentAssetModel;//当前模型
@@ -268,14 +269,23 @@ static NSString *reusedID = @"preview";
 }
 
 #pragma mark - 滑动调用
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+
+    self.selectedIndex = self.collectionView.contentOffset.x/(KScreen_Width+margin);
+
+}
+
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //0 395 790 1185
+    NSLog(@"%f", scrollView.contentOffset.x);
     
-    _currentPage = (self.collectionView.contentOffset.x+KScreen_Width*0.5)/KScreen_Width + 1;
-    NSLog(@"%d", _currentPage);
-    if (_currentPage > self.arrAssetModel.count || _currentPage < 1 )
+    _currentIndex = (self.collectionView.contentOffset.x-margin*self.selectedIndex+KScreen_Width*0.5)/KScreen_Width;
+    
+    if (_currentIndex > self.arrAssetModel.count-1 || _currentIndex < 0 )
         return;
     
-    _currentAssetModel = self.arrAssetModel[_currentPage-1];
+    _currentAssetModel = self.arrAssetModel[_currentIndex];
     
     _btnSelected.selected = _currentAssetModel.selected;
     
