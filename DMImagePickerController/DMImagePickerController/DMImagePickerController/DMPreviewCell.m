@@ -10,6 +10,7 @@
 #import "DMPhotoManager.h"
 #import "DMDefine.h"
 #import "UIView+layout.h"
+#import "UIImage+git.h"
 
 @implementation DMPreviewCell
 
@@ -78,6 +79,8 @@
     
     _assetModel = assetModel;
     
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
     switch (_assetModel.type) {
         case DMAssetModelTypeImage:
             //加载图片预览View
@@ -87,7 +90,9 @@
             
         case DMAssetModelTypeGif:
             //加载Gif预览View
-            NSLog(@"gif");
+            //加载图片预览View
+            [self addSubview:self.imagePreviewView];
+            [self.imagePreviewView fetchImageWithAssetModel:assetModel];
             break;
             
         default:
@@ -174,11 +179,23 @@
     
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
-    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+    if (assetModel.type == DMAssetModelTypeGif) {
+        //Gif
+        [[DMPhotoManager shareManager] requestImageDataForAsset:assetModel.asset complete:^(NSData *imageData, NSDictionary *info) {
+            
+            UIImage *image = [UIImage sd_animatedGIFWithData:imageData];
+            self.imageView.image = image;
+            [self resetSubViewsWithAsset:assetModel.asset];
+        }];
         
-        self.imageView.image = image;
-        [self resetSubViewsWithAsset:assetModel.asset];
-    }];
+    } else {
+        //image
+        [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+            
+            self.imageView.image = image;
+            [self resetSubViewsWithAsset:assetModel.asset];
+        }];
+    }
 }
 
 - (void)resetSubViewsWithAsset:(PHAsset *)asset {
@@ -241,6 +258,35 @@
     CGFloat offsetY = (scrollView.dm_height > scrollView.contentSize.height) ? (scrollView.dm_height - scrollView.contentSize.height) * 0.5 : 0.0;
     self.containerView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX, scrollView.contentSize.height * 0.5 + offsetY);
 
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+
+    [self pauseLayer:self.imageView.layer];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+
+    [self resumeLayer:self.imageView.layer];
+}
+
+//暂停gif的方法
+-(void)pauseLayer:(CALayer*)layer
+{
+    CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    layer.speed = 0.0;
+    layer.timeOffset = pausedTime;
+}
+
+//继续gif的方法
+-(void)resumeLayer:(CALayer*)layer
+{
+    CFTimeInterval pausedTime = [layer timeOffset];
+    layer.speed = 1.0;
+    layer.timeOffset = 0.0;
+    layer.beginTime = 0.0;
+    CFTimeInterval timeSincePause = [layer convertTime:CACurrentMediaTime() fromLayer:nil] -    pausedTime;
+    layer.beginTime = timeSincePause;
 }
 
 

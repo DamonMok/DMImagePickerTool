@@ -50,6 +50,8 @@
 		CE1F15D71F43113400CEE568 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D61F43113400CEE568 /* Security.framework */; };
 		CE1F15D91F43114F00CEE568 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D81F43114F00CEE568 /* libz.tbd */; };
 		CE1F15DB1F43115900CEE568 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15DA1F43115900CEE568 /* libc++.tbd */; };
+		E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */ = {isa = PBXBuildFile; fileRef = E4AE8C141F472B330079E8EB /* UIImage+git.m */; };
+		E4AE8C171F472F5A0079E8EB /* login.gif in Resources */ = {isa = PBXBuildFile; fileRef = E4AE8C161F472F5A0079E8EB /* login.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +141,9 @@
 		CE1F15D61F43113400CEE568 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		CE1F15D81F43114F00CEE568 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		CE1F15DA1F43115900CEE568 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		E4AE8C131F472B330079E8EB /* UIImage+git.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+git.h"; sourceTree = "<group>"; };
+		E4AE8C141F472B330079E8EB /* UIImage+git.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+git.m"; sourceTree = "<group>"; };
+		E4AE8C161F472F5A0079E8EB /* login.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = login.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +274,8 @@
 				CE1F15A11F430BC700CEE568 /* DMPreviewController.m */,
 				CE1F15A31F430C1400CEE568 /* DMPreviewCell.h */,
 				CE1F15A41F430C1400CEE568 /* DMPreviewCell.m */,
+				E4AE8C131F472B330079E8EB /* UIImage+git.h */,
+				E4AE8C141F472B330079E8EB /* UIImage+git.m */,
 				CE1F15A61F430C5700CEE568 /* UIView+layout.h */,
 				CE1F15A71F430C5700CEE568 /* UIView+layout.m */,
 				CE1F15A91F430CA600CEE568 /* UIButton+category.h */,
@@ -287,6 +294,7 @@
 		CE1F15B51F430D9D00CEE568 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E4AE8C161F472F5A0079E8EB /* login.gif */,
 				CE1F15B61F430D9D00CEE568 /* AlbumPhotoImageViewBottomBK123.png */,
 				CE1F15B71F430D9D00CEE568 /* AlbumPhotoImageViewBottomBK@2x.png */,
 				CE1F15B81F430D9D00CEE568 /* arrow_ico@2x.png */,
@@ -435,6 +443,7 @@
 				CE1F15D31F430D9D00CEE568 /* FriendsSendsPicturesSelectYIcon_27x27_@2x.png in Resources */,
 				CE1F15631F43087100CEE568 /* LaunchScreen.storyboard in Resources */,
 				CE1F15C81F430D9D00CEE568 /* arrow_ico@3x.png in Resources */,
+				E4AE8C171F472F5A0079E8EB /* login.gif in Resources */,
 				CE1F15D01F430D9D00CEE568 /* FriendsSendsPicturesNumberIcon@2x.png in Resources */,
 				CE1F15D11F430D9D00CEE568 /* FriendsSendsPicturesSelectBigNIcon@2x.png in Resources */,
 				CE1F15CE1F430D9D00CEE568 /* FriendsSendsPicturesArtworkIcon@2x.png in Resources */,
@@ -542,6 +551,7 @@
 				CE1F159F1F430B9200CEE568 /* DMThumbnailCell.m in Sources */,
 				CE1F15B11F430D1500CEE568 /* UIImage+category.m in Sources */,
 				CE1F15581F43087100CEE568 /* AppDelegate.m in Sources */,
+				E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */,
 				CE1F15AE1F430CD900CEE568 /* DMExpandButton.m in Sources */,
 				CE1F158C1F4309F600CEE568 /* DMAlbumViewController.m in Sources */,
 				CE1F15891F4309AA00CEE568 /* DMImagePickerController.m in Sources */,

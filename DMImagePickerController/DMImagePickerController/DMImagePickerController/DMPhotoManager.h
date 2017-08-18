@@ -61,7 +61,7 @@
  */
 - (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
 
-
+- (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset complete:(void(^)(NSData *, NSDictionary *))complete;
 
 
 

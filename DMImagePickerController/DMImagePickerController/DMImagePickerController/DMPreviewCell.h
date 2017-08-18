@@ -59,3 +59,4 @@ typedef void(^singleTap)();
 - (void)singleTapPreviewView:(UITapGestureRecognizer *)tap;
 
 @end
+

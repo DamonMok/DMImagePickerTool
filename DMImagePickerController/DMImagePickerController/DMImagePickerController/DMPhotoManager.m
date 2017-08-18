@@ -227,6 +227,27 @@
     return imageRequestID;
 }
 
+- (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset complete:(void (^)(NSData *, NSDictionary *))complete {
+
+    PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
+    option.resizeMode = PHImageRequestOptionsResizeModeFast;
+    option.networkAccessAllowed = YES;
+    
+    PHImageRequestID phImageRequestID = [[PHCachingImageManager defaultManager] requestImageDataForAsset:asset options:option resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+       
+        if (![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]) {
+            
+            if (complete) {
+                complete(imageData, info);
+            }
+        }
+       
+    }];
+    
+    return phImageRequestID;
+}
+
+
 
 - (DMAssetModelType)getAssetMediaTypeFromAsset:(PHAsset *)asset {
     

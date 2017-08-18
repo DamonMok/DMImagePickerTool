@@ -259,9 +259,7 @@ static NSString *reusedID = @"thumbnail";
             return;
         }
         
-        assetModel.selected = YES;
         [_imagePickerVC addAssetModel:assetModel];
-//        [cell updateSelectedIndex:assetModel.index];
         
         if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
             //发送通知添加蒙版
@@ -275,7 +273,6 @@ static NSString *reusedID = @"thumbnail";
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil userInfo:@{@"remove":@"remove"}];
         }
         
-        assetModel.selected = NO;
         [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel];
         
     }
