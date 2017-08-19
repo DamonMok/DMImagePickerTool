@@ -306,19 +306,49 @@
 
 @interface DMVideoPreviewView ()
 
+@property (nonatomic, strong)UIImageView *imageView;
+
 @property (nonatomic, strong)AVPlayer *player;
 
 @property (nonatomic, strong)AVPlayerLayer *playerLayer;
+
+@property (nonatomic, strong)AVPlayerItem *playerItem;
 
 @end
 
 @implementation DMVideoPreviewView
 
+- (AVPlayerLayer *)playerLayer {
+
+    if (!_playerLayer) {
+        _playerLayer = [[AVPlayerLayer alloc] init];
+        _playerLayer.frame = self.bounds;
+    }
+    
+    return _playerLayer;
+}
+
+- (UIImageView *)imageView {
+
+    if (!_imageView) {
+        _imageView = [[UIImageView alloc] init];
+        _imageView.frame = self.bounds;
+        _imageView.contentMode = UIViewContentModeScaleAspectFit;
+        _imageView.userInteractionEnabled = YES;
+        [self addSubview:_imageView];
+    }
+    
+    return _imageView;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
 
     if (self = [super initWithFrame:frame]) {
         
-        self.backgroundColor = [UIColor purpleColor];
+        self.backgroundColor = [UIColor whiteColor];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap)];
+        [self addGestureRecognizer:tap];
+
     }
     
     return self;
@@ -326,25 +356,80 @@
 
 - (void)fetchVideoWithAssetModel:(DMAssetModel *)assetModel {
 
-    [[DMPhotoManager shareManager] requestVideoDataForAsset:assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
-        
-        self.player = [AVPlayer playerWithPlayerItem:playerItem];
-        self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-        self.playerLayer.frame = self.bounds;
-        [self.layer addSublayer:self.playerLayer];
-    
-    }];
+    self.assetModel = assetModel;
     
     //封面
     [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:self.bounds.size complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
-        
+        self.imageView.image = image;
     }];
+    
+}
+
+//控制播放/暂停
+- (void)singleTap {
+    
+    if (!_playerLayer) {
+        
+        [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
+            NSLog(@"%@", [NSThread currentThread]);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                self.playerItem = playerItem;
+                
+                self.player = [AVPlayer playerWithPlayerItem:playerItem];
+                self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+                [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+                self.playerLayer.frame = self.bounds;
+                [self.layer addSublayer:self.playerLayer];
+                [self controlStatus];
+            });
+        }];
+    } else {
+    
+        [self controlStatus];
+    }
+}
+
+- (void)controlStatus {
+
+    CMTime stop = self.player.currentItem.currentTime;
+    CMTime duration = self.player.currentItem.duration;
+    
+    if (self.player.rate == .0) {//播放
+        //rate=0代表当前是暂停
+        if (stop.value == duration.value) {
+            [self.player.currentItem seekToTime:CMTimeMake(0, 1)];
+        }
+        [self.player play];
+    } else {//暂停
+        [self.player pause];
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
 
+//    self.imageView.hidden = YES;
     [self.player play];
+}
+
+//监听获得消息
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    AVPlayerItem *playerItem = (AVPlayerItem *)object;
+    
+    if ([keyPath isEqualToString:@"status"]) {
+        if ([playerItem status] == AVPlayerStatusReadyToPlay) {
+            //status 点进去看 有三种状态
+            self.imageView.hidden = YES;
+            NSLog(@"ready");
+        }
+    }
+}
+
+- (void)dealloc {
+
+    [self.playerItem removeObserver:self forKeyPath:@"status"];
 }
 
 @end

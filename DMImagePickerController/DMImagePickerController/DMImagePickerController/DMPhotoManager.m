@@ -258,7 +258,7 @@
     option.deliveryMode = PHVideoRequestOptionsDeliveryModeHighQualityFormat;
     
     [[PHCachingImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
-        
+
         if (complete) {
             complete(playerItem, info);
         }

@@ -149,5 +149,11 @@
     }
 }
 
+- (void)dealloc {
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NotificationShowCover" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NotificationSelectionIndexChanged" object:nil];
+}
+
 
 @end
