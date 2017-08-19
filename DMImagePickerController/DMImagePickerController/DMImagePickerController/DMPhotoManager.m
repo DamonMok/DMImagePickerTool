@@ -8,6 +8,7 @@
 
 #import "DMPhotoManager.h"
 #import "DMDefine.h"
+#import "UIImage+git.h"
 
 @interface DMPhotoManager ()
 {
@@ -227,7 +228,7 @@
     return imageRequestID;
 }
 
-- (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset complete:(void (^)(NSData *, NSDictionary *))complete {
+- (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *))complete {
 
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     option.resizeMode = PHImageRequestOptionsResizeModeFast;
@@ -235,10 +236,13 @@
     
     PHImageRequestID phImageRequestID = [[PHCachingImageManager defaultManager] requestImageDataForAsset:asset options:option resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
        
-        if (![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]) {
+        if (![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]) {
             
             if (complete) {
-                complete(imageData, info);
+                
+                UIImage *image = [UIImage sd_animatedGIFWithData:imageData];
+                
+                complete(image, info);
             }
         }
        

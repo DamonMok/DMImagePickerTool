@@ -31,8 +31,9 @@ static NSString *reusedID = @"preview";
     
     DMAssetModel *_currentAssetModel;//当前模型
     
-    BOOL _isFullScreen;
+    BOOL _isFullScreen;//全屏标识
     
+    DMPreviewCell *_currentPreviewCell;
 }
 
 @property (nonatomic, strong)UIView *navigationView;
@@ -192,15 +193,13 @@ static NSString *reusedID = @"preview";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
     DMPreviewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedID forIndexPath:indexPath];
     
-    cell.assetModel = assetModel;
+//    cell.assetModel = assetModel;
     
     cell.singleTap = ^{
-        
         _isFullScreen = !_isFullScreen;
         
         if (_isFullScreen) {
@@ -214,8 +213,15 @@ static NSString *reusedID = @"preview";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%ld", (long)indexPath.row);
+    ((DMPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
     
-    [((DMPreviewCell *)cell).previewView.imagePreviewView.scrollView setContentOffset:CGPointMake(0, 0) animated:NO];
+    [((DMPreviewCell *)cell) resume];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    [((DMPreviewCell *)cell) pause];
 }
 
 #pragma mark - 刷新底部栏
@@ -287,7 +293,7 @@ static NSString *reusedID = @"preview";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     //0 395 790 1185
-    NSLog(@"%f", scrollView.contentOffset.x);
+    //NSLog(@"%f", scrollView.contentOffset.x);
     
     _currentIndex = (self.collectionView.contentOffset.x-margin*self.selectedIndex+KScreen_Width*0.5)/KScreen_Width;
     
@@ -300,6 +306,18 @@ static NSString *reusedID = @"preview";
     
     [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)_currentAssetModel.index] forState:UIControlStateSelected];
 }
+
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+//
+//    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
+//    [_currentPreviewCell pause];
+//}
+//
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//
+//    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
+//    [_currentPreviewCell resume];
+//}
 
 #pragma mark 进入/退出全屏
 - (void)enterFullScreen {

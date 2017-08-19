@@ -2,73 +2,32 @@
 //  DMPreviewCell.m
 //  DMImagePickerController
 //
-//  Created by Damon on 2017/8/15.
+//  Created by Damon on 2017/8/19.
 //  Copyright © 2017年 damon. All rights reserved.
 //
 
 #import "DMPreviewCell.h"
-#import "DMPhotoManager.h"
 #import "DMDefine.h"
-#import "UIView+layout.h"
+#import "DMPhotoManager.h"
 #import "UIImage+git.h"
+#import "UIView+layout.h"
 
 @implementation DMPreviewCell
-
-- (DMPreviewView *)previewView {
-    
-    if (!_previewView) {
-        
-        _previewView = [[DMPreviewView alloc] init];
-        [self.contentView addSubview:_previewView];
-    }
-    
-    return _previewView;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    
-    if (self = [super initWithFrame:frame]) {
-    
-        [self initViewWithFrame:frame];
-    }
-    
-    return self;
-}
-
-- (void)initViewWithFrame:(CGRect)frame {
-    
-    self.previewView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
-    self.previewView.backgroundColor = [UIColor blackColor];
-    
-    
-    __weak typeof(self) weakSelf = self;
-    self.previewView.singleTap = ^{
-        
-        if (weakSelf.singleTap) {
-            weakSelf.singleTap();
-        }
-    };
-}
-
-- (void)setAssetModel:(DMAssetModel *)assetModel {
-    
-    _assetModel = assetModel;
-    
-    self.previewView.assetModel = assetModel;
-}
-
-@end
-
-
-@implementation DMPreviewView
 
 - (DMImagePreviewView *)imagePreviewView {
     
     if (!_imagePreviewView) {
         
         _imagePreviewView = [[DMImagePreviewView alloc] initWithFrame:self.bounds];
-        _imagePreviewView.backgroundColor = [UIColor blackColor];
-        _imagePreviewView.singleTap = self.singleTap;
+        _imagePreviewView.backgroundColor = [UIColor yellowColor];
+        
+        __weak typeof(self) weakself = self;
+        _imagePreviewView.singleTap = ^{
+            
+            if (weakself.singleTap) {
+                weakself.singleTap();
+            }
+        };
         
     }
     
@@ -76,32 +35,48 @@
 }
 
 - (void)setAssetModel:(DMAssetModel *)assetModel {
-    
+
     _assetModel = assetModel;
     
-    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_imagePreviewView removeFromSuperview];
+    
+    _imagePreviewView = [[DMImagePreviewView alloc] initWithFrame:self.bounds];
     
     switch (_assetModel.type) {
         case DMAssetModelTypeImage:
             //加载图片预览View
-            [self addSubview:self.imagePreviewView];
+            [self.contentView addSubview:self.imagePreviewView];
             [self.imagePreviewView fetchImageWithAssetModel:assetModel];
             break;
             
         case DMAssetModelTypeGif:
             //加载Gif预览View
-            //加载图片预览View
-            [self addSubview:self.imagePreviewView];
+            [self.contentView addSubview:self.imagePreviewView];
             [self.imagePreviewView fetchImageWithAssetModel:assetModel];
             break;
             
         default:
             break;
     }
+
+}
+
+- (void)resume {
+    
+    if (self.assetModel.type == DMAssetModelTypeGif) {
+        
+        [self.imagePreviewView resume];
+    }
+}
+
+- (void)pause {
+    
+    if (self.assetModel.type == DMAssetModelTypeGif) {
+        [self.imagePreviewView pause];
+    }
 }
 
 @end
-
 
 @interface DMImagePreviewView ()<UIScrollViewDelegate>
 
@@ -113,7 +88,7 @@
     
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-        _scrollView.backgroundColor = [UIColor blackColor];
+        _scrollView.backgroundColor = [UIColor redColor];
         _scrollView.delaysContentTouches = NO;
         _scrollView.maximumZoomScale = 3.0;
         _scrollView.minimumZoomScale = 1.0;
@@ -181,14 +156,13 @@
     
     if (assetModel.type == DMAssetModelTypeGif) {
         //Gif
-        [[DMPhotoManager shareManager] requestImageDataForAsset:assetModel.asset complete:^(NSData *imageData, NSDictionary *info) {
+        [[DMPhotoManager shareManager] requestImageDataForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
             
-            UIImage *image = [UIImage sd_animatedGIFWithData:imageData];
             self.imageView.image = image;
             [self resetSubViewsWithAsset:assetModel.asset];
         }];
         
-    } else {
+    } else if (assetModel.type == DMAssetModelTypeImage) {
         //image
         [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
             
@@ -229,7 +203,7 @@
 }
 
 - (void)doubleTapPreviewView:(UITapGestureRecognizer *)tap {
-
+    
     CGFloat zoomScale = self.scrollView.zoomScale == 1.0 ? 3.0: 1.0;
     
     CGPoint tapPoint = [tap locationInView:tap.view];
@@ -257,16 +231,36 @@
     CGFloat offsetX = (scrollView.dm_width > scrollView.contentSize.width) ? (scrollView.dm_width - scrollView.contentSize.width) * 0.5 : 0.0;
     CGFloat offsetY = (scrollView.dm_height > scrollView.contentSize.height) ? (scrollView.dm_height - scrollView.contentSize.height) * 0.5 : 0.0;
     self.containerView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX, scrollView.contentSize.height * 0.5 + offsetY);
-
+    
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    
     [self pauseLayer:self.imageView.layer];
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    [self resumeLayer:self.imageView.layer];
+}
 
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
+    
+    [self pauseLayer:self.imageView.layer];
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    
+    [self resumeLayer:self.imageView.layer];
+}
+
+- (void)pause {
+    
+    [self pauseLayer:self.imageView.layer];
+}
+
+- (void)resume {
+    
     [self resumeLayer:self.imageView.layer];
 }
 
@@ -291,3 +285,6 @@
 
 
 @end
+
+
+

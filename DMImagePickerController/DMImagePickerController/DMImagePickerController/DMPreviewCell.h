@@ -2,44 +2,35 @@
 //  DMPreviewCell.h
 //  DMImagePickerController
 //
-//  Created by Damon on 2017/8/15.
+//  Created by Damon on 2017/8/19.
 //  Copyright © 2017年 damon. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "DMAlbumModel.h"
 
-typedef void(^singleTap)();
-
-@class DMPreviewView;
 @class DMImagePreviewView;
+
+typedef void(^singleTap)();
 
 @interface DMPreviewCell : UICollectionViewCell
 
 @property (nonatomic, strong)DMAssetModel *assetModel;
 
-@property (nonatomic, strong)DMPreviewView *previewView;
-
-@property (nonatomic, copy)singleTap singleTap;
-
-@end
-
-
-//********** 预览View **********
-@interface DMPreviewView : UIView
-
-@property (nonatomic, strong)DMAssetModel *assetModel;
-
-/**图片预览View*/
 @property (nonatomic, strong)DMImagePreviewView *imagePreviewView;
 
 @property (nonatomic, copy)singleTap singleTap;
 
-@end
+- (void)resume;
 
+- (void)pause;
+
+@end
 
 //********** 图片预览View **********
 @interface DMImagePreviewView : UIView
+
+@property (nonatomic, strong)DMAssetModel *assetModel;
 
 @property (nonatomic, strong)UIScrollView *scrollView;
 
@@ -58,5 +49,8 @@ typedef void(^singleTap)();
 /**单击预览View*/
 - (void)singleTapPreviewView:(UITapGestureRecognizer *)tap;
 
-@end
+- (void)resume;
 
+- (void)pause;
+
+@end

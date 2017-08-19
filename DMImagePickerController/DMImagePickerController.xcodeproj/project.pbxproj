@@ -25,7 +25,6 @@
 		CE1F159C1F430B5300CEE568 /* DMAlbumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1F159B1F430B5300CEE568 /* DMAlbumCell.m */; };
 		CE1F159F1F430B9200CEE568 /* DMThumbnailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1F159E1F430B9200CEE568 /* DMThumbnailCell.m */; };
 		CE1F15A21F430BC700CEE568 /* DMPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1F15A11F430BC700CEE568 /* DMPreviewController.m */; };
-		CE1F15A51F430C1400CEE568 /* DMPreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1F15A41F430C1400CEE568 /* DMPreviewCell.m */; };
 		CE1F15A81F430C5700CEE568 /* UIView+layout.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1F15A71F430C5700CEE568 /* UIView+layout.m */; };
 		CE1F15AB1F430CA600CEE568 /* UIButton+category.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1F15AA1F430CA600CEE568 /* UIButton+category.m */; };
 		CE1F15AE1F430CD900CEE568 /* DMExpandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1F15AD1F430CD900CEE568 /* DMExpandButton.m */; };
@@ -50,6 +49,7 @@
 		CE1F15D71F43113400CEE568 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D61F43113400CEE568 /* Security.framework */; };
 		CE1F15D91F43114F00CEE568 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D81F43114F00CEE568 /* libz.tbd */; };
 		CE1F15DB1F43115900CEE568 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15DA1F43115900CEE568 /* libc++.tbd */; };
+		E4274DF81F48148F00604527 /* DMPreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E4274DF71F48148F00604527 /* DMPreviewCell.m */; };
 		E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */ = {isa = PBXBuildFile; fileRef = E4AE8C141F472B330079E8EB /* UIImage+git.m */; };
 		E4AE8C171F472F5A0079E8EB /* login.gif in Resources */ = {isa = PBXBuildFile; fileRef = E4AE8C161F472F5A0079E8EB /* login.gif */; };
 /* End PBXBuildFile section */
@@ -110,8 +110,6 @@
 		CE1F159E1F430B9200CEE568 /* DMThumbnailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMThumbnailCell.m; sourceTree = "<group>"; };
 		CE1F15A01F430BC700CEE568 /* DMPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMPreviewController.h; sourceTree = "<group>"; };
 		CE1F15A11F430BC700CEE568 /* DMPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMPreviewController.m; sourceTree = "<group>"; };
-		CE1F15A31F430C1400CEE568 /* DMPreviewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMPreviewCell.h; sourceTree = "<group>"; };
-		CE1F15A41F430C1400CEE568 /* DMPreviewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMPreviewCell.m; sourceTree = "<group>"; };
 		CE1F15A61F430C5700CEE568 /* UIView+layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+layout.h"; sourceTree = "<group>"; };
 		CE1F15A71F430C5700CEE568 /* UIView+layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+layout.m"; sourceTree = "<group>"; };
 		CE1F15A91F430CA600CEE568 /* UIButton+category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+category.h"; sourceTree = "<group>"; };
@@ -141,6 +139,8 @@
 		CE1F15D61F43113400CEE568 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		CE1F15D81F43114F00CEE568 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		CE1F15DA1F43115900CEE568 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		E4274DF61F48148F00604527 /* DMPreviewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMPreviewCell.h; sourceTree = "<group>"; };
+		E4274DF71F48148F00604527 /* DMPreviewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMPreviewCell.m; sourceTree = "<group>"; };
 		E4AE8C131F472B330079E8EB /* UIImage+git.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+git.h"; sourceTree = "<group>"; };
 		E4AE8C141F472B330079E8EB /* UIImage+git.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+git.m"; sourceTree = "<group>"; };
 		E4AE8C161F472F5A0079E8EB /* login.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = login.gif; sourceTree = "<group>"; };
@@ -272,8 +272,8 @@
 				CE1F159E1F430B9200CEE568 /* DMThumbnailCell.m */,
 				CE1F15A01F430BC700CEE568 /* DMPreviewController.h */,
 				CE1F15A11F430BC700CEE568 /* DMPreviewController.m */,
-				CE1F15A31F430C1400CEE568 /* DMPreviewCell.h */,
-				CE1F15A41F430C1400CEE568 /* DMPreviewCell.m */,
+				E4274DF61F48148F00604527 /* DMPreviewCell.h */,
+				E4274DF71F48148F00604527 /* DMPreviewCell.m */,
 				E4AE8C131F472B330079E8EB /* UIImage+git.h */,
 				E4AE8C141F472B330079E8EB /* UIImage+git.m */,
 				CE1F15A61F430C5700CEE568 /* UIView+layout.h */,
@@ -546,12 +546,12 @@
 				CE1F15991F430B1D00CEE568 /* DMAlbumModel.m in Sources */,
 				CE1F15A81F430C5700CEE568 /* UIView+layout.m in Sources */,
 				CE1F155B1F43087100CEE568 /* ViewController.m in Sources */,
-				CE1F15A51F430C1400CEE568 /* DMPreviewCell.m in Sources */,
 				CE1F15961F430AE700CEE568 /* DMPhotoManager.m in Sources */,
 				CE1F159F1F430B9200CEE568 /* DMThumbnailCell.m in Sources */,
 				CE1F15B11F430D1500CEE568 /* UIImage+category.m in Sources */,
 				CE1F15581F43087100CEE568 /* AppDelegate.m in Sources */,
 				E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */,
+				E4274DF81F48148F00604527 /* DMPreviewCell.m in Sources */,
 				CE1F15AE1F430CD900CEE568 /* DMExpandButton.m in Sources */,
 				CE1F158C1F4309F600CEE568 /* DMAlbumViewController.m in Sources */,
 				CE1F15891F4309AA00CEE568 /* DMImagePickerController.m in Sources */,
