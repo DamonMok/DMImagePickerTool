@@ -163,7 +163,7 @@
     
 }
 
-- (PHImageRequestID)requestImageFoarAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
 
     CGFloat targetWidth = asset.pixelWidth;
     if (targetWidth>self.maxWidth) {
@@ -249,6 +249,20 @@
     }];
     
     return phImageRequestID;
+}
+
+- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void (^)(AVPlayerItem *, NSDictionary *))complete {
+
+    PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
+    option.version = PHVideoRequestOptionsVersionCurrent;
+    option.deliveryMode = PHVideoRequestOptionsDeliveryModeHighQualityFormat;
+    
+    [[PHCachingImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+        
+        if (complete) {
+            complete(playerItem, info);
+        }
+    }];
 }
 
 

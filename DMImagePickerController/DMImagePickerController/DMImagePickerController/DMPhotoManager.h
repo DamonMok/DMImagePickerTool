@@ -50,7 +50,8 @@
  */
 - (PHImageRequestID)requestCoverImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete;
 
-- (PHImageRequestID)requestImageFoarAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
+//返回给用户的图片
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
 
 /**
  通过PHAsset请求照片
@@ -61,8 +62,9 @@
  */
 - (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
 
+//请求gif
 - (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset complete:(void(^)(UIImage *, NSDictionary *))complete;
 
-
+- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete;
 
 @end

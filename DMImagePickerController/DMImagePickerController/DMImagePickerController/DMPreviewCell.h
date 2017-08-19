@@ -10,6 +10,7 @@
 #import "DMAlbumModel.h"
 
 @class DMImagePreviewView;
+@class DMVideoPreviewView;
 
 typedef void(^singleTap)();
 
@@ -18,6 +19,8 @@ typedef void(^singleTap)();
 @property (nonatomic, strong)DMAssetModel *assetModel;
 
 @property (nonatomic, strong)DMImagePreviewView *imagePreviewView;
+
+@property (nonatomic, strong)DMVideoPreviewView *videoPreviewView;
 
 @property (nonatomic, copy)singleTap singleTap;
 
@@ -42,7 +45,6 @@ typedef void(^singleTap)();
 
 @property (nonatomic, copy)singleTap singleTap;
 
-
 /**获取图片asset*/
 - (void)fetchImageWithAssetModel:(DMAssetModel *)assetModel;
 
@@ -54,3 +56,16 @@ typedef void(^singleTap)();
 - (void)pause;
 
 @end
+
+
+@interface DMVideoPreviewView : UIView
+
+@property (nonatomic, strong)DMAssetModel *assetModel;
+
+/**获取视频asset*/
+- (void)fetchVideoWithAssetModel:(DMAssetModel *)assetModel;
+
+@end
+
+
+

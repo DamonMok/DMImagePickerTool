@@ -34,13 +34,24 @@
     return _imagePreviewView;
 }
 
+- (DMVideoPreviewView *)videoPreviewView {
+
+    if (!_videoPreviewView) {
+        _videoPreviewView = [[DMVideoPreviewView alloc] initWithFrame:self.bounds];
+    }
+    
+    return _videoPreviewView;
+}
+
 - (void)setAssetModel:(DMAssetModel *)assetModel {
 
     _assetModel = assetModel;
     
     [_imagePreviewView removeFromSuperview];
+    [_videoPreviewView removeFromSuperview];
     
     _imagePreviewView = [[DMImagePreviewView alloc] initWithFrame:self.bounds];
+    _videoPreviewView = [[DMVideoPreviewView alloc] initWithFrame:self.bounds];
     
     switch (_assetModel.type) {
         case DMAssetModelTypeImage:
@@ -53,6 +64,12 @@
             //加载Gif预览View
             [self.contentView addSubview:self.imagePreviewView];
             [self.imagePreviewView fetchImageWithAssetModel:assetModel];
+            break;
+            
+        case DMAssetModelTypeVideo:
+            //加载Gif预览View
+            [self.contentView addSubview:self.videoPreviewView];
+            [self.videoPreviewView fetchVideoWithAssetModel:assetModel];
             break;
             
         default:
@@ -285,6 +302,54 @@
 
 
 @end
+
+
+@interface DMVideoPreviewView ()
+
+@property (nonatomic, strong)AVPlayer *player;
+
+@property (nonatomic, strong)AVPlayerLayer *playerLayer;
+
+@end
+
+@implementation DMVideoPreviewView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+
+    if (self = [super initWithFrame:frame]) {
+        
+        self.backgroundColor = [UIColor purpleColor];
+    }
+    
+    return self;
+}
+
+- (void)fetchVideoWithAssetModel:(DMAssetModel *)assetModel {
+
+    [[DMPhotoManager shareManager] requestVideoDataForAsset:assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
+        
+        self.player = [AVPlayer playerWithPlayerItem:playerItem];
+        self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+        self.playerLayer.frame = self.bounds;
+        [self.layer addSublayer:self.playerLayer];
+    
+    }];
+    
+    //封面
+    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:self.bounds.size complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+        
+        
+    }];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+
+    [self.player play];
+}
+
+@end
+
+
 
 
 
