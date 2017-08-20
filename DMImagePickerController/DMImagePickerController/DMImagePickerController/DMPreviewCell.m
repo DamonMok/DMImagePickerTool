@@ -2,104 +2,178 @@
 //  DMPreviewCell.m
 //  DMImagePickerController
 //
-//  Created by Damon on 2017/8/19.
+//  Created by Damon on 2017/8/20.
 //  Copyright © 2017年 damon. All rights reserved.
 //
 
 #import "DMPreviewCell.h"
-#import "DMDefine.h"
 #import "DMPhotoManager.h"
-#import "UIImage+git.h"
+#import "DMDefine.h"
 #import "UIView+layout.h"
 
+#pragma mark - DMPreviewCell
 @implementation DMPreviewCell
 
-- (DMImagePreviewView *)imagePreviewView {
+- (DMImageGifPreviewView *)imageGifPreviewView {
     
-    if (!_imagePreviewView) {
-        
-        _imagePreviewView = [[DMImagePreviewView alloc] initWithFrame:self.bounds];
-        _imagePreviewView.backgroundColor = [UIColor yellowColor];
+    if (!_imageGifPreviewView) {
+        _imageGifPreviewView = [[DMImageGifPreviewView alloc] initWithFrame:self.bounds];
         
         __weak typeof(self) weakself = self;
-        _imagePreviewView.singleTap = ^{
+        _imageGifPreviewView.singleTap = ^{
             
             if (weakself.singleTap) {
                 weakself.singleTap();
             }
         };
-        
+        [self.contentView addSubview:_imageGifPreviewView];
     }
     
-    return _imagePreviewView;
+    return _imageGifPreviewView;
 }
 
 - (DMVideoPreviewView *)videoPreviewView {
 
     if (!_videoPreviewView) {
         _videoPreviewView = [[DMVideoPreviewView alloc] initWithFrame:self.bounds];
+        
+        __weak typeof(self) weakself = self;
+        _imageGifPreviewView.singleTap = ^{
+            
+            if (weakself.singleTap) {
+                weakself.singleTap();
+            }
+        };
+        [self.contentView addSubview:_videoPreviewView];
     }
     
     return _videoPreviewView;
 }
 
-- (void)setAssetModel:(DMAssetModel *)assetModel {
+- (void)resume {
+}
 
+- (void)pause {
+}
+
+@end
+
+#pragma mark - DMImagePreviewCell
+@implementation DMImagePreviewCell
+
+- (void)setAssetModel:(DMAssetModel *)assetModel {
+    
     _assetModel = assetModel;
     
-    [_imagePreviewView removeFromSuperview];
-    [_videoPreviewView removeFromSuperview];
-    
-    _imagePreviewView = [[DMImagePreviewView alloc] initWithFrame:self.bounds];
-    _videoPreviewView = [[DMVideoPreviewView alloc] initWithFrame:self.bounds];
-    
-    switch (_assetModel.type) {
-        case DMAssetModelTypeImage:
-            //加载图片预览View
-            [self.contentView addSubview:self.imagePreviewView];
-            [self.imagePreviewView fetchImageWithAssetModel:assetModel];
-            break;
-            
-        case DMAssetModelTypeGif:
-            //加载Gif预览View
-            [self.contentView addSubview:self.imagePreviewView];
-            [self.imagePreviewView fetchImageWithAssetModel:assetModel];
-            break;
-            
-        case DMAssetModelTypeVideo:
-            //加载Gif预览View
-            [self.contentView addSubview:self.videoPreviewView];
-            [self.videoPreviewView fetchVideoWithAssetModel:assetModel];
-            break;
-            
-        default:
-            break;
+    if (assetModel.type == DMAssetModelTypeImage) {
+        
+        [self.imageGifPreviewView fetchImageWithAssetModel:assetModel];
     }
+}
 
+@end
+
+#pragma mark - DMGifPreviewCell
+@implementation DMGifPreviewCell
+
+- (void)setAssetModel:(DMAssetModel *)assetModel {
+    
+    _assetModel = assetModel;
+    
+    if (assetModel.type == DMAssetModelTypeGif) {
+        
+        [self.imageGifPreviewView fetchGifWithAssetModel:assetModel];
+        
+    }
 }
 
 - (void)resume {
     
-    if (self.assetModel.type == DMAssetModelTypeGif) {
-        
-        [self.imagePreviewView resume];
+    [self.imageGifPreviewView resume];
+}
+
+- (void)pause {
+
+    [self.imageGifPreviewView pause];
+}
+
+@end
+
+#pragma mark - DMVideoPreviewCell
+@implementation DMVideoPreviewCell
+
+- (void)setAssetModel:(DMAssetModel *)assetModel {
+    
+    _assetModel = assetModel;
+
+    if (assetModel.type == DMAssetModelTypeVideo) {
+
+        [self.videoPreviewView fetchVideoPosterWithAssetModel:assetModel];
+        [self.videoPreviewView replay];
+        self.videoPreviewView.assetModel = assetModel;
     }
 }
 
 - (void)pause {
-    
-    if (self.assetModel.type == DMAssetModelTypeGif) {
-        [self.imagePreviewView pause];
-    }
+
+    [self.videoPreviewView pause];
 }
 
 @end
 
-@interface DMImagePreviewView ()<UIScrollViewDelegate>
+#pragma mark - DMPreviewView
+@implementation DMPreviewView
+
+- (UIImageView *)imageView {
+    
+    if (!_imageView) {
+        _imageView = [[UIImageView alloc] init];
+        _imageView.frame = self.bounds;
+        _imageView.contentMode = UIViewContentModeScaleAspectFit;
+        _imageView.userInteractionEnabled = YES;
+        [self addSubview:_imageView];
+    }
+    
+    return _imageView;
+}
+
+#pragma mark - 子类重写
+- (void)fetchImageWithAssetModel:(DMAssetModel *)assetModel {
+}
+
+- (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel {
+}
+
+- (void)fetchVideoPosterWithAssetModel:(DMAssetModel *)assetModel {
+}
+
+- (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel {
+}
+
+- (void)singleTapPreviewView:(UITapGestureRecognizer *)tap {
+}
+
+- (void)resume {
+}
+
+- (void)pause {
+}
 
 @end
 
-@implementation DMImagePreviewView
+#pragma mark - DMImageGifPreviewView
+@interface DMImageGifPreviewView ()<UIScrollViewDelegate>
+
+@end
+
+#pragma mark - DMImageGifPreviewView
+@interface DMImageGifPreviewView ()<UIScrollViewDelegate>
+
+@end
+
+#pragma mark - DMImageGifPreviewView
+
+@implementation DMImageGifPreviewView
 
 - (UIScrollView *)scrollView {
     
@@ -130,63 +204,47 @@
     return _containerView;
 }
 
-- (UIImageView *)imageView {
-    
-    if (!_imageView) {
-        _imageView = [[UIImageView alloc] init];
-        _imageView.contentMode = UIViewContentModeScaleAspectFit;
-    }
-    
-    return _imageView;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame {
-    
+
     if (self = [super initWithFrame:frame]) {
         
-        [self initViewWithFrame:frame];
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapPreviewView:)];
+        [self addGestureRecognizer:singleTap];
+        
+        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapPreviewView:)];
+        doubleTap.numberOfTapsRequired = 2;
+        [singleTap requireGestureRecognizerToFail:doubleTap];
+        [self addGestureRecognizer:doubleTap];
+        
+        
+        [self addSubview:self.scrollView];
+        [self.scrollView addSubview:self.containerView];
+        [self.containerView addSubview:self.imageView];
     }
     
     return self;
 }
 
-- (void)initViewWithFrame:(CGRect)frame {
-    
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapPreviewView:)];
-    [self addGestureRecognizer:singleTap];
-    
-    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapPreviewView:)];
-    doubleTap.numberOfTapsRequired = 2;
-    [singleTap requireGestureRecognizerToFail:doubleTap];
-    [self addGestureRecognizer:doubleTap];
-    
-    
-    [self addSubview:self.scrollView];
-    [self.scrollView addSubview:self.containerView];
-    [self.containerView addSubview:self.imageView];
-    
-}
-
+#pragma mark 获取图片
 - (void)fetchImageWithAssetModel:(DMAssetModel *)assetModel {
-    
+
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
-    if (assetModel.type == DMAssetModelTypeGif) {
-        //Gif
-        [[DMPhotoManager shareManager] requestImageDataForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
-            
-            self.imageView.image = image;
-            [self resetSubViewsWithAsset:assetModel.asset];
-        }];
+    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
-    } else if (assetModel.type == DMAssetModelTypeImage) {
-        //image
-        [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
-            
-            self.imageView.image = image;
-            [self resetSubViewsWithAsset:assetModel.asset];
-        }];
-    }
+        self.imageView.image = image;
+        [self resetSubViewsWithAsset:assetModel.asset];
+    }];
+}
+
+#pragma mark 获取Gif
+- (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel {
+
+    [[DMPhotoManager shareManager] requestImageDataForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
+        
+        self.imageView.image = image;
+        [self resetSubViewsWithAsset:assetModel.asset];
+    }];
 }
 
 - (void)resetSubViewsWithAsset:(PHAsset *)asset {
@@ -211,9 +269,9 @@
     
 }
 
-
+#pragma mark 单双击
 - (void)singleTapPreviewView:(UITapGestureRecognizer *)tap {
-    
+
     if (self.singleTap) {
         self.singleTap();
     }
@@ -236,6 +294,7 @@
     [self.scrollView zoomToRect:zoomRect animated:YES];
 }
 
+#pragma mark - scrollView代理
 //指定放大的视图
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
@@ -251,37 +310,40 @@
     
 }
 
+#pragma mark - scrollView代理
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
-    [self pauseLayer:self.imageView.layer];
+    [self pause];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     
-    [self resumeLayer:self.imageView.layer];
+    [self resume];
 }
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
     
-    [self pauseLayer:self.imageView.layer];
+    [self pause];
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     
-    [self resumeLayer:self.imageView.layer];
+    [self resume];
 }
 
+#pragma mark - Gif播放/暂停方法
+//暂停gif
 - (void)pause {
     
     [self pauseLayer:self.imageView.layer];
 }
 
+//播放gif
 - (void)resume {
     
     [self resumeLayer:self.imageView.layer];
 }
 
-//暂停gif的方法
 -(void)pauseLayer:(CALayer*)layer
 {
     CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
@@ -289,7 +351,6 @@
     layer.timeOffset = pausedTime;
 }
 
-//继续gif的方法
 -(void)resumeLayer:(CALayer*)layer
 {
     CFTimeInterval pausedTime = [layer timeOffset];
@@ -300,13 +361,13 @@
     layer.beginTime = timeSincePause;
 }
 
-
 @end
 
 
+#pragma mark - DMVideoPreviewView
 @interface DMVideoPreviewView ()
 
-@property (nonatomic, strong)UIImageView *imageView;
+@property (nonatomic, strong)UIButton *btnPlay;
 
 @property (nonatomic, strong)AVPlayer *player;
 
@@ -317,62 +378,65 @@
 @end
 
 @implementation DMVideoPreviewView
-
-- (AVPlayerLayer *)playerLayer {
-
-    if (!_playerLayer) {
-        _playerLayer = [[AVPlayerLayer alloc] init];
-        _playerLayer.frame = self.bounds;
+//lazy load
+- (UIButton *)btnPlay {
+    
+    if (!_btnPlay) {
+        _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_btnPlay setBackgroundImage:[UIImage imageNamed:@"Fav_List_Video_Play"] forState:UIControlStateNormal];
+        [_btnPlay setBackgroundImage:[UIImage imageNamed:@"Fav_List_Video_Play_HL"] forState:UIControlStateHighlighted];
+        [_btnPlay addTarget:self action:@selector(playStatusDidChange) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_btnPlay];
     }
     
-    return _playerLayer;
-}
-
-- (UIImageView *)imageView {
-
-    if (!_imageView) {
-        _imageView = [[UIImageView alloc] init];
-        _imageView.frame = self.bounds;
-        _imageView.contentMode = UIViewContentModeScaleAspectFit;
-        _imageView.userInteractionEnabled = YES;
-        [self addSubview:_imageView];
-    }
-    
-    return _imageView;
+    return _btnPlay;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
 
     if (self = [super initWithFrame:frame]) {
         
-        self.backgroundColor = [UIColor whiteColor];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playStatusDidChange)];
         [self addGestureRecognizer:tap];
-
+        
     }
     
     return self;
 }
 
-- (void)fetchVideoWithAssetModel:(DMAssetModel *)assetModel {
-
-    self.assetModel = assetModel;
+#pragma mark 获取视频封面
+- (void)fetchVideoPosterWithAssetModel:(DMAssetModel *)assetModel {
     
-    //封面
-    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:self.bounds.size complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+    CGSize posterSize = self.bounds.size;
+    
+    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:posterSize complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
+        [self resetSubViews];
     }];
-    
 }
 
-//控制播放/暂停
-- (void)singleTap {
+//frame
+- (void)resetSubViews {
+
+    self.imageView.frame = self.bounds;
+    [self addSubview:self.imageView];
     
-    if (!_playerLayer) {
-        
+    self.btnPlay.frame = CGRectMake(0, 0, 82, 82);
+    self.btnPlay.center = CGPointMake(KScreen_Width*0.5, KScreen_Height*0.5);
+    [self bringSubviewToFront:self.btnPlay];
+    
+    
+
+}
+
+#pragma mark - 视频播放/暂停控制
+#pragma mark 点击屏幕
+- (void)playStatusDidChange {
+
+    if (!self.playerLayer) {
         [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
-            NSLog(@"%@", [NSThread currentThread]);
+           
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 self.playerItem = playerItem;
@@ -380,49 +444,78 @@
                 self.player = [AVPlayer playerWithPlayerItem:playerItem];
                 self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
                 [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+                [self.layer addSublayer:self.playerLayer];//播放结束通知
                 self.playerLayer.frame = self.bounds;
-                [self.layer addSublayer:self.playerLayer];
-                [self controlStatus];
+                [self resetPlayerStatus];
             });
+            
+            
         }];
+        
     } else {
     
-        [self controlStatus];
+        [self resetPlayerStatus];
     }
 }
 
-- (void)controlStatus {
+#pragma mark 播放/暂停之间的切换
+- (void)resetPlayerStatus {
 
-    CMTime stop = self.player.currentItem.currentTime;
-    CMTime duration = self.player.currentItem.duration;
+    CMTime currentTime = self.player.currentItem.currentTime;
+    CMTime durationTime = self.player.currentItem.duration;
     
-    if (self.player.rate == .0) {//播放
-        //rate=0代表当前是暂停
-        if (stop.value == duration.value) {
+    if (self.player.rate == 0) {
+        //播放
+        if (currentTime.value == durationTime.value) {
+            
             [self.player.currentItem seekToTime:CMTimeMake(0, 1)];
         }
+        
         [self.player play];
-    } else {//暂停
+        self.btnPlay.hidden = YES;
+        
+    } else {
+        //暂停
         [self.player pause];
+        self.btnPlay.hidden = NO;
+        [self bringSubviewToFront:self.btnPlay];
     }
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+#pragma mark 播放完毕
+- (void)didPlayFinish {
 
-//    self.imageView.hidden = YES;
-    [self.player play];
+    self.btnPlay.hidden = NO;
+    [self bringSubviewToFront:self.btnPlay];
+    [self.playerItem seekToTime:kCMTimeZero];
 }
 
-//监听获得消息
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
-{
+//暂停
+- (void)pause {
+
+    [self.player pause];
+    self.btnPlay.hidden = NO;
+    [self bringSubviewToFront:self.btnPlay];
+}
+
+//归零
+- (void)replay {
+
+    [self.playerItem seekToTime:kCMTimeZero];
+}
+
+#pragma mark 监听
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+
     AVPlayerItem *playerItem = (AVPlayerItem *)object;
     
     if ([keyPath isEqualToString:@"status"]) {
-        if ([playerItem status] == AVPlayerStatusReadyToPlay) {
-            //status 点进去看 有三种状态
+        
+        if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
+            
             self.imageView.hidden = YES;
-            NSLog(@"ready");
+            self.btnPlay.hidden = YES;
         }
     }
 }
@@ -433,6 +526,7 @@
 }
 
 @end
+
 
 
 

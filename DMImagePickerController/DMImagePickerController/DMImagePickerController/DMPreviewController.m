@@ -11,7 +11,7 @@
 #import "DMDefine.h"
 #import "DMImagePickerController.h"
 #import "UIView+layout.h"
-#import "DMPreviewCell1.h"
+#import "DMPreviewCell.h"
 #import "UIImage+category.h"
 #import "UIColor+category.h"
 #import "DMPhotoManager.h"
@@ -35,7 +35,7 @@ static NSString *reusedVideo = @"video";
     
     BOOL _isFullScreen;//全屏标识
     
-    DMPreviewCell1 *_currentPreviewCell;
+    DMPreviewCell *_currentPreviewCell;
 }
 
 @property (nonatomic, strong)UIView *navigationView;
@@ -150,6 +150,7 @@ static NSString *reusedVideo = @"video";
     self.collectionView.backgroundColor = [UIColor blackColor];
     [self.collectionView registerClass:[DMImagePreviewCell class] forCellWithReuseIdentifier:reusedImage];
     [self.collectionView registerClass:[DMGifPreviewCell class] forCellWithReuseIdentifier:reusedGif];
+    [self.collectionView registerClass:[DMVideoPreviewCell class] forCellWithReuseIdentifier:reusedVideo];
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.pagingEnabled = YES;
     self.collectionView.dataSource = self;
@@ -198,7 +199,7 @@ static NSString *reusedVideo = @"video";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
-    DMPreviewCell1 *cell;
+    DMPreviewCell *cell;
     
     switch (assetModel.type) {
         case DMAssetModelTypeImage:
@@ -238,6 +239,9 @@ static NSString *reusedVideo = @"video";
         case DMAssetModelTypeGif:
             ((DMGifPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
             [((DMGifPreviewCell *)cell) resume];//播放
+            break;
+        case DMAssetModelTypeVideo:
+            ((DMVideoPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
             break;
             
         default:
@@ -339,22 +343,27 @@ static NSString *reusedVideo = @"video";
     [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)_currentAssetModel.index] forState:UIControlStateSelected];
 }
 
-//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-//
-//    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+
+    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
 //    if ([_currentPreviewCell isKindOfClass:[DMGifPreviewCell class]]    ) {
 //        [(DMGifPreviewCell *)_currentPreviewCell pause];
 //    }
-//}
-//
-//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-//
+    
+    if ([_currentPreviewCell isKindOfClass:[DMVideoPreviewCell class]]) {
+        
+        [(DMVideoPreviewCell *)_currentPreviewCell pause];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+
 //    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
 //    if ([_currentPreviewCell isKindOfClass:[DMGifPreviewCell class]]) {
 //        
 //        [(DMGifPreviewCell *)_currentPreviewCell resume];
 //    }
-//}
+}
 
 #pragma mark 进入/退出全屏
 - (void)enterFullScreen {
