@@ -413,8 +413,8 @@
     [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:posterSize complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
-        self.imageView.hidden = NO;
         [self resetSubViews];
+        self.imageView.hidden = NO;
     }];
 }
 
@@ -443,11 +443,15 @@
                 
                 self.player = [AVPlayer playerWithPlayerItem:playerItem];
                 self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+                
+                //监听状态和播放结束
                 [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+                
                 [self.layer addSublayer:self.playerLayer];//播放结束通知
                 self.playerLayer.frame = self.bounds;
                 [self resetPlayerStatus];
+                
             });
             
             
@@ -525,7 +529,6 @@
         
         if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
             
-            self.imageView.hidden = YES;
             self.btnPlay.hidden = YES;
         }
     }

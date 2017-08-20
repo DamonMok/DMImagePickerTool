@@ -392,7 +392,8 @@ static NSString *reusedVideo = @"video";
         CGRect bottomFrame = self.bottomView.frame;
         bottomFrame.origin.y = KScreen_Height;
         self.bottomView.frame = bottomFrame;
-        
+    
+    _isFullScreen = YES;
 //    }];
 }
 
@@ -407,7 +408,8 @@ static NSString *reusedVideo = @"video";
         CGRect bottomFrame = self.bottomView.frame;
         bottomFrame.origin.y = KScreen_Height-bottomViewHeight;
         self.bottomView.frame = bottomFrame;
-        
+    
+    _isFullScreen = NO;
 //    }];
 }
 
