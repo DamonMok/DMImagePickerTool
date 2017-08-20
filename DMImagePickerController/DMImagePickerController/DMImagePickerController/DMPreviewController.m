@@ -103,6 +103,12 @@ static NSString *reusedVideo = @"video";
     
     self.navigationController.navigationBarHidden = YES;
     
+    //播放结束
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(quitFullScreen) name:@"didPlayToEndTime" object:nil];
+    
+    //开始播放
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterFullScreen) name:@"willPlay" object:nil];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -110,6 +116,10 @@ static NSString *reusedVideo = @"video";
     [super viewWillDisappear:animated];
     
     self.navigationController.navigationBarHidden = NO;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didPlayToEndTime" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPlay" object:nil];
 }
 
 #pragma mark - 初始化自定义导航栏

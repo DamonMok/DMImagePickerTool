@@ -38,7 +38,7 @@
         _videoPreviewView = [[DMVideoPreviewView alloc] initWithFrame:self.bounds];
         
         __weak typeof(self) weakself = self;
-        _imageGifPreviewView.singleTap = ^{
+        _videoPreviewView.singleTap = ^{
             
             if (weakself.singleTap) {
                 weakself.singleTap();
@@ -426,14 +426,16 @@
     self.btnPlay.center = CGPointMake(KScreen_Width*0.5, KScreen_Height*0.5);
     [self bringSubviewToFront:self.btnPlay];
     
-    
-
 }
 
 #pragma mark - 视频播放/暂停控制
 #pragma mark 点击屏幕
 - (void)playStatusDidChange {
 
+    if (self.singleTap) {
+        self.singleTap();
+    }
+    
     if (!self.playerLayer) {
         [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
            
@@ -474,6 +476,7 @@
         
         [self.player play];
         self.btnPlay.hidden = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"willPlay" object:nil];
         
     } else {
         //暂停
@@ -489,6 +492,8 @@
     self.btnPlay.hidden = NO;
     [self bringSubviewToFront:self.btnPlay];
     [self.playerItem seekToTime:kCMTimeZero];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"didPlayToEndTime" object:nil];
 }
 
 //暂停
@@ -497,6 +502,7 @@
     [self.player pause];
     self.btnPlay.hidden = NO;
     [self bringSubviewToFront:self.btnPlay];
+    
 }
 
 //归零
@@ -523,6 +529,11 @@
 - (void)dealloc {
 
     [self.playerItem removeObserver:self forKeyPath:@"status"];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didPlayToEndTime" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPlay" object:nil];
+    
 }
 
 @end
