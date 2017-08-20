@@ -93,6 +93,8 @@ typedef void(^singleTap)();
 
 - (void)replay;
 
+- (void)clearPlayerLayer;
+
 @end
 
 

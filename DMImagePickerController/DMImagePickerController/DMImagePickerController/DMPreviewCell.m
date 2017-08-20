@@ -109,7 +109,8 @@
     if (assetModel.type == DMAssetModelTypeVideo) {
 
         [self.videoPreviewView fetchVideoPosterWithAssetModel:assetModel];
-        [self.videoPreviewView replay];
+//        [self.videoPreviewView replay];
+        [self.videoPreviewView clearPlayerLayer];
         self.videoPreviewView.assetModel = assetModel;
     }
 }
@@ -412,6 +413,7 @@
     [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:posterSize complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
+        self.imageView.hidden = NO;
         [self resetSubViews];
     }];
 }
@@ -509,6 +511,12 @@
 - (void)replay {
 
     [self.playerItem seekToTime:kCMTimeZero];
+}
+
+- (void)clearPlayerLayer {
+    
+    self.playerLayer = nil;
+    self.imageView.hidden = YES;
 }
 
 #pragma mark 监听
