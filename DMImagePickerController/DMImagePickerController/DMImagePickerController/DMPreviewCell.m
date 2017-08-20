@@ -433,10 +433,6 @@
 #pragma mark - 视频播放/暂停控制
 #pragma mark 点击屏幕
 - (void)playStatusDidChange {
-
-    if (self.singleTap) {
-        self.singleTap();
-    }
     
     if (!self.playerLayer) {
         [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
@@ -485,6 +481,7 @@
         [self.player pause];
         self.btnPlay.hidden = NO;
         [self bringSubviewToFront:self.btnPlay];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"willPause" object:nil];
     }
 }
 
@@ -541,6 +538,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didPlayToEndTime" object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPlay" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPause" object:nil];
     
 }
 

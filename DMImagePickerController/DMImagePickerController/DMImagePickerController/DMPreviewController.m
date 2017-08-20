@@ -109,6 +109,9 @@ static NSString *reusedVideo = @"video";
     //开始播放
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterFullScreen) name:@"willPlay" object:nil];
     
+    //暂停播放
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(quitFullScreen) name:@"willPause" object:nil];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -120,6 +123,8 @@ static NSString *reusedVideo = @"video";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didPlayToEndTime" object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPlay" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPause" object:nil];
 }
 
 #pragma mark - 初始化自定义导航栏
