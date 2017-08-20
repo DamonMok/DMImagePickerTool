@@ -11,14 +11,16 @@
 #import "DMDefine.h"
 #import "DMImagePickerController.h"
 #import "UIView+layout.h"
-#import "DMPreviewCell.h"
+#import "DMPreviewCell1.h"
 #import "UIImage+category.h"
 #import "UIColor+category.h"
 #import "DMPhotoManager.h"
 
 #define margin 20
 
-static NSString *reusedID = @"preview";
+static NSString *reusedImage = @"image";
+static NSString *reusedGif = @"gif";
+static NSString *reusedVideo = @"video";
 
 @interface DMPreviewController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMBottomViewDelegate>{
     
@@ -33,7 +35,7 @@ static NSString *reusedID = @"preview";
     
     BOOL _isFullScreen;//全屏标识
     
-    DMPreviewCell *_currentPreviewCell;
+    DMPreviewCell1 *_currentPreviewCell;
 }
 
 @property (nonatomic, strong)UIView *navigationView;
@@ -146,7 +148,8 @@ static NSString *reusedID = @"preview";
 - (void)initCollectionView {
     
     self.collectionView.backgroundColor = [UIColor blackColor];
-    [self.collectionView registerClass:[DMPreviewCell class] forCellWithReuseIdentifier:reusedID];
+    [self.collectionView registerClass:[DMImagePreviewCell class] forCellWithReuseIdentifier:reusedImage];
+    [self.collectionView registerClass:[DMGifPreviewCell class] forCellWithReuseIdentifier:reusedGif];
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.pagingEnabled = YES;
     self.collectionView.dataSource = self;
@@ -195,9 +198,22 @@ static NSString *reusedID = @"preview";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
-    DMPreviewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedID forIndexPath:indexPath];
+    DMPreviewCell1 *cell;
     
-//    cell.assetModel = assetModel;
+    switch (assetModel.type) {
+        case DMAssetModelTypeImage:
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedImage forIndexPath:indexPath];
+            break;
+        case DMAssetModelTypeGif:
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedGif forIndexPath:indexPath];
+            break;
+        case DMAssetModelTypeVideo:
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedVideo forIndexPath:indexPath];
+            break;
+            
+        default:
+            break;
+    }
     
     cell.singleTap = ^{
         _isFullScreen = !_isFullScreen;
@@ -213,15 +229,31 @@ static NSString *reusedID = @"preview";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%ld", (long)indexPath.row);
-    ((DMPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
     
-    [((DMPreviewCell *)cell) resume];
+    DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
+    switch (assetModel.type) {
+        case DMAssetModelTypeImage:
+            ((DMImagePreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
+            break;
+        case DMAssetModelTypeGif:
+            ((DMGifPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
+            [((DMGifPreviewCell *)cell) resume];//播放
+            break;
+            
+        default:
+            break;
+    }
+    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
 
-    [((DMPreviewCell *)cell) pause];
+    DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
+    
+    if (assetModel.type == DMAssetModelTypeGif) {
+        
+        [((DMGifPreviewCell *)cell) pause];//暂停
+    }
 }
 
 #pragma mark - 刷新底部栏
@@ -310,13 +342,18 @@ static NSString *reusedID = @"preview";
 //- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 //
 //    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
-//    [_currentPreviewCell pause];
+//    if ([_currentPreviewCell isKindOfClass:[DMGifPreviewCell class]]    ) {
+//        [(DMGifPreviewCell *)_currentPreviewCell pause];
+//    }
 //}
 //
 //- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 //
 //    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
-//    [_currentPreviewCell resume];
+//    if ([_currentPreviewCell isKindOfClass:[DMGifPreviewCell class]]) {
+//        
+//        [(DMGifPreviewCell *)_currentPreviewCell resume];
+//    }
 //}
 
 #pragma mark 进入/退出全屏
