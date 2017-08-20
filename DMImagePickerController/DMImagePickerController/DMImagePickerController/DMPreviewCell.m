@@ -108,7 +108,7 @@
 
     if (assetModel.type == DMAssetModelTypeVideo) {
 
-        [self.videoPreviewView fetchVideoPosterWithAssetModel:assetModel];
+        [self.videoPreviewView fetchVideoPosterImageWithAssetModel:assetModel];
 //        [self.videoPreviewView replay];
         [self.videoPreviewView clearPlayerLayer];
         self.videoPreviewView.assetModel = assetModel;
@@ -145,7 +145,7 @@
 - (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel {
 }
 
-- (void)fetchVideoPosterWithAssetModel:(DMAssetModel *)assetModel {
+- (void)fetchVideoPosterImageWithAssetModel:(DMAssetModel *)assetModel {
 }
 
 - (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel {
@@ -180,7 +180,7 @@
     
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-        _scrollView.backgroundColor = [UIColor redColor];
+        _scrollView.backgroundColor = [UIColor blackColor];
         _scrollView.delaysContentTouches = NO;
         _scrollView.maximumZoomScale = 3.0;
         _scrollView.minimumZoomScale = 1.0;
@@ -241,7 +241,7 @@
 #pragma mark 获取Gif
 - (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel {
 
-    [[DMPhotoManager shareManager] requestImageDataForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
+    [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
@@ -406,7 +406,7 @@
 }
 
 #pragma mark 获取视频封面
-- (void)fetchVideoPosterWithAssetModel:(DMAssetModel *)assetModel {
+- (void)fetchVideoPosterImageWithAssetModel:(DMAssetModel *)assetModel {
     
     CGSize posterSize = self.bounds.size;
     

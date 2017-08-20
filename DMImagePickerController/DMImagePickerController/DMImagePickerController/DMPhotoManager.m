@@ -151,7 +151,7 @@
     return arrAsset;
 }
 
-- (PHImageRequestID)requestCoverImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete
+- (PHImageRequestID)requestPosterImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete
 {
     
     return [self requestImageForAsset:albumModel.coverImageAsset targetSize:CGSizeMake(KAlbumViewRowHeight, KAlbumViewRowHeight) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
@@ -228,7 +228,7 @@
     return imageRequestID;
 }
 
-- (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *))complete {
+- (PHImageRequestID)requestGifImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *))complete {
 
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     option.resizeMode = PHImageRequestOptionsResizeModeFast;

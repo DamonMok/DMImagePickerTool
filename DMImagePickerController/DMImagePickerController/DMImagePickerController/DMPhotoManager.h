@@ -48,9 +48,15 @@
  @param complete 回调
  @return 图片异步请求标识符
  */
-- (PHImageRequestID)requestCoverImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete;
+- (PHImageRequestID)requestPosterImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete;
 
-//返回给用户的图片
+/**
+ 返回给用户的图片
+
+ @param asset PHAsset
+ @param complete 返回的照片不大于默认宽度414
+ @return 请求照片的标识
+ */
 - (PHImageRequestID)requestImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
 
 /**
@@ -62,9 +68,20 @@
  */
 - (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
 
-//请求gif
-- (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset complete:(void(^)(UIImage *, NSDictionary *))complete;
 
+/**
+ 请求Gif图片
+ @param asset PHAsset
+ @return 经过处理的Gif图片，可以直接传给imageView显示
+ */
+- (PHImageRequestID)requestGifImageForAsset:(PHAsset *)asset complete:(void(^)(UIImage *, NSDictionary *))complete;
+
+
+/**
+ 请求视频数据
+ @param asset PHAsset
+ @param complete 用户可在回调中得到AVPlayerItem用来播放
+ */
 - (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete;
 
 @end

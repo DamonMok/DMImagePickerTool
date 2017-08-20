@@ -71,7 +71,7 @@ typedef void(^singleTap)();
 - (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel;
 
 //获取视频封面
-- (void)fetchVideoPosterWithAssetModel:(DMAssetModel *)assetModel;
+- (void)fetchVideoPosterImageWithAssetModel:(DMAssetModel *)assetModel;
 
 //后去视频数据
 - (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel;
