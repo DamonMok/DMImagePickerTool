@@ -13,7 +13,7 @@
 
 #pragma mark - DMPreviewCell
 @implementation DMPreviewCell
-
+//lazy load
 - (DMImageGifPreviewView *)imageGifPreviewView {
     
     if (!_imageGifPreviewView) {
@@ -248,6 +248,7 @@
     }];
 }
 
+//子控件frame
 - (void)resetSubViewsWithAsset:(PHAsset *)asset {
     
     UIImage *image = self.imageView.image;

@@ -221,4 +221,17 @@
     self.btnPreview.hidden = YES;
 }
 
+- (void)setIsVideo:(BOOL)isVideo {
+
+    _isVideo = isVideo;
+    
+    if (isVideo) {
+        _btnEdit.hidden = YES;
+        _btnOriginalPicture.hidden = YES;
+    } else {
+        _btnEdit.hidden = NO;
+        _btnOriginalPicture.hidden = NO;
+    }
+}
+
 @end

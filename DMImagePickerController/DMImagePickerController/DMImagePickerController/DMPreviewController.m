@@ -48,6 +48,7 @@ static NSString *reusedVideo = @"video";
 
 @implementation DMPreviewController
 
+//lazy load
 - (UIView *)navigationView {
     
     if (!_navigationView) {
@@ -84,6 +85,7 @@ static NSString *reusedVideo = @"video";
     return _bottomView;
 }
 
+//cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -245,7 +247,7 @@ static NSString *reusedVideo = @"video";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+    //预加载
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     switch (assetModel.type) {
         case DMAssetModelTypeImage:
@@ -356,15 +358,16 @@ static NSString *reusedVideo = @"video";
     _btnSelected.selected = _currentAssetModel.selected;
     
     [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)_currentAssetModel.index] forState:UIControlStateSelected];
+    
+    //如果是视频，隐藏编辑和原图按钮
+    _bottomView.isVideo = _currentAssetModel.type == DMAssetModelTypeVideo?YES:NO;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 
     _currentPreviewCell = [self.collectionView visibleCells].firstObject;
-//    if ([_currentPreviewCell isKindOfClass:[DMGifPreviewCell class]]    ) {
-//        [(DMGifPreviewCell *)_currentPreviewCell pause];
-//    }
-    
+
+    //暂停视频
     if ([_currentPreviewCell isKindOfClass:[DMVideoPreviewCell class]]) {
         
         [(DMVideoPreviewCell *)_currentPreviewCell pause];
@@ -373,11 +376,6 @@ static NSString *reusedVideo = @"video";
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 
-//    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
-//    if ([_currentPreviewCell isKindOfClass:[DMGifPreviewCell class]]) {
-//        
-//        [(DMGifPreviewCell *)_currentPreviewCell resume];
-//    }
 }
 
 #pragma mark 进入/退出全屏

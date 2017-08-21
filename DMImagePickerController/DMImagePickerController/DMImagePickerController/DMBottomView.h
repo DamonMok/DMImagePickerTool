@@ -34,6 +34,9 @@
 /**当已选照片张数为零,发送按钮是否可以点击   YES:可以点击*/
 @property (nonatomic, assign)BOOL sendEnable;
 
+/**如果是视频，则只显示发送按钮*/
+@property (nonatomic, assign)BOOL isVideo;
+
 @property (nonatomic, assign)id<DMBottomViewDelegate> delegate;
 
 @end

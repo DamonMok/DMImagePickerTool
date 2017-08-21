@@ -4,7 +4,7 @@
 //
 //  Created by Damon on 2017/8/18.
 //  Copyright © 2017年 damon. All rights reserved.
-//
+//  这个文件的代码来自SDWebImage
 
 #import <UIKit/UIKit.h>
 
