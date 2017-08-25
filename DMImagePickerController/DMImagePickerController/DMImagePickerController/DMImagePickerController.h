@@ -22,6 +22,9 @@
 /**限制选择照片的最大张数*/
 @property (nonatomic, assign)NSInteger maxImagesCount;
 
+/**显示内部预览,默认为YES*/
+@property (nonatomic, assign)BOOL showInnerPreview;
+
 /**用户是否选择原图*/
 @property (nonatomic, assign)BOOL selectedOriginalPicture;
 

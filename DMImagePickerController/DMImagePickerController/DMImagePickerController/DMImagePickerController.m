@@ -49,6 +49,7 @@
     if (self = [super initWithRootViewController:albumViewController]) {
         
         self.recordPreviousSelections = YES;
+        self.showInnerPreview = YES;
         self.maxImagesCount = maxImagesCount>0?maxImagesCount:9;
         
         if ([[DMPhotoManager shareManager] getAuthorizationStatus]) {

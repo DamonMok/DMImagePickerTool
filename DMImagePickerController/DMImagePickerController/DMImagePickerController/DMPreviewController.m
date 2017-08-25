@@ -179,9 +179,17 @@ static NSString *reusedVideo = @"video";
 #pragma mark - 初始化底部栏
 - (void)initBottomView {
     
+    _imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
     self.bottomView.delegate = self;
     self.bottomView.showEditButton = YES;
     self.bottomView.sendEnable = YES;
+    self.bottomView.showInnerPreview = _imagePickerVC.showInnerPreview;
+    self.bottomView.arrData = _imagePickerVC.arrselected;
+    if (_imagePickerVC.showInnerPreview) {
+        self.bottomView.frame = CGRectMake(0, KScreen_Height-bottomViewHeight-KInnerPreviewHeight, KScreen_Width, bottomViewHeight+KInnerPreviewHeight);
+    }
+    
     [self.view addSubview:self.bottomView];
 }
 
@@ -280,9 +288,6 @@ static NSString *reusedVideo = @"video";
 #pragma mark - 刷新底部栏
 - (void)refreshBottomView {
     
-    
-    _imagePickerVC = (DMImagePickerController *)self.navigationController;
-    
     self.bottomView.count = _imagePickerVC.arrselected.count;
     
     self.bottomView.selectedOriginalPicture = _imagePickerVC.selectedOriginalPicture;
@@ -334,6 +339,7 @@ static NSString *reusedVideo = @"video";
     
     [self refreshBottomView];
     
+    self.bottomView.arrData = _imagePickerVC.arrselected;
 }
 
 #pragma mark - 滑动调用

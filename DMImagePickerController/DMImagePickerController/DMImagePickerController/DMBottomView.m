@@ -11,6 +11,10 @@
 #import "UIButton+category.h"
 #import "UIImage+category.h"
 #import "UIColor+category.h"
+#import "DMDefine.h"
+#import "DMPhotoManager.h"
+
+@class DMInnerPreviewCell;
 
 #define btnSendHeight 30
 #define btnSendWidth 62
@@ -19,10 +23,7 @@
 #define btnOriginalHeight 22 //原图按钮高度
 #define btnOriginalCycleWidth 20 //原图按钮圆圈的宽度
 
-@interface DMBottomView (){
-    
-    
-}
+@interface DMBottomView ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong)UIImageView *bgImageView;
 
@@ -37,6 +38,10 @@
 
 //原图
 @property (nonatomic, strong)UIButton *btnOriginalPicture;
+
+//预览View
+@property (nonatomic, strong)UICollectionView *collectionView;
+@property (nonatomic, strong)UIImageView *bgInnerView;
 
 @end
 
@@ -124,6 +129,36 @@
     }
     
     return _btnOriginalPicture;
+}
+
+- (UICollectionView *)collectionView {
+
+    if (!_collectionView) {
+        
+        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+        flowLayout.minimumLineSpacing = 12;
+        flowLayout.itemSize = CGSizeMake(64, 64);
+        flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.backgroundColor = [UIColor clearColor];
+        _collectionView.showsVerticalScrollIndicator = YES;
+        _collectionView.showsHorizontalScrollIndicator = YES;
+        [_collectionView registerClass:[DMInnerPreviewCell class] forCellWithReuseIdentifier:@"innerPreview"];
+    }
+    
+    return _collectionView;
+}
+
+- (UIImageView *)bgInnerView {
+
+    if (!_bgInnerView) {
+        _bgInnerView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AlbumPhotoImageViewBottomBK"]];
+        _bgInnerView.alpha = 0.95;
+    }
+    
+    return _bgInnerView;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -233,5 +268,114 @@
         _btnOriginalPicture.hidden = NO;
     }
 }
+
+- (void)setShowInnerPreview:(BOOL)showInnerPreview {
+
+    _showInnerPreview = showInnerPreview;
+    
+    if (!_showInnerPreview) return;
+    
+    self.collectionView.frame = CGRectMake(0, 0, KScreen_Width, KInnerPreviewHeight);
+    [self addSubview:self.collectionView];
+    
+    self.btnEdit.dm_y += KInnerPreviewHeight;
+    self.btnSend.dm_y += KInnerPreviewHeight;
+    self.btnOriginalPicture.dm_y += KInnerPreviewHeight;
+    self.btnPreview.dm_y += KInnerPreviewHeight;
+    self.bgImageView.dm_y += KInnerPreviewHeight;
+    
+}
+
+- (void)setArrData:(NSArray *)arrData {
+
+    _arrData = arrData;
+    
+    if (!_showInnerPreview) return;
+    
+    if (_arrData.count > 0) {
+        
+        self.collectionView.backgroundView = self.bgInnerView;
+    } else {
+    
+        self.collectionView.backgroundView = nil;
+    }
+    
+    [self.collectionView reloadData];
+    
+    
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+
+    return self.arrData.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    DMInnerPreviewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"innerPreview" forIndexPath:indexPath];
+    
+    cell.assetModel = self.arrData[indexPath.row];
+    
+    return cell;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+
+    return UIEdgeInsetsMake(0, 12, 0, 12);
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    if (_arrData.count <= 0) return;
+    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+}
+
+@end
+
+
+@interface DMInnerPreviewCell ()
+
+@property (nonatomic, strong)UIImageView *imageView;
+
+@end
+
+@implementation DMInnerPreviewCell
+
+- (UIImageView *)imageView {
+
+    if (!_imageView) {
+        _imageView = [[UIImageView alloc] init];
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    
+    return _imageView;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+
+    if (self = [super initWithFrame:frame]) {
+        
+        self.imageView.frame = self.contentView.bounds;
+        [self.contentView addSubview:self.imageView];
+    }
+    
+    return self;
+}
+
+- (void)setAssetModel:(DMAssetModel *)assetModel {
+
+    _assetModel = assetModel;
+    
+    [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(60, 60) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+        
+        if (image) {
+            self.imageView.image = image;
+        }
+    }];
+}
+
+
+
+
 
 @end

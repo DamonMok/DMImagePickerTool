@@ -18,4 +18,7 @@
 //底部栏高度
 #define bottomViewHeight 46
 
+//内部预览View高度
+#define KInnerPreviewHeight 88
+
 #endif /* DMDefine_h */

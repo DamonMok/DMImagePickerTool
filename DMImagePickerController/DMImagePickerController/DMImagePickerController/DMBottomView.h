@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DMAlbumModel.h"
 
 @protocol DMBottomViewDelegate <NSObject>
 
@@ -37,6 +38,16 @@
 /**如果是视频，则只显示发送按钮*/
 @property (nonatomic, assign)BOOL isVideo;
 
+/**是否显示内部预览*/
+@property (nonatomic, assign)BOOL showInnerPreview;
+@property (nonatomic, strong)NSArray *arrData;
+
 @property (nonatomic, assign)id<DMBottomViewDelegate> delegate;
+
+@end
+
+@interface DMInnerPreviewCell : UICollectionViewCell
+
+@property (nonatomic, strong)DMAssetModel *assetModel;
 
 @end
