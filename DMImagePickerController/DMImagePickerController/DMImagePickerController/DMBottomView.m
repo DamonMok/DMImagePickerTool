@@ -359,6 +359,13 @@
     if (index < 0) return;
     
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    
+//    _selectedAssetModel.clicked = NO;
+//    DMAssetModel *assetModel = self.arrData[index];
+//    assetModel.clicked = YES;
+//    _selectedAssetModel = assetModel;
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
+    
 }
 
 @end
@@ -408,6 +415,16 @@
             self.imageView.image = image;
         }
     }];
+    
+    if (self.assetModel.clicked) {
+        //有边框
+        [self.imageView.layer setBorderWidth:2.0];
+    } else {
+        //无边框
+        [self.imageView.layer setBorderWidth:0];
+        
+    }
+    
 }
 
 - (void)selectStatusChanged {
@@ -421,6 +438,12 @@
         [self.imageView.layer setBorderWidth:0];
         
     }
+}
+
+- (void)dealloc {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"selectStatusChanged" object:nil];
+    self.assetModel.clicked = NO;
 }
 
 

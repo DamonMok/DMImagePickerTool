@@ -439,5 +439,10 @@ static NSString *reusedVideo = @"video";
 //    }];
 }
 
+- (void)dealloc {
+
+    NSLog(@"dealloc");
+}
+
 @end
 
