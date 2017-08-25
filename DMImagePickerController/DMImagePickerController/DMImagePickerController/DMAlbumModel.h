@@ -59,6 +59,9 @@ typedef NS_ENUM(NSUInteger, DMAssetModelType) {
 /**是否可以交互，用于超过最大图片张数的时候控制交互*/
 @property (nonatomic, assign)BOOL userInteractionEnabled;
 
+/**是否显示边框，用于内部小图预览边框是否显示*/
+@property (nonatomic, assign)BOOL clicked;
+
 + (instancetype)assetModelWithAsset:(PHAsset *)asset medieType:(DMAssetModelType)type;
 
 @end

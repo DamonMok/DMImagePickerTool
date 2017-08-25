@@ -26,6 +26,7 @@
 @interface DMBottomView ()<UICollectionViewDelegate, UICollectionViewDataSource> {
 
     int _dataCount;
+    DMAssetModel *_selectedAssetModel;//当前选中照片对应的模型
 }
 
 @property (nonatomic, strong)UIImageView *bgImageView;
@@ -335,6 +336,13 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
+    //边框
+    _selectedAssetModel.clicked = NO;
+    DMAssetModel *assetModel = self.arrData[indexPath.row];
+    assetModel.clicked = YES;
+    _selectedAssetModel = assetModel;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
+    
     if (_arrData.count <= 0) return;
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     
@@ -369,6 +377,9 @@
     if (!_imageView) {
         _imageView = [[UIImageView alloc] init];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGColorRef colorref = CGColorCreate(colorSpace,(CGFloat[]){ 81/255.0, 170/255.0, 55/255.0, 1 });
+        [_imageView.layer setBorderColor:colorref];//边框颜色
     }
     
     return _imageView;
@@ -380,6 +391,8 @@
         
         self.imageView.frame = self.contentView.bounds;
         [self.contentView addSubview:self.imageView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectStatusChanged) name:@"selectStatusChanged" object:nil];
     }
     
     return self;
@@ -395,6 +408,19 @@
             self.imageView.image = image;
         }
     }];
+}
+
+- (void)selectStatusChanged {
+
+    if (self.assetModel.clicked) {
+        //有边框
+        [self.imageView.layer setBorderWidth:2.0];   //边框宽度
+        
+    } else {
+        //无边框
+        [self.imageView.layer setBorderWidth:0];
+        
+    }
 }
 
 
