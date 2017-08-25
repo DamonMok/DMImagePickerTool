@@ -13,11 +13,17 @@
 
 @optional
 
+//预览
 - (void)bottomViewDidClickPreviewButton;
 
+//原图
 - (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn;
 
+//发送
 - (void)bottomViewDidClickSendButton;
+
+//内部预览小图点击
+- (void)bottomViewDidSelectImageWithAssetModel:(DMAssetModel *)assetModel;
 
 @end
 

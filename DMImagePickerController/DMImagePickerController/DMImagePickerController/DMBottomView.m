@@ -328,6 +328,11 @@
 
     if (_arrData.count <= 0) return;
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    
+    if ([self.delegate respondsToSelector:@selector(bottomViewDidSelectImageWithAssetModel:)]) {
+        
+        [self.delegate bottomViewDidSelectImageWithAssetModel:self.arrData[indexPath.row]];
+    }
 }
 
 @end

@@ -295,9 +295,20 @@ static NSString *reusedVideo = @"video";
 }
 
 #pragma mark - 底部栏代理
-- (void)DMBottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
-    
+- (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
+
     _imagePickerVC.selectedOriginalPicture = originalPictureBtn.selected;
+}
+
+- (void)bottomViewDidSelectImageWithAssetModel:(DMAssetModel *)assetModel {
+
+    for (int i = 0; i < self.arrAssetModel.count; i++) {
+        
+        if (self.arrAssetModel[i] == assetModel) {
+            
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+        }
+    }
 }
 
 #pragma mark - 导航栏返回按钮
