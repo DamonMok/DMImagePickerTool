@@ -518,6 +518,7 @@
 - (void)clearPlayerLayer {
     
     self.playerLayer = nil;
+    self.playerItem = nil;
     self.imageView.hidden = YES;
 }
 
@@ -532,14 +533,14 @@
             
             self.btnPlay.hidden = YES;
         }
+        
+        [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
     }
 }
 
 - (void)dealloc {
-
-    [self.playerItem removeObserver:self forKeyPath:@"status"];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didPlayToEndTime" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
 }
 
