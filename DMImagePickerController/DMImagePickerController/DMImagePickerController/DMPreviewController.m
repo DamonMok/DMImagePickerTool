@@ -306,7 +306,7 @@ static NSString *reusedVideo = @"video";
         
         if (self.arrAssetModel[i] == assetModel) {
             
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:NO];
         }
     }
 }
