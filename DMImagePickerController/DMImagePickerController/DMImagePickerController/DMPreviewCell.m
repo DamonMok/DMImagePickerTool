@@ -541,10 +541,6 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didPlayToEndTime" object:nil];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPlay" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPause" object:nil];
-    
 }
 
 @end

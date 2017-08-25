@@ -16,7 +16,7 @@
 
 @property (nonatomic, copy)void (^didFinishPickImageWithHandle)(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos);
 
-/**默认不记录之前相册选择的照片，设置为YES则记录*/
+/**(跨相册选择)默认不记录之前相册选择的照片，设置为YES则记录*/
 @property (nonatomic, assign)BOOL recordPreviousSelections;
 
 /**限制选择照片的最大张数*/

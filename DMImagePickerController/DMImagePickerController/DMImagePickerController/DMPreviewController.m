@@ -463,11 +463,16 @@ static NSString *reusedVideo = @"video";
         self.navigationView.frame = topFrame;
         
         CGRect bottomFrame = self.bottomView.frame;
-        bottomFrame.origin.y = KScreen_Height-bottomViewHeight;
+        bottomFrame.origin.y = KScreen_Height-self.bottomView.dm_height;
         self.bottomView.frame = bottomFrame;
     
     _isFullScreen = NO;
 //    }];
+}
+
+- (void)dealloc {
+
+    NSLog(@"dealloc");
 }
 
 @end
