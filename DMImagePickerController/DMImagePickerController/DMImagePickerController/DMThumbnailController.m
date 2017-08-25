@@ -99,6 +99,11 @@ static NSString *reusedID = @"thumbnail";
     
     [super viewWillDisappear:animated];
     
+    
+}
+
+- (void)dealloc {
+
     if (!_imagePickerVC.recordPreviousSelections) {
         [_imagePickerVC.arrselected removeAllObjects];
     }
