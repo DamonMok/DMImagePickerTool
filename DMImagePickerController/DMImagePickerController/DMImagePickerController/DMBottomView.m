@@ -23,7 +23,10 @@
 #define btnOriginalHeight 22 //原图按钮高度
 #define btnOriginalCycleWidth 20 //原图按钮圆圈的宽度
 
-@interface DMBottomView ()<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface DMBottomView ()<UICollectionViewDelegate, UICollectionViewDataSource> {
+
+    int _dataCount;
+}
 
 @property (nonatomic, strong)UIImageView *bgImageView;
 
@@ -302,6 +305,12 @@
     
     [self.collectionView reloadData];
     
+    if (_arrData.count>_dataCount) {
+        //添加,滚动到新添加图片的位置
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_arrData.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    }
+    
+    _dataCount = (int)_arrData.count;
     
 }
 
@@ -333,6 +342,15 @@
         
         [self.delegate bottomViewDidSelectImageWithAssetModel:self.arrData[indexPath.row]];
     }
+}
+
+- (void)scrollToItemOfIndex:(int)index {
+    
+    if (!self.showInnerPreview) return;
+    
+    if (index < 0) return;
+    
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
 }
 
 @end
@@ -378,9 +396,6 @@
         }
     }];
 }
-
-
-
 
 
 @end

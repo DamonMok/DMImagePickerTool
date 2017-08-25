@@ -50,6 +50,8 @@
 
 @property (nonatomic, assign)id<DMBottomViewDelegate> delegate;
 
+- (void)scrollToItemOfIndex:(int)index;
+
 @end
 
 @interface DMInnerPreviewCell : UICollectionViewCell

@@ -378,6 +378,17 @@ static NSString *reusedVideo = @"video";
     
     //如果是视频，隐藏编辑和原图按钮
     _bottomView.isVideo = _currentAssetModel.type == DMAssetModelTypeVideo?YES:NO;
+    
+    if (_currentAssetModel.selected && _imagePickerVC.showInnerPreview) {
+        
+        for (int i = 0; i < self.bottomView.arrData.count; i++) {
+            
+            if (self.bottomView.arrData[i] == _currentAssetModel) {
+                
+                [self.bottomView scrollToItemOfIndex:i];
+            }
+        }
+    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
