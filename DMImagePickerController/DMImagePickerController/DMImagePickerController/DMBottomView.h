@@ -46,7 +46,10 @@
 
 /**是否显示内部预览*/
 @property (nonatomic, assign)BOOL showInnerPreview;
-@property (nonatomic, strong)NSArray *arrData;
+@property (nonatomic, strong)NSArray *arrData;//数据
+//当前被选中的模型
+@property (nonatomic, strong)DMAssetModel *selectedAssetModel;
+
 
 @property (nonatomic, assign)id<DMBottomViewDelegate> delegate;
 

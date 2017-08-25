@@ -33,7 +33,7 @@ static NSString *reusedVideo = @"video";
     
     DMAssetModel *_currentAssetModel;//当前模型
     
-    BOOL _isFullScreen;//全屏标识
+//    BOOL _isFullScreen;//全屏标识
     
     DMPreviewCell *_currentPreviewCell;
 }
@@ -43,6 +43,8 @@ static NSString *reusedVideo = @"video";
 @property (nonatomic, strong)UICollectionView *collectionView;
 
 @property (nonatomic, strong)DMBottomView *bottomView;
+
+@property (nonatomic, assign)BOOL isFullScreen;//全屏标识
 
 @end
 
@@ -186,11 +188,27 @@ static NSString *reusedVideo = @"video";
     self.bottomView.sendEnable = YES;
     self.bottomView.showInnerPreview = _imagePickerVC.showInnerPreview;
     self.bottomView.arrData = _imagePickerVC.arrselected;
+    
     if (_imagePickerVC.showInnerPreview) {
+        
         self.bottomView.frame = CGRectMake(0, KScreen_Height-bottomViewHeight-KInnerPreviewHeight, KScreen_Width, bottomViewHeight+KInnerPreviewHeight);
+        
+        //与当前所点击进来的照片进行位置联动
+        DMAssetModel *selectedModel = self.arrAssetModel[self.selectedIndex];
+        for (int i = 0; i < self.bottomView.arrData.count; i++) {
+            DMAssetModel *assetModel = self.bottomView.arrData[i];
+            
+            if ([assetModel.asset.localIdentifier isEqualToString:selectedModel.asset.localIdentifier]) {
+                
+                [self.bottomView scrollToItemOfIndex:i];
+            }
+        }
     }
     
     [self.view addSubview:self.bottomView];
+    
+    
+    
 }
 
 #pragma mark - 滚动到目标Item
@@ -241,13 +259,14 @@ static NSString *reusedVideo = @"video";
             break;
     }
     
+    __weak typeof(self) weakself = self;
     cell.singleTap = ^{
-        _isFullScreen = !_isFullScreen;
+        weakself.isFullScreen = !weakself.isFullScreen;
         
-        if (_isFullScreen) {
-            [self enterFullScreen];
+        if (weakself.isFullScreen) {
+            [weakself enterFullScreen];
         } else {
-            [self quitFullScreen];
+            [weakself quitFullScreen];
         }
     };
     
@@ -379,14 +398,26 @@ static NSString *reusedVideo = @"video";
     //如果是视频，隐藏编辑和原图按钮
     _bottomView.isVideo = _currentAssetModel.type == DMAssetModelTypeVideo?YES:NO;
     
-    if (_currentAssetModel.selected && _imagePickerVC.showInnerPreview) {
+    //根据滑动与内部预览View进行照片位置联动
+    if (_imagePickerVC.showInnerPreview) {
+        
+        BOOL isFind = NO;
         
         for (int i = 0; i < self.bottomView.arrData.count; i++) {
             
-            if (self.bottomView.arrData[i] == _currentAssetModel) {
+            DMAssetModel *assetModel = self.bottomView.arrData[i];
+            
+            if ([assetModel.asset.localIdentifier isEqualToString:_currentAssetModel.asset.localIdentifier]) {
                 
                 [self.bottomView scrollToItemOfIndex:i];
+                
+                isFind = YES;
             }
+        }
+        
+        if (!isFind) {
+            self.bottomView.selectedAssetModel.clicked = NO;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
         }
     }
 }
@@ -437,11 +468,6 @@ static NSString *reusedVideo = @"video";
     
     _isFullScreen = NO;
 //    }];
-}
-
-- (void)dealloc {
-
-    NSLog(@"dealloc");
 }
 
 @end

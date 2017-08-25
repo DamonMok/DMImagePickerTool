@@ -26,7 +26,6 @@
 @interface DMBottomView ()<UICollectionViewDelegate, UICollectionViewDataSource> {
 
     int _dataCount;
-    DMAssetModel *_selectedAssetModel;//当前选中照片对应的模型
 }
 
 @property (nonatomic, strong)UIImageView *bgImageView;
@@ -309,6 +308,13 @@
     if (_arrData.count>_dataCount) {
         //添加,滚动到新添加图片的位置
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_arrData.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+        
+        //设置选择框
+        _selectedAssetModel.clicked = NO;
+        DMAssetModel *assetModel = self.arrData.lastObject;
+        assetModel.clicked = YES;
+        _selectedAssetModel = assetModel;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
     }
     
     _dataCount = (int)_arrData.count;
@@ -336,7 +342,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
-    //边框
+    //点解切换选中边框
     _selectedAssetModel.clicked = NO;
     DMAssetModel *assetModel = self.arrData[indexPath.row];
     assetModel.clicked = YES;
@@ -360,11 +366,11 @@
     
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     
-//    _selectedAssetModel.clicked = NO;
-//    DMAssetModel *assetModel = self.arrData[index];
-//    assetModel.clicked = YES;
-//    _selectedAssetModel = assetModel;
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
+    _selectedAssetModel.clicked = NO;
+    DMAssetModel *assetModel = self.arrData[index];
+    assetModel.clicked = YES;
+    _selectedAssetModel = assetModel;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
     
 }
 

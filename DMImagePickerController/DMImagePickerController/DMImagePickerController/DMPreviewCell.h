@@ -20,7 +20,7 @@ typedef void(^singleTap)();
 
 @property (nonatomic, strong)DMVideoPreviewView *videoPreviewView;
 
-@property (nonatomic, assign)singleTap singleTap;
+@property (nonatomic, copy)singleTap singleTap;
 
 - (void)resume;
 
