@@ -26,8 +26,8 @@
  */
 @property (nonatomic, assign)BOOL showInnerPreview;
 
-/**用户是否选择原图*/
-@property (nonatomic, assign)BOOL selectedOriginalPicture;
+/**用户是否选择原图 Yes:原图*/
+@property (nonatomic, assign)BOOL isOriginal;
 
 /**已选择的照片数组*/
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrselected;

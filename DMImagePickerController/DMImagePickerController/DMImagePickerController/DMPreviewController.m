@@ -309,14 +309,14 @@ static NSString *reusedVideo = @"video";
     
     self.bottomView.count = _imagePickerVC.arrselected.count;
     
-    self.bottomView.selectedOriginalPicture = _imagePickerVC.selectedOriginalPicture;
+    self.bottomView.isOriginal = _imagePickerVC.isOriginal;
     
 }
 
 #pragma mark - 底部栏代理
 - (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
 
-    _imagePickerVC.selectedOriginalPicture = originalPictureBtn.selected;
+    _imagePickerVC.isOriginal = originalPictureBtn.selected;
 }
 
 - (void)bottomViewDidSelectImageWithAssetModel:(DMAssetModel *)assetModel {
@@ -470,6 +470,7 @@ static NSString *reusedVideo = @"video";
 - (void)bottomViewDidClickSendButton {
     
     NSArray *arrSelected = _imagePickerVC.arrselected;
+    BOOL isOriginal = _imagePickerVC.isOriginal;
     
     NSMutableArray *arrImage = [NSMutableArray array];
     NSMutableArray *arrInfo = [NSMutableArray array];
@@ -485,7 +486,7 @@ static NSString *reusedVideo = @"video";
         
         DMAssetModel *assetModel = arrSelected[i];
         
-        [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+        [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset isOriginal:isOriginal complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
             
             if (isDegraded) return ;
             

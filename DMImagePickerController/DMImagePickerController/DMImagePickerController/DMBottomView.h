@@ -30,7 +30,7 @@
 @interface DMBottomView : UIView
 
 /**设置原图选中状态 YES:选中*/
-@property (nonatomic, assign)BOOL selectedOriginalPicture;
+@property (nonatomic, assign)BOOL isOriginal;
 
 /**Yes:隐藏预览按钮，显示编辑按钮*/
 @property (nonatomic, assign)BOOL showEditButton;

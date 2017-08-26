@@ -242,11 +242,11 @@
     }
 }
 
-- (void)setSelectedOriginalPicture:(BOOL)selectedOriginalPicture {
+- (void)setIsOriginal:(BOOL)isOriginal {
     
-    _selectedOriginalPicture = selectedOriginalPicture;
+    _isOriginal = isOriginal;
     
-    _btnOriginalPicture.selected = _selectedOriginalPicture;
+    _btnOriginalPicture.selected = _isOriginal;
 }
 
 - (void)setShowEditButton:(BOOL)showEditButton {

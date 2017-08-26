@@ -209,7 +209,7 @@ static NSString *reusedID = @"thumbnail";
     
     self.bottomView.count = _imagePickerVC.arrselected.count;
     
-    self.bottomView.selectedOriginalPicture = _imagePickerVC.selectedOriginalPicture;
+    self.bottomView.isOriginal = _imagePickerVC.isOriginal;
 }
 
 #pragma mark - 同步并刷新数据
@@ -302,12 +302,13 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 点击原图按钮
 - (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
     
-    _imagePickerVC.selectedOriginalPicture = originalPictureBtn.selected;
+    _imagePickerVC.isOriginal = originalPictureBtn.selected;
 }
 
 - (void)bottomViewDidClickSendButton {
 
     NSArray *arrSelected = _imagePickerVC.arrselected;
+    BOOL isOriginal = _imagePickerVC.isOriginal;
     
     NSMutableArray *arrImage = [NSMutableArray array];
     NSMutableArray *arrInfo = [NSMutableArray array];
@@ -323,7 +324,7 @@ static NSString *reusedID = @"thumbnail";
         
         DMAssetModel *assetModel = arrSelected[i];
         
-        [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+        [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset isOriginal:isOriginal complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
             
             if (isDegraded) return ;
             
