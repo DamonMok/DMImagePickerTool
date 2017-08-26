@@ -75,8 +75,8 @@
 #pragma mark - 初始化导航栏
 - (void)initNavigationBar {
     
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"AlbumPhotoImageViewBottomBK123"] forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setTranslucent:YES];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"AlbumPhotoImageViewBottomBK123"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTranslucent:YES];
     
     UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];

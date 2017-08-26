@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "DMImagePickerController.h"
 #import <Photos/Photos.h>
+#import "YYFPSLabel.h"
 
 @interface ViewController ()
 
@@ -19,6 +20,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.view.backgroundColor = [UIColor whiteColor];
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn addTarget:self action:@selector(openImagePickerVC) forControlEvents:UIControlEventTouchUpInside];
@@ -29,6 +32,13 @@
 
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
     }];
+    
+    //FPS监测
+    YYFPSLabel *labFPS = [[YYFPSLabel alloc] initWithFrame:CGRectMake(80, 2, 50, 30)];
+    [labFPS sizeToFit];
+    
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    [window addSubview:labFPS];
 }
 
 - (void)openImagePickerVC {

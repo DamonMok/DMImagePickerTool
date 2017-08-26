@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <Bugly/Bugly.h>
+#import "ViewController.h"
 
 @interface AppDelegate ()
 
@@ -19,6 +20,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     [Bugly startWithAppId:@"0054cdba40"];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    ViewController *VC = [[ViewController alloc] init];
+    UINavigationController *navigationVC = [[UINavigationController alloc] initWithRootViewController:VC];
+    
+    self.window.rootViewController = navigationVC;
+    
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

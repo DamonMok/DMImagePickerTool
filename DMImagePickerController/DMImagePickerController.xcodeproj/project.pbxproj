@@ -49,6 +49,8 @@
 		CE1F15D71F43113400CEE568 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D61F43113400CEE568 /* Security.framework */; };
 		CE1F15D91F43114F00CEE568 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D81F43114F00CEE568 /* libz.tbd */; };
 		CE1F15DB1F43115900CEE568 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15DA1F43115900CEE568 /* libc++.tbd */; };
+		E42330FE1F51BE370083002F /* YYFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E42330FB1F51BE370083002F /* YYFPSLabel.m */; };
+		E42330FF1F51BE370083002F /* YYWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = E42330FD1F51BE370083002F /* YYWeakProxy.m */; };
 		E426EBDF1F49539B0059FE25 /* DMPreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E426EBDE1F49539B0059FE25 /* DMPreviewCell.m */; };
 		E436AA8C1F49BDD100FA9587 /* Fav_List_Video_Play_HL@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA881F49BDD100FA9587 /* Fav_List_Video_Play_HL@2x.png */; };
 		E436AA8D1F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA891F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png */; };
@@ -143,6 +145,10 @@
 		CE1F15D61F43113400CEE568 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		CE1F15D81F43114F00CEE568 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		CE1F15DA1F43115900CEE568 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		E42330FA1F51BE370083002F /* YYFPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYFPSLabel.h; sourceTree = "<group>"; };
+		E42330FB1F51BE370083002F /* YYFPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYFPSLabel.m; sourceTree = "<group>"; };
+		E42330FC1F51BE370083002F /* YYWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWeakProxy.h; sourceTree = "<group>"; };
+		E42330FD1F51BE370083002F /* YYWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWeakProxy.m; sourceTree = "<group>"; };
 		E426EBDD1F49539B0059FE25 /* DMPreviewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMPreviewCell.h; sourceTree = "<group>"; };
 		E426EBDE1F49539B0059FE25 /* DMPreviewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMPreviewCell.m; sourceTree = "<group>"; };
 		E436AA881F49BDD100FA9587 /* Fav_List_Video_Play_HL@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fav_List_Video_Play_HL@2x.png"; sourceTree = "<group>"; };
@@ -222,6 +228,7 @@
 				CE1F15571F43087100CEE568 /* AppDelegate.m */,
 				CE1F15591F43087100CEE568 /* ViewController.h */,
 				CE1F155A1F43087100CEE568 /* ViewController.m */,
+				E42330F71F51BE000083002F /* Library */,
 				CE1F15861F43097F00CEE568 /* DMImagePickerController */,
 				CE1F155C1F43087100CEE568 /* Main.storyboard */,
 				CE1F155F1F43087100CEE568 /* Assets.xcassets */,
@@ -324,6 +331,25 @@
 				E436AA8B1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		E42330F71F51BE000083002F /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				E42330F91F51BE370083002F /* YYFPSLabel */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		E42330F91F51BE370083002F /* YYFPSLabel */ = {
+			isa = PBXGroup;
+			children = (
+				E42330FA1F51BE370083002F /* YYFPSLabel.h */,
+				E42330FB1F51BE370083002F /* YYFPSLabel.m */,
+				E42330FC1F51BE370083002F /* YYWeakProxy.h */,
+				E42330FD1F51BE370083002F /* YYWeakProxy.m */,
+			);
+			path = YYFPSLabel;
 			sourceTree = "<group>";
 		};
 		F36ADC098A7E75FD37E5A222 /* Frameworks */ = {
@@ -563,7 +589,9 @@
 				CE1F15A81F430C5700CEE568 /* UIView+layout.m in Sources */,
 				CE1F155B1F43087100CEE568 /* ViewController.m in Sources */,
 				CE1F15961F430AE700CEE568 /* DMPhotoManager.m in Sources */,
+				E42330FE1F51BE370083002F /* YYFPSLabel.m in Sources */,
 				CE1F159F1F430B9200CEE568 /* DMThumbnailCell.m in Sources */,
+				E42330FF1F51BE370083002F /* YYWeakProxy.m in Sources */,
 				CE1F15B11F430D1500CEE568 /* UIImage+category.m in Sources */,
 				CE1F15581F43087100CEE568 /* AppDelegate.m in Sources */,
 				E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */,
