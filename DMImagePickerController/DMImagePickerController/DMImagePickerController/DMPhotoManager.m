@@ -163,7 +163,7 @@
     
 }
 
-- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
+- (PHImageRequestID)requestTargetImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
 
     CGFloat targetWidth = asset.pixelWidth;
     if (targetWidth>self.maxWidth) {

@@ -57,7 +57,7 @@
  @param complete 返回的照片不大于默认宽度414
  @return 请求照片的标识
  */
-- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
+- (PHImageRequestID)requestTargetImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
 
 /**
  通过PHAsset请求照片

@@ -323,7 +323,7 @@ static NSString *reusedID = @"thumbnail";
         
         DMAssetModel *assetModel = arrSelected[i];
         
-        [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+        [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
             
             if (isDegraded) return ;
             

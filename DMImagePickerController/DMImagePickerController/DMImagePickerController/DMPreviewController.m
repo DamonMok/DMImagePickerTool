@@ -433,10 +433,6 @@ static NSString *reusedVideo = @"video";
     }
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-
-}
-
 #pragma mark 进入/退出全屏
 - (void)enterFullScreen {
     
@@ -468,6 +464,43 @@ static NSString *reusedVideo = @"video";
     
     _isFullScreen = NO;
 //    }];
+}
+
+#pragma mark 发送
+- (void)bottomViewDidClickSendButton {
+    
+    NSArray *arrSelected = _imagePickerVC.arrselected;
+    
+    NSMutableArray *arrImage = [NSMutableArray array];
+    NSMutableArray *arrInfo = [NSMutableArray array];
+    
+    for (int i = 0; i < _imagePickerVC.arrselected.count; i++) {
+        
+        //因为获取图片是异步，所以预设一个数组，根据回调时候的i进行有序替换
+        [arrImage addObject:@"placeholder"];
+        [arrInfo addObject:@"placeholder"];
+    }
+    
+    for (int i = 0; i < arrSelected.count; i++) {
+        
+        DMAssetModel *assetModel = arrSelected[i];
+        
+        [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+            
+            if (isDegraded) return ;
+            
+            [arrImage replaceObjectAtIndex:i withObject:image];
+            [arrInfo replaceObjectAtIndex:i withObject:info];
+            
+            for (id asset in arrImage) {
+                if ([asset isKindOfClass:[NSString class]]) return;
+            }
+            
+            if (_imagePickerVC.didFinishPickImageWithHandle) {
+                _imagePickerVC.didFinishPickImageWithHandle(arrImage, arrInfo);
+            }
+        }];
+    }
 }
 
 - (void)dealloc {
