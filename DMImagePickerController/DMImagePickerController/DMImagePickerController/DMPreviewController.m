@@ -29,13 +29,11 @@ static NSString *reusedVideo = @"video";
     UIButton *_btnSelected;
     
     int _currentIndex;//当前索引
-    int _currentPage;//当前页数
     
     DMAssetModel *_currentAssetModel;//当前模型
     
-//    BOOL _isFullScreen;//全屏标识
-    
     DMPreviewCell *_currentPreviewCell;
+    
 }
 
 @property (nonatomic, strong)UIView *navigationView;
@@ -325,6 +323,7 @@ static NSString *reusedVideo = @"video";
         
         if (self.arrAssetModel[i] == assetModel) {
             
+            self.selectedIndex = i;
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:NO];
         }
     }
@@ -385,7 +384,7 @@ static NSString *reusedVideo = @"video";
     //NSLog(@"%f", scrollView.contentOffset.x);
     
     _currentIndex = (self.collectionView.contentOffset.x-margin*self.selectedIndex+KScreen_Width*0.5)/KScreen_Width;
-    
+    NSLog(@"%d",_currentIndex);
     if (_currentIndex > self.arrAssetModel.count-1 || _currentIndex < 0 )
         return;
     
@@ -431,6 +430,7 @@ static NSString *reusedVideo = @"video";
         
         [(DMVideoPreviewCell *)_currentPreviewCell pause];
     }
+    
 }
 
 #pragma mark 进入/退出全屏

@@ -438,12 +438,14 @@
     if (self.assetModel.clicked) {
         //有边框
         [self.imageView.layer setBorderWidth:2.0];   //边框宽度
+//        NSLog(@"%ld",(long)self.assetModel.index);
         
     } else {
         //无边框
         [self.imageView.layer setBorderWidth:0];
-        
+//        NSLog(@"%ld",(long)self.assetModel.index);
     }
+    
 }
 
 - (void)dealloc {
