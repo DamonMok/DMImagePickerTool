@@ -300,6 +300,11 @@ static NSString *reusedVideo = @"video";
         
         [((DMGifPreviewCell *)cell) pause];//暂停
     }
+    
+    if (assetModel.type == DMAssetModelTypeGif || assetModel.type == DMAssetModelTypeImage) {
+        //重设scrollView的zoomScale=1.0;
+        [((DMPreviewCell *)cell) resetZoomScale];
+    }
 }
 
 #pragma mark - 刷新底部栏
@@ -384,7 +389,7 @@ static NSString *reusedVideo = @"video";
     //NSLog(@"%f", scrollView.contentOffset.x);
     
     _currentIndex = (self.collectionView.contentOffset.x-margin*self.selectedIndex+KScreen_Width*0.5)/KScreen_Width;
-    NSLog(@"%d",_currentIndex);
+
     if (_currentIndex > self.arrAssetModel.count-1 || _currentIndex < 0 )
         return;
     

@@ -26,6 +26,8 @@ typedef void(^singleTap)();
 
 - (void)pause;
 
+- (void)resetZoomScale;
+
 @end
 
 //image Cell

@@ -56,6 +56,11 @@
 - (void)pause {
 }
 
+- (void)resetZoomScale {
+
+    self.imageGifPreviewView.scrollView.zoomScale = 1.0;
+}
+
 @end
 
 #pragma mark - DMImagePreviewCell
