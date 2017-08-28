@@ -10,7 +10,7 @@
 #import "DMAlbumModel.h"
 #import <PhotosUI/PhotosUI.h>
 
-@class DMImageGifPreviewView;
+@class DMPhotoPreviewView;
 @class DMVideoPreviewView;
 @class DMLivePhotoPreviewView;
 
@@ -18,7 +18,7 @@ typedef void(^singleTap)();
 
 @interface DMPreviewCell : UICollectionViewCell
 
-@property (nonatomic, strong)DMImageGifPreviewView *imageGifPreviewView;
+@property (nonatomic, strong)DMPhotoPreviewView *photoPreviewView;
 
 @property (nonatomic, strong)DMVideoPreviewView *videoPreviewView;
 
@@ -68,7 +68,9 @@ typedef void(^singleTap)();
 
 @property (nonatomic, strong)DMAssetModel *assetModel;
 
-@property (nonatomic, strong)UIImageView *imageView;
+@property (nonatomic, strong)UIImageView *imageView;//image/gif
+
+@property (nonatomic, strong)PHLivePhotoView *livePhotoView;//livePhoto
 
 @property (nonatomic, copy)singleTap singleTap;
 
@@ -97,14 +99,18 @@ typedef void(^singleTap)();
 
 @end
 
-@interface DMImageGifPreviewView : DMPreviewView
+//image/gif/livePhoto
+@interface DMPhotoPreviewView : DMPreviewView
 
 @property (nonatomic, strong)UIScrollView *scrollView;
 
 @property (nonatomic, strong)UIView *containerView;
 
+- (void)resetSubViewsWithAsset:(PHAsset *)asset;
+
 @end
 
+//video
 @interface DMVideoPreviewView : DMPreviewView
 
 - (void)replay;
@@ -113,11 +119,6 @@ typedef void(^singleTap)();
 
 @end
 
-@interface DMLivePhotoPreviewView : DMPreviewView
-
-@property (nonatomic, strong)PHLivePhotoView *livePhotoView;
-
-@end
 
 
 

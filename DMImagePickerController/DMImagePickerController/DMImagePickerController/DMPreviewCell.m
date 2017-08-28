@@ -14,22 +14,22 @@
 #pragma mark - DMPreviewCell
 @implementation DMPreviewCell
 //lazy load
-- (DMImageGifPreviewView *)imageGifPreviewView {
+- (DMPhotoPreviewView *)photoPreviewView {
     
-    if (!_imageGifPreviewView) {
-        _imageGifPreviewView = [[DMImageGifPreviewView alloc] initWithFrame:self.bounds];
+    if (!_photoPreviewView) {
+        _photoPreviewView = [[DMPhotoPreviewView alloc] initWithFrame:self.bounds];
         
         __weak typeof(self) weakself = self;
-        _imageGifPreviewView.singleTap = ^{
+        _photoPreviewView.singleTap = ^{
             
             if (weakself.singleTap) {
                 weakself.singleTap();
             }
         };
-        [self.contentView addSubview:_imageGifPreviewView];
+        [self.contentView addSubview:_photoPreviewView];
     }
     
-    return _imageGifPreviewView;
+    return _photoPreviewView;
 }
 
 - (DMVideoPreviewView *)videoPreviewView {
@@ -50,16 +50,6 @@
     return _videoPreviewView;
 }
 
-- (DMLivePhotoPreviewView *)livePhotoPreviewView {
-
-    if (!_livePhotoPreviewView) {
-        _livePhotoPreviewView  = [[DMLivePhotoPreviewView alloc] initWithFrame:self.bounds];
-        [self.contentView addSubview:_livePhotoPreviewView];
-    }
-    
-    return _livePhotoPreviewView;
-}
-
 - (void)resume {
 }
 
@@ -68,7 +58,7 @@
 
 - (void)resetZoomScale {
 
-    self.imageGifPreviewView.scrollView.zoomScale = 1.0;
+    self.photoPreviewView.scrollView.zoomScale = 1.0;
 }
 
 @end
@@ -82,7 +72,8 @@
     
     if (assetModel.type == DMAssetModelTypeImage) {
         
-        [self.imageGifPreviewView fetchImageWithAssetModel:assetModel];
+        self.photoPreviewView.assetModel = assetModel;
+        [self.photoPreviewView fetchImageWithAssetModel:assetModel];
     }
 }
 
@@ -97,19 +88,20 @@
     
     if (assetModel.type == DMAssetModelTypeGif) {
         
-        [self.imageGifPreviewView fetchGifWithAssetModel:assetModel];
+        self.photoPreviewView.assetModel = assetModel;
+        [self.photoPreviewView fetchGifWithAssetModel:assetModel];
         
     }
 }
 
 - (void)resume {
     
-    [self.imageGifPreviewView resume];
+    [self.photoPreviewView resume];
 }
 
 - (void)pause {
 
-    [self.imageGifPreviewView pause];
+    [self.photoPreviewView pause];
 }
 
 @end
@@ -123,10 +115,11 @@
 
     if (assetModel.type == DMAssetModelTypeVideo) {
 
+        self.videoPreviewView.assetModel = assetModel;
         [self.videoPreviewView fetchVideoPosterImageWithAssetModel:assetModel];
 //        [self.videoPreviewView replay];
         [self.videoPreviewView clearPlayerLayer];
-        self.videoPreviewView.assetModel = assetModel;
+        
     }
 }
 
@@ -146,7 +139,8 @@
     
     if (assetModel.type == DMAssetModelTypeLivePhoto) {
         
-        [self.livePhotoPreviewView fetchLivePhotoWithAssetModel:assetModel];
+        self.videoPreviewView.assetModel = assetModel;
+        [self.photoPreviewView fetchLivePhotoWithAssetModel:assetModel];
     }
 }
 
@@ -166,6 +160,20 @@
     }
     
     return _imageView;
+}
+
+- (PHLivePhotoView *)livePhotoView {
+    
+    if (!_livePhotoView) {
+        
+        _livePhotoView = [[PHLivePhotoView alloc] init];
+        _livePhotoView.frame = self.bounds;
+        _livePhotoView.contentMode = UIViewContentModeScaleAspectFill;
+        _livePhotoView.backgroundColor = [UIColor blueColor];
+        [self addSubview:_livePhotoView];
+    }
+    
+    return _livePhotoView;
 }
 
 #pragma mark - 子类重写
@@ -195,19 +203,12 @@
 
 @end
 
-#pragma mark - DMImageGifPreviewView
-@interface DMImageGifPreviewView ()<UIScrollViewDelegate>
+#pragma mark - DMPhotoPreviewView
+@interface DMPhotoPreviewView ()<UIScrollViewDelegate>
 
 @end
 
-#pragma mark - DMImageGifPreviewView
-@interface DMImageGifPreviewView ()<UIScrollViewDelegate>
-
-@end
-
-#pragma mark - DMImageGifPreviewView
-
-@implementation DMImageGifPreviewView
+@implementation DMPhotoPreviewView
 
 - (UIScrollView *)scrollView {
     
@@ -254,6 +255,7 @@
         [self addSubview:self.scrollView];
         [self.scrollView addSubview:self.containerView];
         [self.containerView addSubview:self.imageView];
+        [self.containerView addSubview:self.livePhotoView];
     }
     
     return self;
@@ -262,6 +264,9 @@
 #pragma mark 获取图片
 - (void)fetchImageWithAssetModel:(DMAssetModel *)assetModel {
 
+    self.livePhotoView.hidden = YES;
+    self.imageView.hidden = NO;
+    
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
     [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
@@ -274,6 +279,9 @@
 #pragma mark 获取Gif
 - (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel {
 
+    self.livePhotoView.hidden = YES;
+    self.imageView.hidden = NO;
+    
     [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
         self.imageView.image = image;
@@ -281,14 +289,27 @@
     }];
 }
 
+#pragma mark 获取LivePhoto
+- (void)fetchLivePhotoWithAssetModel:(DMAssetModel *)assetModel {
+    
+    self.imageView.hidden = YES;
+    self.livePhotoView.hidden = NO;
+    
+    [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
+        
+        self.livePhotoView.livePhoto = livePhoto;
+        [self.livePhotoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
+        [self resetSubViewsWithAsset:assetModel.asset];
+        
+    }];
+}
+
 //子控件frame
 - (void)resetSubViewsWithAsset:(PHAsset *)asset {
     
-    UIImage *image = self.imageView.image;
-    
     CGFloat width = MIN(KScreen_Width, asset.pixelWidth);
     
-    CGFloat scale = image.size.height/image.size.width;
+    CGFloat scale = (CGFloat)asset.pixelHeight/asset.pixelWidth;
     
     CGFloat height = width * scale;
     
@@ -300,6 +321,7 @@
     }
     
     self.imageView.frame = self.containerView.bounds;
+    self.livePhotoView.frame = self.containerView.bounds;
     self.scrollView.contentSize = CGSizeMake(width, MAX(KScreen_Height, height));
     
 }
@@ -381,19 +403,26 @@
 
 -(void)pauseLayer:(CALayer*)layer
 {
-    CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
-    layer.speed = 0.0;
-    layer.timeOffset = pausedTime;
+    if (self.assetModel.type == DMAssetModelTypeGif) {
+        
+        CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
+        layer.speed = 0.0;
+        layer.timeOffset = pausedTime;
+    }
+    
 }
 
 -(void)resumeLayer:(CALayer*)layer
 {
-    CFTimeInterval pausedTime = [layer timeOffset];
-    layer.speed = 1.0;
-    layer.timeOffset = 0.0;
-    layer.beginTime = 0.0;
-    CFTimeInterval timeSincePause = [layer convertTime:CACurrentMediaTime() fromLayer:nil] -    pausedTime;
-    layer.beginTime = timeSincePause;
+    if (self.assetModel.type == DMAssetModelTypeGif) {
+        
+        CFTimeInterval pausedTime = [layer timeOffset];
+        layer.speed = 1.0;
+        layer.timeOffset = 0.0;
+        layer.beginTime = 0.0;
+        CFTimeInterval timeSincePause = [layer convertTime:CACurrentMediaTime() fromLayer:nil] -    pausedTime;
+        layer.beginTime = timeSincePause;
+    }
 }
 
 @end
@@ -578,44 +607,5 @@
 }
 
 @end
-
-
-@implementation DMLivePhotoPreviewView
-
-- (PHLivePhotoView *)livePhotoView {
-
-    if (!_livePhotoView) {
-       
-        _livePhotoView = [[PHLivePhotoView alloc] init];
-        _livePhotoView.backgroundColor = [UIColor blueColor];
-        [self addSubview:_livePhotoView];
-    }
-    
-    return _livePhotoView;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-
-    if (self = [super initWithFrame:frame]) {
-        
-        self.livePhotoView.frame = self.bounds;
-        self.livePhotoView.contentMode = UIViewContentModeScaleAspectFill;
-    }
-    
-    return self;
-}
-
-- (void)fetchLivePhotoWithAssetModel:(DMAssetModel *)assetModel {
-
-    [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
-        
-        self.livePhotoView.livePhoto = livePhoto;
-        [self.livePhotoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
-    }];
-}
-
-@end
-
-
 
 
