@@ -34,7 +34,7 @@
     }];
     
     //FPS监测
-    YYFPSLabel *labFPS = [[YYFPSLabel alloc] initWithFrame:CGRectMake(80, 2, 50, 30)];
+    YYFPSLabel *labFPS = [[YYFPSLabel alloc] initWithFrame:CGRectMake(80, 30, 50, 30)];
     [labFPS sizeToFit];
     
     UIWindow *window = [UIApplication sharedApplication].delegate.window;

@@ -21,6 +21,7 @@
 static NSString *reusedImage = @"image";
 static NSString *reusedGif = @"gif";
 static NSString *reusedVideo = @"video";
+static NSString *reusedLivePhoto = @"livePhoto";
 
 @interface DMPreviewController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMBottomViewDelegate>{
     
@@ -168,6 +169,7 @@ static NSString *reusedVideo = @"video";
     [self.collectionView registerClass:[DMImagePreviewCell class] forCellWithReuseIdentifier:reusedImage];
     [self.collectionView registerClass:[DMGifPreviewCell class] forCellWithReuseIdentifier:reusedGif];
     [self.collectionView registerClass:[DMVideoPreviewCell class] forCellWithReuseIdentifier:reusedVideo];
+    [self.collectionView registerClass:[DMLivePhotoPreviewCell class] forCellWithReuseIdentifier:reusedLivePhoto];
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.pagingEnabled = YES;
     self.collectionView.dataSource = self;
@@ -252,6 +254,9 @@ static NSString *reusedVideo = @"video";
         case DMAssetModelTypeVideo:
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedVideo forIndexPath:indexPath];
             break;
+        case DMAssetModelTypeLivePhoto:
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedLivePhoto forIndexPath:indexPath];
+            break;
             
         default:
             break;
@@ -284,6 +289,9 @@ static NSString *reusedVideo = @"video";
             break;
         case DMAssetModelTypeVideo:
             ((DMVideoPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
+            break;
+        case DMAssetModelTypeLivePhoto:
+            ((DMLivePhotoPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
             break;
             
         default:

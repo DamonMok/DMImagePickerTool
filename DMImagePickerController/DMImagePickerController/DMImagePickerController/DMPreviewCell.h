@@ -51,6 +51,13 @@ typedef void(^singleTap)();
 
 @end
 
+//LivePhoto Cell
+@interface DMLivePhotoPreviewCell : DMPreviewCell
+
+@property (nonatomic, strong)DMAssetModel *assetModel;
+
+@end
+
 
 
 @interface DMPreviewView : UIView

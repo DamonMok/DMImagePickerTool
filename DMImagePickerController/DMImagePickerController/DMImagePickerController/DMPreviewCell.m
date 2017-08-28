@@ -127,6 +127,21 @@
 
 @end
 
+#pragma mark - DMLivePhotoPreviewCell
+@implementation DMLivePhotoPreviewCell
+
+- (void)setAssetModel:(DMAssetModel *)assetModel {
+
+    _assetModel = assetModel;
+    
+    if (assetModel.type == DMAssetModelTypeLivePhoto) {
+        
+        [self.imageGifPreviewView fetchImageWithAssetModel:assetModel];
+    }
+}
+
+@end
+
 #pragma mark - DMPreviewView
 @implementation DMPreviewView
 

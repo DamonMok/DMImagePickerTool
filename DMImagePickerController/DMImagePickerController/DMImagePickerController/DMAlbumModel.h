@@ -36,7 +36,7 @@ typedef NS_ENUM(NSUInteger, DMAssetModelType) {
     
     DMAssetModelTypeImage,      //图片
     DMAssetModelTypeGif,        //gif
-    DMAssetModelTypePhotoLive,  //photoLive
+    DMAssetModelTypeLivePhoto,  //livePhoto
     DMAssetModelTypeVideo,      //视频
     DMAssetModelTypeAudio,      //语音
     DMAssetModelTypeUnknow      //未知

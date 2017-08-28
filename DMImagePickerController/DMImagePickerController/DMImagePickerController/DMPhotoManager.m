@@ -280,7 +280,7 @@
             
         case PHAssetMediaTypeImage:
             if (asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive)
-                return DMAssetModelTypePhotoLive;
+                return DMAssetModelTypeLivePhoto;
             
             if ([[asset valueForKey:@"filename"] hasSuffix:@"GIF"])
                 return DMAssetModelTypeGif;

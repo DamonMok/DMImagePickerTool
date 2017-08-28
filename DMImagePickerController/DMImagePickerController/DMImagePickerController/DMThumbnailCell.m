@@ -86,7 +86,7 @@
     
     _assetModel = assetModel;
     
-   PHImageRequestID imageRequestID = [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(self.contentView.dm_width, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+   [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(self.contentView.dm_width, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.ivImageView.image = image;
         
