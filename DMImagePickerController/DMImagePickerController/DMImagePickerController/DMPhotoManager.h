@@ -85,4 +85,10 @@
  */
 - (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete;
 
+
+
+- (PHImageRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(PHLivePhoto *livePhoto, NSDictionary *info))complete;
+
+
+
 @end

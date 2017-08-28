@@ -295,4 +295,22 @@
     return DMAssetModelTypeUnknow;
 }
 
+- (PHImageRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(PHLivePhoto *, NSDictionary *))complete {
+
+    PHLivePhotoRequestOptions *option = [[PHLivePhotoRequestOptions alloc] init];
+    option.networkAccessAllowed = YES;
+    
+    PHImageRequestID phImageRequestID = [[PHCachingImageManager defaultManager] requestLivePhotoForAsset:asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nullable info) {
+        
+        BOOL downloadSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue];
+        
+        if (downloadSuccess && complete) {
+            
+            complete(livePhoto, info);
+        }
+    }];
+    
+    return phImageRequestID;
+}
+
 @end

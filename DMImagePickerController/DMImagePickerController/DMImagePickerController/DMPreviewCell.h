@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "DMAlbumModel.h"
+#import <PhotosUI/PhotosUI.h>
 
 @class DMImageGifPreviewView;
 @class DMVideoPreviewView;
+@class DMLivePhotoPreviewView;
 
 typedef void(^singleTap)();
 
@@ -19,6 +21,8 @@ typedef void(^singleTap)();
 @property (nonatomic, strong)DMImageGifPreviewView *imageGifPreviewView;
 
 @property (nonatomic, strong)DMVideoPreviewView *videoPreviewView;
+
+@property (nonatomic, strong)DMLivePhotoPreviewView *livePhotoPreviewView;
 
 @property (nonatomic, copy)singleTap singleTap;
 
@@ -82,8 +86,11 @@ typedef void(^singleTap)();
 //获取视频封面
 - (void)fetchVideoPosterImageWithAssetModel:(DMAssetModel *)assetModel;
 
-//后去视频数据
+//获取视频数据
 - (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel;
+
+//获取LivePhoto数据
+- (void)fetchLivePhotoWithAssetModel:(DMAssetModel *)assetModel;
 
 /**单击预览View*/
 - (void)singleTapPreviewView:(UITapGestureRecognizer *)tap;
@@ -105,5 +112,13 @@ typedef void(^singleTap)();
 - (void)clearPlayerLayer;
 
 @end
+
+@interface DMLivePhotoPreviewView : DMPreviewView
+
+@property (nonatomic, strong)PHLivePhotoView *livePhotoView;
+
+@end
+
+
 
 

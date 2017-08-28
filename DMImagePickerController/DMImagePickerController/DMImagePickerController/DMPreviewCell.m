@@ -50,6 +50,16 @@
     return _videoPreviewView;
 }
 
+- (DMLivePhotoPreviewView *)livePhotoPreviewView {
+
+    if (!_livePhotoPreviewView) {
+        _livePhotoPreviewView  = [[DMLivePhotoPreviewView alloc] initWithFrame:self.bounds];
+        [self.contentView addSubview:_livePhotoPreviewView];
+    }
+    
+    return _livePhotoPreviewView;
+}
+
 - (void)resume {
 }
 
@@ -136,7 +146,7 @@
     
     if (assetModel.type == DMAssetModelTypeLivePhoto) {
         
-        [self.imageGifPreviewView fetchImageWithAssetModel:assetModel];
+        [self.livePhotoPreviewView fetchLivePhotoWithAssetModel:assetModel];
     }
 }
 
@@ -169,6 +179,9 @@
 }
 
 - (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel {
+}
+
+- (void)fetchLivePhotoWithAssetModel:(DMAssetModel *)assetModel {
 }
 
 - (void)singleTapPreviewView:(UITapGestureRecognizer *)tap {
@@ -567,6 +580,41 @@
 @end
 
 
+@implementation DMLivePhotoPreviewView
+
+- (PHLivePhotoView *)livePhotoView {
+
+    if (!_livePhotoView) {
+       
+        _livePhotoView = [[PHLivePhotoView alloc] init];
+        _livePhotoView.backgroundColor = [UIColor blueColor];
+        [self addSubview:_livePhotoView];
+    }
+    
+    return _livePhotoView;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+
+    if (self = [super initWithFrame:frame]) {
+        
+        self.livePhotoView.frame = self.bounds;
+        self.livePhotoView.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    
+    return self;
+}
+
+- (void)fetchLivePhotoWithAssetModel:(DMAssetModel *)assetModel {
+
+    [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
+        
+        self.livePhotoView.livePhoto = livePhoto;
+        [self.livePhotoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
+    }];
+}
+
+@end
 
 
 
