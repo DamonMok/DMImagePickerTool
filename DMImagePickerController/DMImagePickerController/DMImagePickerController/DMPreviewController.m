@@ -273,6 +273,18 @@ static NSString *reusedLivePhoto = @"livePhoto";
         }
     };
     
+    //注册3D Touch，判断设备是否支持
+    if ([self respondsToSelector:@selector(traitCollection)]) {
+        
+        if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)]) {
+            
+            if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable) {
+                
+                [self registerForPreviewingWithDelegate:(id)self sourceView:cell];
+            }
+        }
+    }
+    
     return cell;
 }
 
@@ -292,6 +304,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
             break;
         case DMAssetModelTypeLivePhoto:
             ((DMLivePhotoPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
+            [((DMLivePhotoPreviewCell *)cell) resume];//播放
             break;
             
         default:
@@ -304,12 +317,9 @@ static NSString *reusedLivePhoto = @"livePhoto";
 
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
-    if (assetModel.type == DMAssetModelTypeGif) {
-        
-        [((DMGifPreviewCell *)cell) pause];//暂停
-    }
+    [((DMGifPreviewCell *)cell) pause];//暂停Gif/livePhoto
     
-    if (assetModel.type == DMAssetModelTypeGif || assetModel.type == DMAssetModelTypeImage) {
+    if (assetModel.type == DMAssetModelTypeGif || assetModel.type == DMAssetModelTypeImage || assetModel.type == DMAssetModelTypeLivePhoto) {
         //重设scrollView的zoomScale=1.0;
         [((DMPreviewCell *)cell) resetZoomScale];
     }
@@ -515,6 +525,14 @@ static NSString *reusedLivePhoto = @"livePhoto";
             }
         }];
     }
+}
+
+-(UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
+{
+    
+    NSLog(@"3d touch");
+    
+    return nil;
 }
 
 - (void)dealloc {

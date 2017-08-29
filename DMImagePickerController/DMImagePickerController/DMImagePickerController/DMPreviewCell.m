@@ -139,9 +139,19 @@
     
     if (assetModel.type == DMAssetModelTypeLivePhoto) {
         
-        self.videoPreviewView.assetModel = assetModel;
+        self.photoPreviewView.assetModel = assetModel;
         [self.photoPreviewView fetchLivePhotoWithAssetModel:assetModel];
     }
+}
+
+- (void)resume {
+    
+    [self.photoPreviewView resume];
+}
+
+- (void)pause {
+    
+    [self.photoPreviewView pause];
 }
 
 @end
@@ -298,7 +308,6 @@
     [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
         
         self.livePhotoView.livePhoto = livePhoto;
-        [self.livePhotoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
         [self resetSubViewsWithAsset:assetModel.asset];
         
     }];
@@ -389,40 +398,50 @@
 }
 
 #pragma mark - Gif播放/暂停方法
-//暂停gif
+//暂停Gif/LivePhoto
 - (void)pause {
     
-    [self pauseLayer:self.imageView.layer];
+    if (self.assetModel.type == DMAssetModelTypeGif) {
+        
+        [self pauseLayer:self.imageView.layer];
+        
+    } else if (self.assetModel.type == DMAssetModelTypeLivePhoto) {
+    
+        [self.livePhotoView stopPlayback];
+    }
 }
 
-//播放gif
+//播放Gif/LivePhoto
 - (void)resume {
     
-    [self resumeLayer:self.imageView.layer];
+    if (self.assetModel.type == DMAssetModelTypeGif) {
+        
+        [self resumeLayer:self.imageView.layer];
+        
+    } else if (self.assetModel.type == DMAssetModelTypeLivePhoto) {
+        
+//        [self.livePhotoView startPlaybackWithStyle:PHLivePhotoViewPlaybackStyleFull];
+    }
 }
 
 -(void)pauseLayer:(CALayer*)layer
 {
-    if (self.assetModel.type == DMAssetModelTypeGif) {
-        
-        CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
-        layer.speed = 0.0;
-        layer.timeOffset = pausedTime;
-    }
+    CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    layer.speed = 0.0;
+    layer.timeOffset = pausedTime;
+
     
 }
 
 -(void)resumeLayer:(CALayer*)layer
 {
-    if (self.assetModel.type == DMAssetModelTypeGif) {
-        
-        CFTimeInterval pausedTime = [layer timeOffset];
-        layer.speed = 1.0;
-        layer.timeOffset = 0.0;
-        layer.beginTime = 0.0;
-        CFTimeInterval timeSincePause = [layer convertTime:CACurrentMediaTime() fromLayer:nil] -    pausedTime;
-        layer.beginTime = timeSincePause;
-    }
+    CFTimeInterval pausedTime = [layer timeOffset];
+    layer.speed = 1.0;
+    layer.timeOffset = 0.0;
+    layer.beginTime = 0.0;
+    CFTimeInterval timeSincePause = [layer convertTime:CACurrentMediaTime() fromLayer:nil] -    pausedTime;
+    layer.beginTime = timeSincePause;
+    
 }
 
 @end
