@@ -527,9 +527,10 @@ static NSString *reusedLivePhoto = @"livePhoto";
     }
 }
 
+#pragma mark - 3D Touch代理
 -(UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
 {
-    
+    _isFullScreen = !_isFullScreen;
     NSLog(@"3d touch");
     
     return nil;
