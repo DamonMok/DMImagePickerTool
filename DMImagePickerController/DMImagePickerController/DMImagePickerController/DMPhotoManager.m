@@ -202,9 +202,14 @@
     option.networkAccessAllowed = YES;
     option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
         
-        if (!error && progressHandler) {
+        if (progressHandler) {
             
-            progressHandler(progress, error, stop, info);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+               progressHandler(progress, error, stop, info);
+                
+            });
+            
         }
     };
     

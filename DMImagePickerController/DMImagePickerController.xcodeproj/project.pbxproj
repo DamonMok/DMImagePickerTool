@@ -56,6 +56,7 @@
 		E436AA8D1F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA891F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png */; };
 		E436AA8E1F49BDD100FA9587 /* Fav_List_Video_Play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA8A1F49BDD100FA9587 /* Fav_List_Video_Play@2x.png */; };
 		E436AA8F1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA8B1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png */; };
+		E490ED461F5987F4003EF3A1 /* DMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E490ED451F5987F4003EF3A1 /* DMProgressView.m */; };
 		E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */ = {isa = PBXBuildFile; fileRef = E4AE8C141F472B330079E8EB /* UIImage+git.m */; };
 		E4AE8C171F472F5A0079E8EB /* login.gif in Resources */ = {isa = PBXBuildFile; fileRef = E4AE8C161F472F5A0079E8EB /* login.gif */; };
 /* End PBXBuildFile section */
@@ -155,6 +156,8 @@
 		E436AA891F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fav_List_Video_Play_HL@3x.png"; sourceTree = "<group>"; };
 		E436AA8A1F49BDD100FA9587 /* Fav_List_Video_Play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fav_List_Video_Play@2x.png"; sourceTree = "<group>"; };
 		E436AA8B1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fav_List_Video_Play@3x.png"; sourceTree = "<group>"; };
+		E490ED441F5987F4003EF3A1 /* DMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMProgressView.h; sourceTree = "<group>"; };
+		E490ED451F5987F4003EF3A1 /* DMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMProgressView.m; sourceTree = "<group>"; };
 		E4AE8C131F472B330079E8EB /* UIImage+git.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+git.h"; sourceTree = "<group>"; };
 		E4AE8C141F472B330079E8EB /* UIImage+git.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+git.m"; sourceTree = "<group>"; };
 		E4AE8C161F472F5A0079E8EB /* login.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = login.gif; sourceTree = "<group>"; };
@@ -301,6 +304,8 @@
 				CE1F15B01F430D1500CEE568 /* UIImage+category.m */,
 				CE1F15B21F430D4F00CEE568 /* UIColor+category.h */,
 				CE1F15B31F430D4F00CEE568 /* UIColor+category.m */,
+				E490ED441F5987F4003EF3A1 /* DMProgressView.h */,
+				E490ED451F5987F4003EF3A1 /* DMProgressView.m */,
 				CE1F15B51F430D9D00CEE568 /* Resources */,
 			);
 			path = DMImagePickerController;
@@ -599,6 +604,7 @@
 				CE1F15AE1F430CD900CEE568 /* DMExpandButton.m in Sources */,
 				CE1F158C1F4309F600CEE568 /* DMAlbumViewController.m in Sources */,
 				CE1F15891F4309AA00CEE568 /* DMImagePickerController.m in Sources */,
+				E490ED461F5987F4003EF3A1 /* DMProgressView.m in Sources */,
 				CE1F15921F430A7600CEE568 /* DMBottomView.m in Sources */,
 				CE1F15551F43087100CEE568 /* main.m in Sources */,
 				CE1F15AB1F430CA600CEE568 /* UIButton+category.m in Sources */,

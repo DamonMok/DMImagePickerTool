@@ -10,6 +10,7 @@
 #import "DMPhotoManager.h"
 #import "DMDefine.h"
 #import "UIView+layout.h"
+#import "DMProgressView.h"
 
 #pragma mark - DMPreviewCell
 @implementation DMPreviewCell
@@ -279,11 +280,24 @@
     
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
+    DMProgressView *progressView = [DMProgressView showAddedTo:self];
     [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
-    } progressHandler:nil];
+        
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        
+        if (!error) {
+            
+            progressView.progress = progress;
+            
+            if (progress >= 1) {
+                
+                [progressView hide];
+            }
+        }
+    }];
 }
 
 #pragma mark 获取Gif
@@ -497,7 +511,10 @@
         self.imageView.image = image;
         [self resetSubViews];
         self.imageView.hidden = NO;
-    } progressHandler:nil];
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        
+        NSLog(@"%@", [NSThread currentThread]);
+    }];
 }
 
 //frame
