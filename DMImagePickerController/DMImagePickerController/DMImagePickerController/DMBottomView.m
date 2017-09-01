@@ -420,7 +420,7 @@
         if (image) {
             self.imageView.image = image;
         }
-    }];
+    } progressHandler:nil];
     
     if (self.assetModel.clicked) {
         //有边框

@@ -157,9 +157,11 @@
     return [self requestImageForAsset:albumModel.coverImageAsset targetSize:CGSizeMake(KAlbumViewRowHeight, KAlbumViewRowHeight) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         if (complete) {
+            
             complete(image, info);
         }
-    }];
+        
+    } progressHandler:nil];
     
 }
 
@@ -170,11 +172,11 @@
         targetWidth = self.maxWidth;
     }
     
-    return [self requestImageForAsset:asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:complete];
+    return [self requestImageForAsset:asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:complete progressHandler:nil];
     
 }
 
-- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(UIImage *, NSDictionary *, BOOL))complete progressHandler:(void (^)(double, NSError *, BOOL *, NSDictionary *))progressHandler {
 
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     
@@ -198,6 +200,13 @@
     //PHImageRequestOptionsDeliveryModeFastFormat = 2
     option.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
     option.networkAccessAllowed = YES;
+    option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        
+        if (!error && progressHandler) {
+            
+            progressHandler(progress, error, stop, info);
+        }
+    };
     
     CGSize imageSize = CGSizeZero;
     

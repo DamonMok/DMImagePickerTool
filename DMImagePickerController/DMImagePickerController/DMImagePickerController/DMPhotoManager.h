@@ -65,9 +65,10 @@
  @param asset PHAsset
  @param targetSize 照片尺寸，当传入的height=MAXFLOAT的时候：根据宽度进行高度自适应
  @param complete 回调
+ @param progressHandler 下载进度
  @return 图片异步请求标识符
  */
-- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(UIImage *image, NSDictionary *info, BOOL isDegraded))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler;
 
 
 /**

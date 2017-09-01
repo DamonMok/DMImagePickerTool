@@ -135,8 +135,6 @@
     
     [self.navigationController pushViewController:thumbnailsController animated:YES];
     
-    
-    
 }
 
 #pragma mark 导航栏取消按钮

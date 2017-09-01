@@ -283,7 +283,7 @@
         
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
-    }];
+    } progressHandler:nil];
 }
 
 #pragma mark 获取Gif
@@ -497,7 +497,7 @@
         self.imageView.image = image;
         [self resetSubViews];
         self.imageView.hidden = NO;
-    }];
+    } progressHandler:nil];
 }
 
 //frame
