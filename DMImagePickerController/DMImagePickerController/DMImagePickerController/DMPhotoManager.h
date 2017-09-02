@@ -86,9 +86,30 @@
  */
 - (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete;
 
+/**
+ 请求LivePhoto数据
+
+ @param asset PHAsset
+ @param targetSize 目标尺寸
+ @param complete 完成回调
+ @return 请求标识符
+ */
+- (PHLivePhotoRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(PHLivePhoto *livePhoto, NSDictionary *info))complete;
 
 
-- (PHImageRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(PHLivePhoto *livePhoto, NSDictionary *info))complete;
+/**
+ 判断文件是否在本地
+ @param asset PHAsset
+ @return 是否存在本地的布尔值
+ */
+- (BOOL)isExistLocallyAsset:(PHAsset *)asset;
+
+
+
+
+
+
+
 
 
 

@@ -240,6 +240,14 @@ static NSString *reusedID = @"thumbnail";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
+    
+    if (![[DMPhotoManager shareManager] isExistLocallyAsset:assetModel.asset]) {
+        
+        NSLog(@"不存在");
+        return;
+    }
+    
+    
     if (!assetModel.userInteractionEnabled) return;
     
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
