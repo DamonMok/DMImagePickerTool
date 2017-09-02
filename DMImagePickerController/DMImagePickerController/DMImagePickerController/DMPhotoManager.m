@@ -107,7 +107,7 @@
             
             
             //转成DMAlbumModel对象
-            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithTitle:collection.localizedTitle assetResult:result];
+            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithTitle:collection.localizedTitle localIdentifier:collection.localIdentifier assetResult:result];
             
             if (collection.assetCollectionSubtype == PHAssetCollectionSubtypeSmartAlbumUserLibrary) {
                 
@@ -140,7 +140,7 @@
             
             PHFetchResult *result = [PHAsset fetchAssetsInAssetCollection:collection options:fetchOptions];
             
-            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithTitle:collection.localizedTitle assetResult:result];
+            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithTitle:collection.localizedTitle localIdentifier:collection.localIdentifier assetResult:result];
             
             if (completion) {
                 completion(albumModel);
@@ -361,7 +361,7 @@
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance {
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationContentChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationAlubmsContentChanged" object:nil];
 }
 
 @end

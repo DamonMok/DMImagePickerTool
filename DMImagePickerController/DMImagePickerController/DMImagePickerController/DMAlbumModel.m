@@ -11,11 +11,12 @@
 
 @implementation DMAlbumModel
 
-+ (instancetype)albumModelWithTitle:(NSString *)title assetResult:(PHFetchResult<PHAsset *> *)result {
++ (instancetype)albumModelWithTitle:(NSString *)title localIdentifier:(NSString *)localIdentifier assetResult:(PHFetchResult<PHAsset *> *)result {
     
     DMAlbumModel *albumModel = [[DMAlbumModel alloc] init];
     
     albumModel.albumTitle = title;
+    albumModel.localIdentifier = localIdentifier;
     albumModel.count = result.count;
     albumModel.result = result;
     

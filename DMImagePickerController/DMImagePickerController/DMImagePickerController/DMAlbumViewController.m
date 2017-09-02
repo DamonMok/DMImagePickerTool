@@ -13,7 +13,10 @@
 #import "DMAlbumCell.h"
 #import "DMThumbnailController.h"
 
-@interface DMAlbumViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface DMAlbumViewController ()<UITableViewDelegate,UITableViewDataSource> {
+
+    NSString *_selectedAlbumId;
+}
 
 @property (nonatomic, strong)NSArray<DMAlbumModel *> *arrAlbumModel;
 
@@ -35,30 +38,65 @@
 }
 
 #pragma mark - cycle
-
-- (void)viewWillAppear:(BOOL)animated {
-    
-    [super viewWillAppear:animated];
-    
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self setAutomaticallyAdjustsScrollViewInsets:NO];
-    
-    self.view.backgroundColor = [UIColor redColor];
-    
 //        [self initTableView];
     [self initNavigationBar];
+    [self fetchData];
     
-    //请求相册列表数据
-    [[DMPhotoManager shareManager] getAllAlbumsCompletion:^(NSArray<DMAlbumModel *> *arrAblum) {
-        
-        self.arrAlbumModel = [NSArray arrayWithArray:arrAblum];
-        [self.tableView reloadData];
-    }];
+    //相册内容改变的监听(iCloud)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(albumContentChanged) name:@"NotificationAlubmsContentChanged" object:nil];
 }
+
+- (void)dealloc {
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NotificationAlubmsContentChanged" object:nil];
+}
+
+#pragma mark 请求相册列表数据
+- (void)fetchData {
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [[DMPhotoManager shareManager] getAllAlbumsCompletion:^(NSArray<DMAlbumModel *> *arrAblum) {
+            
+            self.arrAlbumModel = [NSArray arrayWithArray:arrAblum];
+            
+            [self postNotification];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [self.tableView reloadData];
+                
+            });
+        }];
+    });
+}
+
+#pragma mark 相册内容发生改变(iCloud)
+- (void)albumContentChanged {
+
+    [self fetchData];
+    
+}
+
+#pragma mark 通知对应的相册更新内容(iCloud)
+- (void)postNotification {
+
+    if ([_selectedAlbumId isEqualToString:@""] || !_selectedAlbumId) {
+        _selectedAlbumId = self.arrAlbumModel[0].localIdentifier;
+    }
+    
+    for (DMAlbumModel *albumModel in self.arrAlbumModel) {
+        
+        if ([albumModel.localIdentifier isEqualToString:_selectedAlbumId] && albumModel.result.count>0) {
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationUpdateAlbumContent" object:nil userInfo:@{@"album":albumModel}];
+        }
+    }
+}
+
 
 #pragma mark 初始化tableView
 - (void)initTableView {
@@ -74,6 +112,10 @@
 
 #pragma mark - 初始化导航栏
 - (void)initNavigationBar {
+    
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    
+    self.view.backgroundColor = [UIColor redColor];
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"AlbumPhotoImageViewBottomBK123"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTranslucent:YES];
@@ -134,6 +176,8 @@
     thumbnailsController.isFromTapAlbum = YES;
     
     [self.navigationController pushViewController:thumbnailsController animated:YES];
+    
+    _selectedAlbumId = albumModel.localIdentifier;
     
 }
 
