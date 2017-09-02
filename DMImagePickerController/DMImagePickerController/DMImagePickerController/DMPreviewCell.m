@@ -165,7 +165,8 @@
     if (!_imageView) {
         _imageView = [[UIImageView alloc] init];
         _imageView.frame = self.bounds;
-        _imageView.contentMode = UIViewContentModeScaleAspectFit;
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.clipsToBounds = YES;
         _imageView.userInteractionEnabled = YES;
         [self addSubview:_imageView];
     }
