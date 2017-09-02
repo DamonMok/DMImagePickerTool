@@ -10,7 +10,7 @@
 #import "DMDefine.h"
 #import "UIImage+git.h"
 
-@interface DMPhotoManager ()
+@interface DMPhotoManager ()<PHPhotoLibraryChangeObserver>
 {
     CGFloat _screenScale;
 }
@@ -34,6 +34,22 @@
     });
     
     return manager;
+}
+
+- (instancetype)init {
+
+    if (self = [super init]) {
+        
+        //监听相册内容发生变化
+        [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+
+    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
 }
 
 #pragma mark 在这里设置相关默认参数
@@ -341,6 +357,11 @@
     }];
     
     return isExistLocally;
+}
+
+- (void)photoLibraryDidChange:(PHChange *)changeInstance {
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationContentChanged" object:nil];
 }
 
 @end
