@@ -17,13 +17,13 @@
 
 static NSString *reusedID = @"thumbnail";
 
-@interface DMThumbnailController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMThumbnailCellDelegate, DMBottomViewDelegate> {
+@interface DMThumbnailController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMThumbnailCellDelegate, DMBottomViewDelegate, PHPhotoLibraryChangeObserver> {
     
     DMImagePickerController *_imagePickerVC;
 }
 
 //push进来传进来的数组
-@property (nonatomic, strong)NSArray<DMAssetModel *> *arrAssetModel;
+@property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrAssetModel;
 
 @property (nonatomic, strong)UICollectionView *collectionView;
 
@@ -35,10 +35,10 @@ static NSString *reusedID = @"thumbnail";
 
 #pragma mark - lazy load
 
-- (NSArray<DMAssetModel *> *)arrAssetModel {
+- (NSMutableArray<DMAssetModel *> *)arrAssetModel {
     
     if (!_arrAssetModel) {
-        _arrAssetModel = [NSArray array];
+        _arrAssetModel = [NSMutableArray array];
     }
     
     return _arrAssetModel;
@@ -93,6 +93,16 @@ static NSString *reusedID = @"thumbnail";
     [self refreshBottomView];
     
     [self syncAndReloadData];
+    
+    //相册本地+iCloud监听
+    [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+
+    [super viewWillDisappear:animated];
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
 }
 
 - (void)dealloc {
@@ -113,15 +123,15 @@ static NSString *reusedID = @"thumbnail";
             //首次进入相册，显示所有的照片
             [[DMPhotoManager shareManager] getCameraRollAlbumCompletion:^(DMAlbumModel *albumModel) {
                 
-                self.arrAssetModel = [[DMPhotoManager shareManager] getAssetModelArrayFromAlbumModel:albumModel];
-                
+                self.albumModel = albumModel;
+                self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:albumModel.result];
                 
                     [self syncAndReloadData];
                 
             }];
         } else {
             //通过点击相册进来
-            self.arrAssetModel = [[DMPhotoManager shareManager] getAssetModelArrayFromAlbumModel:self.albumModel];
+            self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:self.albumModel.result];
             
                 [self syncAndReloadData];
             
@@ -357,6 +367,66 @@ static NSString *reusedID = @"thumbnail";
             }
         }];
     }
+}
+
+#pragma mark - 相册本地+iCloud监听
+/**
+ 官方示例代码
+ https://developer.apple.com/documentation/photos/phphotolibrarychangeobserver?language=objc
+ */
+- (void)photoLibraryDidChange:(PHChange *)changeInfo {
+    // Photos may call this method on a background queue;
+    // switch to the main queue to update the UI.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        // Check for changes to the list of assets (insertions, deletions, moves, or updates).
+        PHFetchResultChangeDetails *collectionChanges = [changeInfo changeDetailsForFetchResult:self.albumModel.result];
+        if (collectionChanges) {
+            //获取新的PHAsset集合
+            self.albumModel.result = collectionChanges.fetchResultAfterChanges;
+            
+            if (collectionChanges.hasIncrementalChanges)  {
+                // Tell the collection view to animate insertions/deletions/moves
+                // and to refresh any cells that have changed content.
+                [self.collectionView performBatchUpdates:^{
+                    NSIndexSet *removed = collectionChanges.removedIndexes;
+                    if (removed.count) {
+                        
+                        [self.arrAssetModel removeObjectsAtIndexes:removed];
+                        [self.collectionView deleteItemsAtIndexPaths:[self indexPathsFromIndexSet:removed]];
+                    }
+                    NSIndexSet *inserted = collectionChanges.insertedIndexes;
+                    if (inserted.count) {
+                        
+                        NSMutableArray *arrNewAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:self.albumModel.result];
+                        NSArray *arrInsert = [arrNewAssetModel objectsAtIndexes:inserted];
+                        [self.arrAssetModel insertObjects:arrInsert atIndexes:inserted];
+                        
+                        [self.collectionView insertItemsAtIndexPaths:[self indexPathsFromIndexSet:inserted]];
+                    }
+                    
+                } completion:nil];
+            } else {
+                // Detailed change information is not available;
+                // repopulate the UI from the current fetch result.
+                [self.collectionView reloadData];
+            }
+        }
+    });
+}
+
+- (NSArray *)indexPathsFromIndexSet:(NSIndexSet *)indexSet {
+
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+       
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:idx inSection:0];
+        
+        [indexPaths addObject:indexPath];
+        
+    }];
+    
+    return indexPaths;
 }
 
 @end

@@ -40,7 +40,7 @@
 - (void)getCameraRollAlbumCompletion:(void(^)(DMAlbumModel *))completion;
 
 /**在DMAlbumModel模型里面提取DMAssetModel数组*/
-- (NSArray<DMAssetModel *> *)getAssetModelArrayFromAlbumModel:(DMAlbumModel *)albumModel;
+- (NSArray<DMAssetModel *> *)getAssetModelArrayFromResult:(PHFetchResult<PHAsset *> *)result;
 
 /**
  获取相册封面图

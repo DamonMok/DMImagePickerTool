@@ -134,11 +134,11 @@
     
 }
 
-- (NSArray<DMAssetModel *> *)getAssetModelArrayFromAlbumModel:(DMAlbumModel *)albumModel {
-    
+- (NSArray<DMAssetModel *> *)getAssetModelArrayFromResult:(PHFetchResult<PHAsset *> *)result {
+
     NSMutableArray *arrAsset = [NSMutableArray array];
     
-    [albumModel.result enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+    [result enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
         
         DMAssetModelType type = [self getAssetMediaTypeFromAsset:asset];
         
