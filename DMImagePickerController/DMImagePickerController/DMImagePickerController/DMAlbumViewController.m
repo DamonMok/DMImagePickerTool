@@ -13,7 +13,7 @@
 #import "DMAlbumCell.h"
 #import "DMThumbnailController.h"
 
-@interface DMAlbumViewController ()<UITableViewDelegate,UITableViewDataSource> {
+@interface DMAlbumViewController ()<UITableViewDelegate,UITableViewDataSource, PHPhotoLibraryChangeObserver> {
 
     NSString *_selectedAlbumId;
 }
@@ -45,11 +45,15 @@
     [self initNavigationBar];
     [self fetchData];
     
+    //相册本地+iCloud监听
+    [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
 }
 
 - (void)dealloc {
 
     NSLog(@"%s", __func__);
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
 }
 
 #pragma mark 请求相册列表数据
@@ -149,6 +153,15 @@
 - (void)didClickCancelButton {
     
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - 相册本地+iCloud监听
+- (void)photoLibraryDidChange:(PHChange *)changeInfo {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+       [self fetchData];
+    });
 }
 
 @end

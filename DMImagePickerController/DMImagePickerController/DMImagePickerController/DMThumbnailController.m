@@ -94,7 +94,7 @@ static NSString *reusedID = @"thumbnail";
     
     [self syncAndReloadData];
     
-    //相册本地+iCloud监听
+    //相册本地+iCloud内容变化监听
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
 }
 
@@ -371,7 +371,7 @@ static NSString *reusedID = @"thumbnail";
 
 #pragma mark - 相册本地+iCloud监听
 /**
- 官方示例代码
+ 官方文档示例代码
  https://developer.apple.com/documentation/photos/phphotolibrarychangeobserver?language=objc
  */
 - (void)photoLibraryDidChange:(PHChange *)changeInfo {
@@ -415,6 +415,7 @@ static NSString *reusedID = @"thumbnail";
     });
 }
 
+#pragma mark NSIndexSet -> NSIndexPath array
 - (NSArray *)indexPathsFromIndexSet:(NSIndexSet *)indexSet {
 
     NSMutableArray *indexPaths = [NSMutableArray array];
