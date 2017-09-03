@@ -266,7 +266,6 @@ static NSString *reusedID = @"thumbnail";
         return;
     }
     
-    
     if (!assetModel.userInteractionEnabled) return;
     
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
@@ -391,52 +390,54 @@ static NSString *reusedID = @"thumbnail";
                 [self.collectionView performBatchUpdates:^{
                     NSIndexSet *removed = collectionChanges.removedIndexes;
                     if (removed.count) {
-                        
+                        //删除
                         [removed enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-                            
+                            //已选数组的属性同步
                             [_imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel];
                         }];
                         
                         [self.arrAssetModel removeObjectsAtIndexes:removed];
                         
-                        
                         [self.collectionView deleteItemsAtIndexPaths:[self indexPathsFromIndexSet:removed]];
                         
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationSelectionIndexChanged" object:nil];
-                        
-                        if (_imagePickerVC.arrselected.count <_imagePickerVC.maxImagesCount) {
-                            //发送通知移除蒙版
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil userInfo:@{@"remove":@"remove"}];
-                        }
                     }
                     NSIndexSet *inserted = collectionChanges.insertedIndexes;
                     if (inserted.count) {
-                        
+                        //插入
                         NSMutableArray *arrNewAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:self.albumModel.result];
                         NSArray *arrInsert = [arrNewAssetModel objectsAtIndexes:inserted];
                         [self.arrAssetModel insertObjects:arrInsert atIndexes:inserted];
                         
                         if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
-                            
+                            //判断是否已经等于最大可选数量，如果是，则插入进来的元素不可交互
                             [arrInsert enumerateObjectsUsingBlock:^(DMAssetModel  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                 
                                 obj.userInteractionEnabled = NO;
                             }];
-                            
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil];
                         }
                         
                         [self.collectionView insertItemsAtIndexPaths:[self indexPathsFromIndexSet:inserted]];
                     }
                     
-                } completion:nil];
+                } completion:^(BOOL finished) {
+                    
+                    if (finished) {
+                        //批处理成功
+//                        [self.collectionView reloadData];
+                    }
+                }];
+                
             } else {
                 // Detailed change information is not available;
                 // repopulate the UI from the current fetch result.
                 [self.collectionView reloadData];
             }
+            
         }
+        
     });
+    
+    
 }
 
 #pragma mark NSIndexSet -> NSIndexPath array
