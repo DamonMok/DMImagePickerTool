@@ -10,7 +10,7 @@
 #import "DMDefine.h"
 #import "UIImage+git.h"
 
-@interface DMPhotoManager ()<PHPhotoLibraryChangeObserver>
+@interface DMPhotoManager ()
 {
     CGFloat _screenScale;
 }
@@ -34,22 +34,6 @@
     });
     
     return manager;
-}
-
-- (instancetype)init {
-
-    if (self = [super init]) {
-        
-        //监听相册内容发生变化
-        [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
-    }
-    
-    return self;
-}
-
-- (void)dealloc {
-
-    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
 }
 
 #pragma mark 在这里设置相关默认参数
@@ -107,7 +91,7 @@
             
             
             //转成DMAlbumModel对象
-            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithTitle:collection.localizedTitle localIdentifier:collection.localIdentifier assetResult:result];
+            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithCollection:collection assetResult:result];
             
             if (collection.assetCollectionSubtype == PHAssetCollectionSubtypeSmartAlbumUserLibrary) {
                 
@@ -140,7 +124,7 @@
             
             PHFetchResult *result = [PHAsset fetchAssetsInAssetCollection:collection options:fetchOptions];
             
-            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithTitle:collection.localizedTitle localIdentifier:collection.localIdentifier assetResult:result];
+            DMAlbumModel *albumModel = [DMAlbumModel albumModelWithCollection:collection assetResult:result];
             
             if (completion) {
                 completion(albumModel);

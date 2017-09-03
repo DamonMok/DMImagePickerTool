@@ -45,58 +45,24 @@
     [self initNavigationBar];
     [self fetchData];
     
-    //相册内容改变的监听(iCloud)
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(albumContentChanged) name:@"NotificationAlubmsContentChanged" object:nil];
 }
 
 - (void)dealloc {
 
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NotificationAlubmsContentChanged" object:nil];
+    NSLog(@"%s", __func__);
 }
 
 #pragma mark 请求相册列表数据
 - (void)fetchData {
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[DMPhotoManager shareManager] getAllAlbumsCompletion:^(NSArray<DMAlbumModel *> *arrAblum) {
             
             self.arrAlbumModel = [NSArray arrayWithArray:arrAblum];
             
-            [self postNotification];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
                 [self.tableView reloadData];
                 
-            });
         }];
-    });
 }
-
-#pragma mark 相册内容发生改变(iCloud)
-- (void)albumContentChanged {
-
-    [self fetchData];
-    
-}
-
-#pragma mark 通知对应的相册更新内容(iCloud)
-- (void)postNotification {
-
-    if ([_selectedAlbumId isEqualToString:@""] || !_selectedAlbumId) {
-        _selectedAlbumId = self.arrAlbumModel[0].localIdentifier;
-    }
-    
-    for (DMAlbumModel *albumModel in self.arrAlbumModel) {
-        
-        if ([albumModel.localIdentifier isEqualToString:_selectedAlbumId] && albumModel.result.count>0) {
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationUpdateAlbumContent" object:nil userInfo:@{@"album":albumModel}];
-        }
-    }
-}
-
 
 #pragma mark 初始化tableView
 - (void)initTableView {
@@ -176,9 +142,7 @@
     thumbnailsController.isFromTapAlbum = YES;
     
     [self.navigationController pushViewController:thumbnailsController animated:YES];
-    
-    _selectedAlbumId = albumModel.localIdentifier;
-    
+        
 }
 
 #pragma mark 导航栏取消按钮

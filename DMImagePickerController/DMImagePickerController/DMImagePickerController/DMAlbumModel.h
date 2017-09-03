@@ -22,21 +22,20 @@
 /**相册第一张封面图*/
 @property (nonatomic, strong)PHAsset *coverImageAsset;
 
-/**相册唯一标识符*/
-@property (nonatomic, copy)NSString *localIdentifier;
-
 /**相册里面的PHAsset集合*/
 @property (nonatomic, strong)PHFetchResult<PHAsset *> *result;
+
+/**模型对应的对象(同步相册会用到)*/
+@property (nonatomic, strong)PHAssetCollection *collection;
 
 
 /**
  相册模型转换
- @param title 标题
- @param localIdentifier 唯一标识
+ @param collection PHAssetCollection
  @param result PHAsset集合
  @return 相册模型
  */
-+ (instancetype)albumModelWithTitle:(NSString *)title localIdentifier:(NSString *)localIdentifier assetResult:(PHFetchResult<PHAsset *> *)result;
++ (instancetype)albumModelWithCollection:(PHAssetCollection *)collection assetResult:(PHFetchResult<PHAsset *> *)result;
 
 @end
 

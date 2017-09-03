@@ -11,14 +11,14 @@
 
 @implementation DMAlbumModel
 
-+ (instancetype)albumModelWithTitle:(NSString *)title localIdentifier:(NSString *)localIdentifier assetResult:(PHFetchResult<PHAsset *> *)result {
-    
++ (instancetype)albumModelWithCollection:(PHAssetCollection *)collection assetResult:(PHFetchResult<PHAsset *> *)result {
+
     DMAlbumModel *albumModel = [[DMAlbumModel alloc] init];
     
-    albumModel.albumTitle = title;
-    albumModel.localIdentifier = localIdentifier;
+    albumModel.albumTitle = collection.localizedTitle;
     albumModel.count = result.count;
     albumModel.result = result;
+    albumModel.collection = collection;
     
     if ([DMPhotoManager shareManager].sortAscendingByCreationDate) {
         albumModel.coverImageAsset = result.lastObject;

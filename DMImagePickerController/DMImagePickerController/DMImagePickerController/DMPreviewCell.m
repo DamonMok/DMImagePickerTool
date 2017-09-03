@@ -181,7 +181,7 @@
         _livePhotoView = [[PHLivePhotoView alloc] init];
         _livePhotoView.frame = self.bounds;
         _livePhotoView.contentMode = UIViewContentModeScaleAspectFill;
-        _livePhotoView.backgroundColor = [UIColor blueColor];
+        _livePhotoView.backgroundColor = [UIColor blackColor];
         [self addSubview:_livePhotoView];
     }
     

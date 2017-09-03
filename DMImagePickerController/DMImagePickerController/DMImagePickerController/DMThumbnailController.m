@@ -84,8 +84,6 @@ static NSString *reusedID = @"thumbnail";
     [self initBottomView];
     [self scrollToBotton];
     
-    //更新当前相册内容的监听(iCloud)
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAlbumContent:) name:@"NotificationUpdateAlbumContent" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -103,7 +101,7 @@ static NSString *reusedID = @"thumbnail";
         [_imagePickerVC.arrselected removeAllObjects];
     }
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NotificationUpdateAlbumContent" object:nil];
+    NSLog(@"%s", __func__);
 }
 
 #pragma mark - 获取数据
@@ -111,36 +109,24 @@ static NSString *reusedID = @"thumbnail";
     
     _imagePickerVC = (DMImagePickerController *)self.navigationController;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        self.arrAssetModel = nil;
-        
         if (!_isFromTapAlbum) {
             //首次进入相册，显示所有的照片
             [[DMPhotoManager shareManager] getCameraRollAlbumCompletion:^(DMAlbumModel *albumModel) {
                 
                 self.arrAssetModel = [[DMPhotoManager shareManager] getAssetModelArrayFromAlbumModel:albumModel];
                 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
+                
                     [self syncAndReloadData];
-                });
                 
             }];
         } else {
             //通过点击相册进来
             self.arrAssetModel = [[DMPhotoManager shareManager] getAssetModelArrayFromAlbumModel:self.albumModel];
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
                 [self syncAndReloadData];
-            });
             
         };
-        
-        
-        
-    });
+    
 }
 
 #pragma mark - 相册内容发生改变的监听(iCloud)
