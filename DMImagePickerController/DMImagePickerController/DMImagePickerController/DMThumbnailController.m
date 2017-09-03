@@ -392,8 +392,22 @@ static NSString *reusedID = @"thumbnail";
                     NSIndexSet *removed = collectionChanges.removedIndexes;
                     if (removed.count) {
                         
+                        [removed enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+                            
+                            [_imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel];
+                        }];
+                        
                         [self.arrAssetModel removeObjectsAtIndexes:removed];
+                        
+                        
                         [self.collectionView deleteItemsAtIndexPaths:[self indexPathsFromIndexSet:removed]];
+                        
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationSelectionIndexChanged" object:nil];
+                        
+                        if (_imagePickerVC.arrselected.count <_imagePickerVC.maxImagesCount) {
+                            //发送通知移除蒙版
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil userInfo:@{@"remove":@"remove"}];
+                        }
                     }
                     NSIndexSet *inserted = collectionChanges.insertedIndexes;
                     if (inserted.count) {
@@ -401,6 +415,16 @@ static NSString *reusedID = @"thumbnail";
                         NSMutableArray *arrNewAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:self.albumModel.result];
                         NSArray *arrInsert = [arrNewAssetModel objectsAtIndexes:inserted];
                         [self.arrAssetModel insertObjects:arrInsert atIndexes:inserted];
+                        
+                        if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
+                            
+                            [arrInsert enumerateObjectsUsingBlock:^(DMAssetModel  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                
+                                obj.userInteractionEnabled = NO;
+                            }];
+                            
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil];
+                        }
                         
                         [self.collectionView insertItemsAtIndexPaths:[self indexPathsFromIndexSet:inserted]];
                     }
