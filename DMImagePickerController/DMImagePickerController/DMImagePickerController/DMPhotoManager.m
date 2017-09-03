@@ -54,18 +54,6 @@
     _screenScale = screenWidth > 400 ? 3:2;
 }
 
-- (BOOL)getAuthorizationStatus {
-    
-    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
-    
-    if (status == PHAuthorizationStatusAuthorized) {
-        //授权
-        return YES;
-    }
-    
-    return NO;
-}
-
 - (void)getAllAlbumsCompletion:(void (^)(NSArray<DMAlbumModel *> *))completion {
     
     //相册<PHAssetCollect *>
@@ -132,23 +120,6 @@
         }
     }];
     
-}
-
-- (NSArray<DMAssetModel *> *)getAssetModelArrayFromResult:(PHFetchResult<PHAsset *> *)result {
-
-    NSMutableArray *arrAsset = [NSMutableArray array];
-    
-    [result enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        DMAssetModelType type = [self getAssetMediaTypeFromAsset:asset];
-        
-        DMAssetModel *photoModel = [DMAssetModel assetModelWithAsset:asset medieType:type];
-        
-        [arrAsset addObject:photoModel];
-        
-    }];
-    
-    return arrAsset;
 }
 
 - (PHImageRequestID)requestPosterImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete
@@ -313,6 +284,7 @@
 
     PHLivePhotoRequestOptions *option = [[PHLivePhotoRequestOptions alloc] init];
     option.networkAccessAllowed = YES;
+    option.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
     
     PHLivePhotoRequestID phLivePhotoRequestID = [[PHCachingImageManager defaultManager] requestLivePhotoForAsset:asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nullable info) {
         
@@ -325,6 +297,35 @@
     }];
     
     return phLivePhotoRequestID;
+}
+
+- (BOOL)getAuthorizationStatus {
+    
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    
+    if (status == PHAuthorizationStatusAuthorized) {
+        //授权
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (NSArray<DMAssetModel *> *)getAssetModelArrayFromResult:(PHFetchResult<PHAsset *> *)result {
+    
+    NSMutableArray *arrAsset = [NSMutableArray array];
+    
+    [result enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        DMAssetModelType type = [self getAssetMediaTypeFromAsset:asset];
+        
+        DMAssetModel *photoModel = [DMAssetModel assetModelWithAsset:asset medieType:type];
+        
+        [arrAsset addObject:photoModel];
+        
+    }];
+    
+    return arrAsset;
 }
 
 - (BOOL)isExistLocallyAsset:(PHAsset *)asset {

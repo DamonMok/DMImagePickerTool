@@ -30,8 +30,7 @@
 @property(nonatomic, assign)NSInteger maxImagesCount;
 
 
-/**获取相册权限状态*/
-- (BOOL)getAuthorizationStatus;
+
 
 /**获取所有相册*/
 - (void)getAllAlbumsCompletion:(void(^)(NSArray<DMAlbumModel *> *))completion;
@@ -39,8 +38,7 @@
 /**获取Camera roll相册*/
 - (void)getCameraRollAlbumCompletion:(void(^)(DMAlbumModel *))completion;
 
-/**在DMAlbumModel模型里面提取DMAssetModel数组*/
-- (NSArray<DMAssetModel *> *)getAssetModelArrayFromResult:(PHFetchResult<PHAsset *> *)result;
+
 
 /**
  获取相册封面图
@@ -96,6 +94,12 @@
  */
 - (PHLivePhotoRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(PHLivePhoto *livePhoto, NSDictionary *info))complete;
 
+
+/**获取相册权限状态*/
+- (BOOL)getAuthorizationStatus;
+
+/**在DMAlbumModel模型里面提取DMAssetModel数组*/
+- (NSArray<DMAssetModel *> *)getAssetModelArrayFromResult:(PHFetchResult<PHAsset *> *)result;
 
 /**
  判断文件是否在本地
