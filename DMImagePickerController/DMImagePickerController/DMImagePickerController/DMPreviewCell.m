@@ -556,9 +556,12 @@
                 self.player = [AVPlayer playerWithPlayerItem:playerItem];
                 self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
                 
-                //监听状态和播放结束
+                //加载完成的监听
                 [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+                //播放结束的监听
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+                //播放期间切换到后台导致暂停的监听
+                [self.player addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
                 
                 [self.layer addSublayer:self.playerLayer];//播放结束通知
                 self.playerLayer.frame = self.bounds;
@@ -636,9 +639,9 @@
 #pragma mark 监听
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
 
-    AVPlayerItem *playerItem = (AVPlayerItem *)object;
-    
     if ([keyPath isEqualToString:@"status"]) {
+        
+        AVPlayerItem *playerItem = (AVPlayerItem *)object;
         
         if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
             
@@ -646,12 +649,25 @@
         }
         
         [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
+        
+    } else if ([keyPath isEqualToString:@"rate"]) {
+    
+        AVPlayer *player = (AVPlayer *)object;
+        
+        if (player.rate == 0) {
+            
+            self.btnPlay.hidden = NO;
+            [self bringSubviewToFront:self.btnPlay];
+        }
     }
+    
 }
 
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    
+    [self.player removeObserver:self forKeyPath:@"rate" context:nil];
     
 }
 

@@ -360,9 +360,5 @@
     return isExistLocally;
 }
 
-//- (void)photoLibraryDidChange:(PHChange *)changeInstance {
-//
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationAlubmsContentChanged" object:nil];
-//}
 
 @end
