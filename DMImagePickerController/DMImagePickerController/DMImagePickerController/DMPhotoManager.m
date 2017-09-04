@@ -43,6 +43,12 @@
     self.showHiddenAlbum = YES;
     self.sortAscendingByCreationDate = YES;
     self.maxWidth = 414;
+    
+    //配置音频会话，不配置播放视频将没有声音
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord
+             withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
+                   error:nil];
 }
 
 //6plus/6splus/7plus    屏幕宽度414 -----@3x

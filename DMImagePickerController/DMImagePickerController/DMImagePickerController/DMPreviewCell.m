@@ -546,6 +546,7 @@
 - (void)playStatusDidChange {
     
     if (!self.playerLayer) {
+        
         [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
            
             dispatch_async(dispatch_get_main_queue(), ^{

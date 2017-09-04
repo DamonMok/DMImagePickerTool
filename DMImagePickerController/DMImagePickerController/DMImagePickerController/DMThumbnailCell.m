@@ -14,7 +14,7 @@
 #define KbtnSelectWH 26 //选择按钮大小
 #define KmarginTopRight 0
 
-#define KtimelineBgHeight 26    //类型标识背景
+#define KtimelineBgHeight 26    //类型标识背景高
 #define Kmargin 8
 #define KlabelHeight 16
 #define KvideoWidth 16  //视频图标宽
