@@ -14,18 +14,30 @@
 #define KbtnSelectWH 26 //选择按钮大小
 #define KmarginTopRight 0
 
+#define KtimelineBgHeight 26    //类型标识背景
+#define Kmargin 8
+#define KlabelHeight 16
+#define KvideoWidth 16  //视频图标宽
+#define kvideoHeight 10 //视频图标高
+
+
 @interface DMThumbnailCell ()
 
-@property (nonatomic, strong)UIImageView *ivImageView;
+@property (nonatomic, strong)UIImageView *ivImageView;//照片View
 
-@property (nonatomic, strong)UIButton *btnSelect;
+@property (nonatomic, strong)UIButton *btnSelect;//选择按钮
 
-@property (nonatomic, strong)UIView *vCover;
+@property (nonatomic, strong)UIView *vCover;//不可交互时的遮盖
+
+@property (nonatomic, strong)UILabel *labType;//照片类型标识
+
+@property (nonatomic, strong)UIImageView *ivTypeBg;//照片类型背景
 
 @end
 
 @implementation DMThumbnailCell
 
+#pragma mark - lazy load
 - (UIImageView *)ivImageView {
     
     if (!_ivImageView) {
@@ -64,6 +76,29 @@
     return _vCover;
 }
 
+- (UILabel *)labType {
+
+    if (!_labType) {
+        
+        _labType = [[UILabel alloc] init];
+        [self.contentView addSubview:_labType];
+    }
+    
+    return _labType;
+}
+
+- (UIImageView *)ivTypeBg {
+
+    if (!_ivTypeBg) {
+        
+        _ivTypeBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Albumtimeline_video_shadow"]];
+        [self.contentView addSubview:_ivTypeBg];
+    }
+    
+    return _ivTypeBg;
+}
+
+#pragma frame
 - (instancetype)initWithFrame:(CGRect)frame {
 
     if (self = [super initWithFrame:frame]) {
@@ -74,6 +109,11 @@
         
         self.vCover.frame = self.bounds;
         self.vCover.hidden = YES;
+        
+        self.ivTypeBg.frame = CGRectMake(0, frame.size.height-KtimelineBgHeight, frame.size.width, KtimelineBgHeight);
+        
+        self.labType.frame = CGRectMake(Kmargin, frame.size.height-KlabelHeight-Kmargin+2, frame.size.width-2*Kmargin, KlabelHeight);
+        
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showCover:) name:@"NotificationShowCover" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSelectionIndex) name:@"NotificationSelectionIndexChanged" object:nil];
@@ -86,7 +126,9 @@
     
     _assetModel = assetModel;
     
-   [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(self.contentView.dm_width, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+    [self configTypeWithAssetModel:assetModel];
+    
+    [[DMPhotoManager shareManager] requestImageForAsset:self.assetModel.asset targetSize:CGSizeMake(self.contentView.dm_width, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.ivImageView.image = image;
         
@@ -101,6 +143,7 @@
     
         self.vCover.hidden = NO;
     }
+    
 }
 
 #pragma mark 点击选择图片按钮
@@ -147,6 +190,59 @@
             
         }
     }
+}
+
+- (void)configTypeWithAssetModel:(DMAssetModel *)assetModel {
+    assetModel.durationTime = @"00:07";
+    
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] init];
+
+    //图片
+    NSTextAttachment *attachImage = [[NSTextAttachment alloc] init];
+    
+    NSAttributedString *attriImage = [NSAttributedString attributedStringWithAttachment:attachImage];
+    
+    //文字
+    NSAttributedString *attriText;
+
+    //背景
+    self.ivTypeBg.hidden = NO;
+    
+    switch (assetModel.type) {
+        case DMAssetModelTypeVideo:
+            
+            //视频图标
+            attachImage.bounds = CGRectMake(1, -1, KvideoWidth, kvideoHeight);
+            attachImage.image = [UIImage imageNamed:@"fileicon_video_wall"];
+            [attri appendAttributedString:attriImage];
+            
+            //视频长度
+            attriText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@", assetModel.durationTime] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
+            [attri appendAttributedString:attriText];
+            break;
+            
+        case DMAssetModelTypeGif:
+            
+            //Gif文字
+            attriText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"GIF"] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName:[UIFont boldSystemFontOfSize:14.0]}];
+            [attri appendAttributedString:attriText];
+            break;
+            
+        case DMAssetModelTypeLivePhoto:
+            
+            //LivePhoto图标
+            attachImage.bounds = CGRectMake(1, -2, 16, 16);
+            attachImage.image = [UIImage imageNamed:@"livePhoto"];
+            [attri appendAttributedString:attriImage];
+            break;
+            
+        default:
+            self.ivTypeBg.hidden = YES;
+            break;
+    }
+
+    self.labType.attributedText = attri;
+    
 }
 
 - (void)dealloc {

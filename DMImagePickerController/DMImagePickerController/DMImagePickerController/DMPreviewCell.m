@@ -120,7 +120,6 @@
         [self.videoPreviewView fetchVideoPosterImageWithAssetModel:assetModel];
 //        [self.videoPreviewView replay];
         [self.videoPreviewView clearPlayerLayer];
-        
     }
 }
 
@@ -288,7 +287,7 @@
         [self resetSubViewsWithAsset:assetModel.asset];
         
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-        
+        //iCloud
         if (!error) {
             
             progressView.progress = progress;
@@ -327,7 +326,7 @@
         [self resetSubViewsWithAsset:assetModel.asset];
         
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-        
+        //iCloud
         if (!error) {
             
             progressView.progress = progress;

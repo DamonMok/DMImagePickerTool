@@ -49,6 +49,10 @@
 		CE1F15D71F43113400CEE568 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D61F43113400CEE568 /* Security.framework */; };
 		CE1F15D91F43114F00CEE568 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D81F43114F00CEE568 /* libz.tbd */; };
 		CE1F15DB1F43115900CEE568 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15DA1F43115900CEE568 /* libc++.tbd */; };
+		E40D97031F5D81A000B43F7D /* fileicon_video_wall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E40D97021F5D81A000B43F7D /* fileicon_video_wall@2x.png */; };
+		E40D970B1F5D986500B43F7D /* Albumtimeline_video_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = E40D970A1F5D986500B43F7D /* Albumtimeline_video_shadow.png */; };
+		E40D970E1F5D9F9500B43F7D /* livePhoto@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E40D970C1F5D9F9500B43F7D /* livePhoto@2x.png */; };
+		E40D970F1F5D9F9500B43F7D /* livePhoto@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E40D970D1F5D9F9500B43F7D /* livePhoto@3x.png */; };
 		E42330FE1F51BE370083002F /* YYFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E42330FB1F51BE370083002F /* YYFPSLabel.m */; };
 		E42330FF1F51BE370083002F /* YYWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = E42330FD1F51BE370083002F /* YYWeakProxy.m */; };
 		E426EBDF1F49539B0059FE25 /* DMPreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E426EBDE1F49539B0059FE25 /* DMPreviewCell.m */; };
@@ -146,6 +150,10 @@
 		CE1F15D61F43113400CEE568 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		CE1F15D81F43114F00CEE568 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		CE1F15DA1F43115900CEE568 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		E40D97021F5D81A000B43F7D /* fileicon_video_wall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fileicon_video_wall@2x.png"; sourceTree = "<group>"; };
+		E40D970A1F5D986500B43F7D /* Albumtimeline_video_shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Albumtimeline_video_shadow.png; sourceTree = "<group>"; };
+		E40D970C1F5D9F9500B43F7D /* livePhoto@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "livePhoto@2x.png"; sourceTree = "<group>"; };
+		E40D970D1F5D9F9500B43F7D /* livePhoto@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "livePhoto@3x.png"; sourceTree = "<group>"; };
 		E42330FA1F51BE370083002F /* YYFPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYFPSLabel.h; sourceTree = "<group>"; };
 		E42330FB1F51BE370083002F /* YYFPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYFPSLabel.m; sourceTree = "<group>"; };
 		E42330FC1F51BE370083002F /* YYWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWeakProxy.h; sourceTree = "<group>"; };
@@ -334,6 +342,10 @@
 				E436AA891F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png */,
 				E436AA8A1F49BDD100FA9587 /* Fav_List_Video_Play@2x.png */,
 				E436AA8B1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png */,
+				E40D97021F5D81A000B43F7D /* fileicon_video_wall@2x.png */,
+				E40D970A1F5D986500B43F7D /* Albumtimeline_video_shadow.png */,
+				E40D970C1F5D9F9500B43F7D /* livePhoto@2x.png */,
+				E40D970D1F5D9F9500B43F7D /* livePhoto@3x.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -480,11 +492,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E40D970B1F5D986500B43F7D /* Albumtimeline_video_shadow.png in Resources */,
 				CE1F15C71F430D9D00CEE568 /* arrow_ico@2x.png in Resources */,
 				CE1F15CD1F430D9D00CEE568 /* fav_list_img_default@3x.png in Resources */,
+				E40D970E1F5D9F9500B43F7D /* livePhoto@2x.png in Resources */,
 				CE1F15CF1F430D9D00CEE568 /* FriendsSendsPicturesArtworkNIcon@2x.png in Resources */,
 				CE1F15D31F430D9D00CEE568 /* FriendsSendsPicturesSelectYIcon_27x27_@2x.png in Resources */,
 				CE1F15631F43087100CEE568 /* LaunchScreen.storyboard in Resources */,
+				E40D97031F5D81A000B43F7D /* fileicon_video_wall@2x.png in Resources */,
 				CE1F15C81F430D9D00CEE568 /* arrow_ico@3x.png in Resources */,
 				E4AE8C171F472F5A0079E8EB /* login.gif in Resources */,
 				CE1F15D01F430D9D00CEE568 /* FriendsSendsPicturesNumberIcon@2x.png in Resources */,
@@ -498,6 +513,7 @@
 				CE1F15C51F430D9D00CEE568 /* AlbumPhotoImageViewBottomBK123.png in Resources */,
 				CE1F15D21F430D9D00CEE568 /* FriendsSendsPicturesSelectIcon_27x27_@2x.png in Resources */,
 				E436AA8F1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png in Resources */,
+				E40D970F1F5D9F9500B43F7D /* livePhoto@3x.png in Resources */,
 				CE1F15CC1F430D9D00CEE568 /* fav_list_img_default@2x.png in Resources */,
 				CE1F15C61F430D9D00CEE568 /* AlbumPhotoImageViewBottomBK@2x.png in Resources */,
 				CE1F15CB1F430D9D00CEE568 /* barbuttonicon_back@3x.png in Resources */,

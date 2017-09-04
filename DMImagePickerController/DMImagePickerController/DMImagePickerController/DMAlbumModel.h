@@ -52,10 +52,14 @@ typedef NS_ENUM(NSUInteger, DMAssetModelType) {
 
 @interface DMAssetModel : NSObject
 
+/**PHAsset*/
 @property (nonatomic, strong)PHAsset *asset;
 
 /**类型*/
 @property (nonatomic, assign)DMAssetModelType type;
+
+/**视频时间长度*/
+@property (nonatomic, copy)NSString *durationTime;
 
 /**选中状态 YES：选中   NO：未选中*/
 @property (nonatomic, assign)BOOL selected;
