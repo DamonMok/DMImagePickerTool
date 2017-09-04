@@ -262,7 +262,10 @@ static NSString *reusedID = @"thumbnail";
     
     if (![[DMPhotoManager shareManager] isExistLocallyAsset:assetModel.asset]) {
         
-        NSLog(@"不存在");
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"正在从iCloud同步照片"] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+        [alertVC addAction:action];
+        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
         return;
     }
     
