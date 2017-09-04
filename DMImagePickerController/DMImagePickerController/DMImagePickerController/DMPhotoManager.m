@@ -172,7 +172,7 @@
     option.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
     option.networkAccessAllowed = YES;
     option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
-        
+        //iCloud
         if (progressHandler) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -280,11 +280,21 @@
     return DMAssetModelTypeUnknow;
 }
 
-- (PHLivePhotoRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(PHLivePhoto *, NSDictionary *))complete {
+- (PHLivePhotoRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(PHLivePhoto *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler {
 
     PHLivePhotoRequestOptions *option = [[PHLivePhotoRequestOptions alloc] init];
     option.networkAccessAllowed = YES;
     option.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+    option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        //iCloud
+        if (progressHandler) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                progressHandler(progress, error, stop, info);
+            });
+        }
+    };
     
     PHLivePhotoRequestID phLivePhotoRequestID = [[PHCachingImageManager defaultManager] requestLivePhotoForAsset:asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nullable info) {
         

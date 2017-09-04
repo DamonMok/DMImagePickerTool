@@ -320,11 +320,23 @@
     self.imageView.hidden = YES;
     self.livePhotoView.hidden = NO;
     
+    DMProgressView *progressView = [DMProgressView showAddedTo:self];
     [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
         
         self.livePhotoView.livePhoto = livePhoto;
         [self resetSubViewsWithAsset:assetModel.asset];
         
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        
+        if (!error) {
+            
+            progressView.progress = progress;
+            
+            if (progress >= 1) {
+                
+                [progressView hide];
+            }
+        }
     }];
 }
 

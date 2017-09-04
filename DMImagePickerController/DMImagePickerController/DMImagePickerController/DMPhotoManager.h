@@ -90,9 +90,10 @@
  @param asset PHAsset
  @param targetSize 目标尺寸
  @param complete 完成回调
+ @param progressHandler 进度回调
  @return 请求标识符
  */
-- (PHLivePhotoRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(PHLivePhoto *livePhoto, NSDictionary *info))complete;
+- (PHLivePhotoRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void(^)(PHLivePhoto *livePhoto, NSDictionary *info))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler;
 
 
 /**获取相册权限状态*/
