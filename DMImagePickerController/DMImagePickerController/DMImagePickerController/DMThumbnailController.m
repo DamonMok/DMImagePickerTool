@@ -92,7 +92,7 @@ static NSString *reusedID = @"thumbnail";
     
     [self refreshBottomView];
     
-    [self syncAndReloadData];
+    [self reloadData];
     
     //相册本地+iCloud内容变化监听
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
@@ -126,14 +126,14 @@ static NSString *reusedID = @"thumbnail";
                 self.albumModel = albumModel;
                 self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:albumModel.result];
                 
-                    [self syncAndReloadData];
+                    [self reloadData];
                 
             }];
         } else {
             //通过点击相册进来
             self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:self.albumModel.result];
             
-                [self syncAndReloadData];
+                [self reloadData];
             
         };
     
@@ -232,7 +232,7 @@ static NSString *reusedID = @"thumbnail";
 }
 
 #pragma mark - 同步并刷新数据
-- (void)syncAndReloadData {
+- (void)reloadData {
 
     //同步模型
     [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
@@ -292,26 +292,34 @@ static NSString *reusedID = @"thumbnail";
         
         [_imagePickerVC addAssetModel:assetModel];
         
-        if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
-            //发送通知添加蒙版
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil];
-        }
-        
     } else {
-        //移除
-        if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
-            //发送通知移除蒙版
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil userInfo:@{@"remove":@"remove"}];
-        }
         
         [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel];
         
     }
     
+    [self reflashData];
+    
+}
+
+#pragma mark - 刷新数据
+- (void)reflashData {
+
+    if (_imagePickerVC.arrselected.count < _imagePickerVC.maxImagesCount) {
+        
+        //移除蒙版
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil userInfo:@{@"remove":@"remove"}];
+    } else {
+        
+        //添加蒙版
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil];
+    }
+    
+    //索引
     [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationSelectionIndexChanged" object:nil];
     
+    //底部栏
     [self refreshBottomView];
-    
 }
 
 #pragma mark - DMBottomView代理方法
@@ -423,7 +431,7 @@ static NSString *reusedID = @"thumbnail";
                     
                     if (finished) {
                         //批处理成功
-//                        [self.collectionView reloadData];
+                        [self reflashData];
                     }
                 }];
                 
