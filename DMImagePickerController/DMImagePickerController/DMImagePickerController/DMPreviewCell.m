@@ -306,10 +306,24 @@
     self.livePhotoView.hidden = YES;
     self.imageView.hidden = NO;
     
+    DMProgressView *progressView = [DMProgressView showAddedTo:self];
     [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
+        
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        
+        //iCloud
+        if (!error) {
+            
+            progressView.progress = progress;
+            
+            if (progress >= 1) {
+                
+                [progressView hide];
+            }
+        }
     }];
 }
 
@@ -523,10 +537,7 @@
         self.imageView.image = image;
         [self resetSubViews];
         self.imageView.hidden = NO;
-    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-        
-        NSLog(@"%@", [NSThread currentThread]);
-    }];
+    } progressHandler:nil];
 }
 
 //frame
@@ -547,6 +558,7 @@
     
     if (!self.playerLayer) {
         
+        DMProgressView *progressView = [DMProgressView showAddedTo:self];
         [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
            
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -569,7 +581,17 @@
                 
             });
             
+        } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             
+            if (!error) {
+                
+                progressView.progress = progress;
+                
+                if (progress >= 1) {
+                    
+                    [progressView hide];
+                }
+            }
         }];
         
     } else {

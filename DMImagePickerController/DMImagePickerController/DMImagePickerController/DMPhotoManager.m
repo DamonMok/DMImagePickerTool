@@ -203,9 +203,9 @@
     PHImageRequestID imageRequestID = [[PHCachingImageManager defaultManager] requestImageForAsset:asset targetSize:imageSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable image, NSDictionary * _Nullable info) {
         
         //判断是否请求完成
-        BOOL downloadSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue];
+        BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
         
-        if (downloadSuccess && complete) {
+        if (requestSuccess && complete) {
             
             complete(image, info, [[info valueForKey:PHImageResultIsDegradedKey] boolValue]);
         }
@@ -219,78 +219,75 @@
     return imageRequestID;
 }
 
-- (PHImageRequestID)requestGifImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *))complete {
+- (PHImageRequestID)requestGifImageForAsset:(PHAsset *)asset complete:(void (^)(UIImage *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler {
 
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
-    option.resizeMode = PHImageRequestOptionsResizeModeFast;
+    option.version = PHImageRequestOptionsVersionOriginal;
     option.networkAccessAllowed = YES;
+    option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        //iCloud
+        if (progressHandler) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                progressHandler(progress, error, stop, info);
+            });
+        }
+    };
     
     PHImageRequestID phImageRequestID = [[PHCachingImageManager defaultManager] requestImageDataForAsset:asset options:option resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-       
-        if (![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]) {
             
-            if (complete) {
-                
-                UIImage *image = [UIImage sd_animatedGIFWithData:imageData];
-                
-                complete(image, info);
-            }
+        //判断是否请求完成
+        BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
+        
+        if (requestSuccess && complete) {
+            
+            UIImage *image = [UIImage sd_animatedGIFWithData:imageData];
+            
+            complete(image, info);
         }
+        
        
     }];
     
     return phImageRequestID;
 }
 
-- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void (^)(AVPlayerItem *, NSDictionary *))complete {
+#warning 进度加载有问题
+- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void (^)(AVPlayerItem *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler {
 
     PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
-    option.version = PHVideoRequestOptionsVersionCurrent;
     option.deliveryMode = PHVideoRequestOptionsDeliveryModeHighQualityFormat;
+    option.networkAccessAllowed = YES;
+    
+    option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        //iCloud
+        if (progressHandler) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                progressHandler(progress, error, stop, info);
+            });
+        }
+    };
     
     [[PHCachingImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
 
-        if (complete) {
+        //判断是否请求完成
+        BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
+        
+        if (requestSuccess && complete) {
             complete(playerItem, info);
         }
     }];
 }
 
 
-
-- (DMAssetModelType)getAssetMediaTypeFromAsset:(PHAsset *)asset {
-    
-    switch (asset.mediaType) {
-        case PHAssetMediaTypeAudio:
-            return DMAssetModelTypeAudio;
-            break;
-            
-        case PHAssetMediaTypeVideo:
-            return DMAssetModelTypeVideo;
-            break;
-            
-        case PHAssetMediaTypeImage:
-            if (asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive)
-                return DMAssetModelTypeLivePhoto;
-            
-            if ([[asset valueForKey:@"filename"] hasSuffix:@"GIF"])
-                return DMAssetModelTypeGif;
-            
-            return DMAssetModelTypeImage;
-            
-        default:
-            return DMAssetModelTypeUnknow;
-            break;
-    }
-    
-    return DMAssetModelTypeUnknow;
-}
-
 - (PHLivePhotoRequestID)requestLivePhotoForAsset:(PHAsset *)asset targetSize:(CGSize)targetSize complete:(void (^)(PHLivePhoto *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler {
 
     PHLivePhotoRequestOptions *option = [[PHLivePhotoRequestOptions alloc] init];
-    option.networkAccessAllowed = YES;
     option.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+    option.networkAccessAllowed = YES;
     option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
         //iCloud
         if (progressHandler) {
@@ -304,9 +301,10 @@
     
     PHLivePhotoRequestID phLivePhotoRequestID = [[PHCachingImageManager defaultManager] requestLivePhotoForAsset:asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nullable info) {
         
-        BOOL downloadSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![[info objectForKey:PHImageErrorKey] boolValue];
+        //判断是否请求完成
+        BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
         
-        if (downloadSuccess && complete) {
+        if (requestSuccess && complete) {
             
             complete(livePhoto, info);
         }
@@ -343,6 +341,35 @@
     
     return arrAsset;
 }
+
+- (DMAssetModelType)getAssetMediaTypeFromAsset:(PHAsset *)asset {
+    
+    switch (asset.mediaType) {
+        case PHAssetMediaTypeAudio:
+            return DMAssetModelTypeAudio;
+            break;
+            
+        case PHAssetMediaTypeVideo:
+            return DMAssetModelTypeVideo;
+            break;
+            
+        case PHAssetMediaTypeImage:
+            if (asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive)
+                return DMAssetModelTypeLivePhoto;
+            
+            if ([[asset valueForKey:@"filename"] hasSuffix:@"GIF"])
+                return DMAssetModelTypeGif;
+            
+            return DMAssetModelTypeImage;
+            
+        default:
+            return DMAssetModelTypeUnknow;
+            break;
+    }
+    
+    return DMAssetModelTypeUnknow;
+}
+
 
 - (BOOL)isExistLocallyAsset:(PHAsset *)asset {
 

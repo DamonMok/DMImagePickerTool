@@ -74,7 +74,7 @@
  @param asset PHAsset
  @return 经过处理的Gif图片，可以直接传给imageView显示
  */
-- (PHImageRequestID)requestGifImageForAsset:(PHAsset *)asset complete:(void(^)(UIImage *, NSDictionary *))complete;
+- (PHImageRequestID)requestGifImageForAsset:(PHAsset *)asset complete:(void(^)(UIImage *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler;
 
 
 /**
@@ -82,7 +82,7 @@
  @param asset PHAsset
  @param complete 用户可在回调中得到AVPlayerItem用来播放
  */
-- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete;
+- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler;
 
 /**
  请求LivePhoto数据

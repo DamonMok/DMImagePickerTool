@@ -84,6 +84,8 @@ static NSString *reusedID = @"thumbnail";
     [self initBottomView];
     [self scrollToBotton];
     
+    //相册本地+iCloud内容变化监听
+    [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -94,15 +96,13 @@ static NSString *reusedID = @"thumbnail";
     
     [self reloadData];
     
-    //相册本地+iCloud内容变化监听
-    [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
 
     [super viewWillDisappear:animated];
     
-    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
+    
 }
 
 - (void)dealloc {
@@ -110,6 +110,8 @@ static NSString *reusedID = @"thumbnail";
     if (!_imagePickerVC.recordPreviousSelections) {
         [_imagePickerVC.arrselected removeAllObjects];
     }
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
     
     NSLog(@"%s", __func__);
 }
