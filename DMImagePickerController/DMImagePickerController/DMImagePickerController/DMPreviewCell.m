@@ -117,7 +117,7 @@
     if (assetModel.type == DMAssetModelTypeVideo) {
 
         self.videoPreviewView.assetModel = assetModel;
-        [self.videoPreviewView fetchVideoPosterImageWithAssetModel:assetModel];
+        [self.videoPreviewView fetchVideoDataWithAssetModel:assetModel];
 //        [self.videoPreviewView replay];
         [self.videoPreviewView clearPlayerLayer];
     }
@@ -192,9 +192,6 @@
 }
 
 - (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel {
-}
-
-- (void)fetchVideoPosterImageWithAssetModel:(DMAssetModel *)assetModel {
 }
 
 - (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel {
@@ -519,6 +516,13 @@
 
     if (self = [super initWithFrame:frame]) {
         
+        self.imageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+        [self addSubview:self.imageView];
+        
+        self.btnPlay.frame = CGRectMake(0, 0, 82, 82);
+        self.btnPlay.center = CGPointMake(KScreen_Width*0.5, KScreen_Height*0.5);
+        self.btnPlay.hidden = YES;
+        
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playStatusDidChange)];
         [self addGestureRecognizer:tap];
         
@@ -527,82 +531,62 @@
     return self;
 }
 
-#pragma mark 获取视频封面
-- (void)fetchVideoPosterImageWithAssetModel:(DMAssetModel *)assetModel {
+#pragma mark 获取视频数据
+- (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel {
     
     CGSize posterSize = self.bounds.size;
     
+    //封面
     [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:posterSize complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
-        [self resetSubViews];
         self.imageView.hidden = NO;
     } progressHandler:nil];
-}
-
-//frame
-- (void)resetSubViews {
-
-    self.imageView.frame = self.bounds;
-    [self addSubview:self.imageView];
     
-    self.btnPlay.frame = CGRectMake(0, 0, 82, 82);
-    self.btnPlay.center = CGPointMake(KScreen_Width*0.5, KScreen_Height*0.5);
-    [self bringSubviewToFront:self.btnPlay];
-    
+    //视频
+    DMProgressView *progressView = [DMProgressView showAddedTo:self];
+    [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            self.playerItem = playerItem;
+            
+            self.player = [AVPlayer playerWithPlayerItem:playerItem];
+            self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+            
+            //加载完成的监听
+            [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+            //播放结束的监听
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+            //播放期间切换到后台导致暂停的监听
+//            [self.player addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
+            
+            [self.layer addSublayer:self.playerLayer];//播放结束通知
+            self.playerLayer.frame = self.bounds;
+            
+        });
+        
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        
+        if (!error) {
+            
+            progressView.progress = progress;
+            
+            if (progress >= 1) {
+                
+                [progressView hide];
+            }
+        }
+    }];
 }
 
 #pragma mark - 视频播放/暂停控制
-#pragma mark 点击屏幕
+#pragma mark 播放/暂停之间的切换
 - (void)playStatusDidChange {
     
-    if (!self.playerLayer) {
-        
-        DMProgressView *progressView = [DMProgressView showAddedTo:self];
-        [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
-           
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                self.playerItem = playerItem;
-                
-                self.player = [AVPlayer playerWithPlayerItem:playerItem];
-                self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-                
-                //加载完成的监听
-                [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
-                //播放结束的监听
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-                //播放期间切换到后台导致暂停的监听
-                [self.player addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
-                
-                [self.layer addSublayer:self.playerLayer];//播放结束通知
-                self.playerLayer.frame = self.bounds;
-                [self resetPlayerStatus];
-                
-            });
-            
-        } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-            
-            if (!error) {
-                
-                progressView.progress = progress;
-                
-                if (progress >= 1) {
-                    
-                    [progressView hide];
-                }
-            }
-        }];
-        
-    } else {
+    if (self.playerItem.status != AVPlayerItemStatusReadyToPlay)
+        return;
     
-        [self resetPlayerStatus];
-    }
-}
-
-#pragma mark 播放/暂停之间的切换
-- (void)resetPlayerStatus {
-
     CMTime currentTime = self.player.currentItem.currentTime;
     CMTime durationTime = self.player.currentItem.duration;
     
@@ -621,7 +605,6 @@
         //暂停
         [self.player pause];
         self.btnPlay.hidden = NO;
-        [self bringSubviewToFront:self.btnPlay];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"willPause" object:nil];
     }
 }
@@ -667,7 +650,8 @@
         
         if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
             
-            self.btnPlay.hidden = YES;
+            self.btnPlay.hidden = NO;
+            [self bringSubviewToFront:self.btnPlay];
         }
         
         [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
@@ -689,7 +673,7 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
-    [self.player removeObserver:self forKeyPath:@"rate" context:nil];
+//    [self.player removeObserver:self forKeyPath:@"rate" context:nil];
     
 }
 

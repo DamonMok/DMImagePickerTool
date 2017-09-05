@@ -271,15 +271,27 @@
         }
     };
     
-    [[PHCachingImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
-
+    [[PHCachingImageManager defaultManager] requestAVAssetForVideo:asset options:option resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+        
         //判断是否请求完成
         BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
         
         if (requestSuccess && complete) {
-            complete(playerItem, info);
+            complete([AVPlayerItem playerItemWithAsset:asset], info);
         }
     }];
+    
+//    [[PHCachingImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+//
+//        //判断是否请求完成
+//        BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
+//        
+//        if (requestSuccess && complete) {
+//            complete(playerItem, info);
+//        }
+//        
+//        NSLog(@"%d",[[info objectForKey:PHImageResultIsInCloudKey] boolValue]);
+//    }];
 }
 
 
