@@ -253,11 +253,10 @@
     return phImageRequestID;
 }
 
-#warning 进度加载有问题
 - (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void (^)(AVPlayerItem *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler {
 
     PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
-    option.deliveryMode = PHVideoRequestOptionsDeliveryModeHighQualityFormat;
+    option.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
     option.networkAccessAllowed = YES;
     
     option.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
@@ -281,16 +280,9 @@
         }
     }];
     
+    //不能用下面的方法，当从iCloud下载视频的时候，会检测不到进度
 //    [[PHCachingImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
 //
-//        //判断是否请求完成
-//        BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
-//        
-//        if (requestSuccess && complete) {
-//            complete(playerItem, info);
-//        }
-//        
-//        NSLog(@"%d",[[info objectForKey:PHImageResultIsInCloudKey] boolValue]);
 //    }];
 }
 

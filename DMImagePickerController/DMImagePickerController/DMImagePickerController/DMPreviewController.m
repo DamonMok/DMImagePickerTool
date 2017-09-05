@@ -187,7 +187,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     self.bottomView.showEditButton = YES;
     self.bottomView.sendEnable = YES;
     self.bottomView.showInnerPreview = _imagePickerVC.showInnerPreview;
-    self.bottomView.arrData = _imagePickerVC.arrselected;
+    self.bottomView.arrData = [_imagePickerVC.arrselected copy];
     
     if (_imagePickerVC.showInnerPreview) {
         
@@ -207,19 +207,19 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     [self.view addSubview:self.bottomView];
     
-    
-    
 }
 
 #pragma mark - 滚动到目标Item
 - (void)scrollToTargetItem {
     
     if (self.selectedIndex > 0) {
+        //调用系统的滚动方法后，会自动调用- (void)scrollViewDidScroll:(UIScrollView *)scrollView方法
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         
     } else if (self.selectedIndex == 0) {
         
-        //index为0的时候，根据model调整按钮状态
+        //index为0的时候，不会调用- (void)scrollViewDidScroll:(UIScrollView *)scrollView方法
+        //需要根据model调整选择按钮的状态
         _currentAssetModel = self.arrAssetModel.firstObject;
         _btnSelected.selected = _currentAssetModel.selected;
         [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",_currentAssetModel.index] forState:UIControlStateSelected];
@@ -240,6 +240,8 @@ static NSString *reusedLivePhoto = @"livePhoto";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.arrAssetModel.count <= 0) return nil;
+    
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
     DMPreviewCell *cell;
@@ -408,7 +410,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     _currentIndex = (self.collectionView.contentOffset.x-margin*self.selectedIndex+KScreen_Width*0.5)/KScreen_Width;
 
-    if (_currentIndex > self.arrAssetModel.count-1 || _currentIndex < 0 )
+    if (_currentIndex > self.arrAssetModel.count-1 || _currentIndex < 0 || self.arrAssetModel.count <= 0)
         return;
     
     _currentAssetModel = self.arrAssetModel[_currentIndex];

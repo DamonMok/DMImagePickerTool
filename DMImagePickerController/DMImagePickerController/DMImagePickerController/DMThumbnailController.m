@@ -141,14 +141,6 @@ static NSString *reusedID = @"thumbnail";
     
 }
 
-#pragma mark - 相册内容发生改变的监听(iCloud)
-- (void)updateAlbumContent:(NSNotification *)notification {
-
-    self.albumModel = [notification.userInfo valueForKey:@"album"];
-    
-    [self fetchData];
-}
-
 #pragma mark - 初始化导航栏
 - (void)initNavigationBar {
     
@@ -274,7 +266,7 @@ static NSString *reusedID = @"thumbnail";
     if (!assetModel.userInteractionEnabled) return;
     
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
-    previewVC.arrAssetModel = self.arrAssetModel;
+    previewVC.arrAssetModel = [self.arrAssetModel copy];
     previewVC.selectedIndex = indexPath.row;
     
     [self.navigationController pushViewController:previewVC animated:YES];

@@ -25,7 +25,8 @@
 
 @interface DMBottomView ()<UICollectionViewDelegate, UICollectionViewDataSource> {
 
-    int _dataCount;
+    int _dataCount;//判断是否添加照片
+    BOOL _isInitial;//判断是否初始化
 }
 
 @property (nonatomic, strong)UIImageView *bgImageView;
@@ -168,6 +169,7 @@
     
     if (self = [super initWithFrame:frame]) {
         
+        _isInitial = YES;
         [self initViewsWithFrame:frame];
     }
     
@@ -305,8 +307,8 @@
     
     [self.collectionView reloadData];
     
-    if (_arrData.count>_dataCount) {
-        //添加,滚动到新添加图片的位置
+    if (_arrData.count>_dataCount && !_isInitial) {
+        //添加新照片,滚动到新添加图片的位置
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_arrData.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
         
         //设置选择框
@@ -314,11 +316,13 @@
         DMAssetModel *assetModel = self.arrData.lastObject;
         assetModel.clicked = YES;
         _selectedAssetModel = assetModel;
+        
+        //发送通知改变边框
         [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
     }
     
     _dataCount = (int)_arrData.count;
-    
+    _isInitial = NO;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -342,7 +346,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
-    //点解切换选中边框
+    //点击切换选中边框
     _selectedAssetModel.clicked = NO;
     DMAssetModel *assetModel = self.arrData[indexPath.row];
     assetModel.clicked = YES;
@@ -439,12 +443,11 @@
     if (self.assetModel.clicked) {
         //有边框
         [self.imageView.layer setBorderWidth:2.0];   //边框宽度
-//        NSLog(@"%ld",(long)self.assetModel.index);
         
     } else {
         //无边框
         [self.imageView.layer setBorderWidth:0];
-//        NSLog(@"%ld",(long)self.assetModel.index);
+
     }
     
 }
