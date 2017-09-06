@@ -44,4 +44,20 @@
     return assetModel;
 }
 
+- (instancetype)assetModelWithAssetModel:(DMAssetModel *)assetModel {
+
+    DMAssetModel *m = [[DMAssetModel alloc] init];
+    assetModel.asset = self.asset;
+    assetModel.type = self.type;
+    assetModel.durationTime = self.durationTime;
+    assetModel.selected = self.selected;
+    assetModel.index = self.index;
+    assetModel.userInteractionEnabled = self.userInteractionEnabled;
+    assetModel.clicked = self.clicked;
+    
+    return m;
+}
+
+
+
 @end

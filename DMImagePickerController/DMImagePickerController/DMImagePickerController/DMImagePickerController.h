@@ -38,10 +38,10 @@
 
 ///以下添加/移除照片的方法主要涉及到DMAssetModel下标的更新
 /**向已选择照片数组(arrselected)中添加元素调用的方法：1.更新assetModel的index*/
-- (void)addAssetModel:(DMAssetModel *)assetModel;
+- (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr;
 
 /**从已选择照片数组(arrselected)中移除元素调用的方法：1.更新已选照片(arrselected)的index;2.同步数据源模型*/
-- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource;
+- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource updateArr:(NSMutableArray *)arr;
 
 /**根据selectArray同步dataArray模型*/
 - (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;

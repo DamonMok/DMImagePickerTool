@@ -26,6 +26,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 @interface DMPreviewController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMBottomViewDelegate>{
     
     DMImagePickerController *_imagePickerVC;
+    NSMutableArray *_arrselected;//已选择的照片数组
     
     UIButton *_btnSelected;
     
@@ -128,6 +129,16 @@ static NSString *reusedLivePhoto = @"livePhoto";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPlay" object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"willPause" object:nil];
+    
+    _imagePickerVC.arrselected = _arrselected;
+    
+    for (DMAssetModel *assetModel in self.arrAssetModel) {
+        
+        if (![self.arrUpdate containsObject:assetModel]) {
+            //如果在预览大图时，系统相册某个元素被删除(触发系统相册和app相册同步)，并且在预览大图时新选择了这个元素。那么需要比较缩略图页面和预览大图页面两个数据源，在离开大图预览的时候把该元素删除。
+            [_imagePickerVC.arrselected removeObject:assetModel];
+        }
+    }
 }
 
 #pragma mark - 初始化自定义导航栏
@@ -182,12 +193,14 @@ static NSString *reusedLivePhoto = @"livePhoto";
 - (void)initBottomView {
     
     _imagePickerVC = (DMImagePickerController *)self.navigationController;
+    _arrselected = [_imagePickerVC.arrselected mutableCopy];
+    
     
     self.bottomView.delegate = self;
     self.bottomView.showEditButton = YES;
     self.bottomView.sendEnable = YES;
     self.bottomView.showInnerPreview = _imagePickerVC.showInnerPreview;
-    self.bottomView.arrData = [_imagePickerVC.arrselected copy];
+    self.bottomView.arrData = _arrselected;
     
     if (_imagePickerVC.showInnerPreview) {
         
@@ -240,7 +253,6 @@ static NSString *reusedLivePhoto = @"livePhoto";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.arrAssetModel.count <= 0) return nil;
     
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
@@ -330,7 +342,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 #pragma mark - 刷新底部栏
 - (void)refreshBottomView {
     
-    self.bottomView.count = _imagePickerVC.arrselected.count;
+    self.bottomView.count = _arrselected.count;
     
     self.bottomView.isOriginal = _imagePickerVC.isOriginal;
     
@@ -365,7 +377,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 #pragma mark 导航栏右侧选中按钮
 - (void)didClickSelectedButton:(UIButton *)button {
     
-    if (_imagePickerVC.arrselected.count >= _imagePickerVC.maxImagesCount && !_currentAssetModel.selected) {
+    if (_arrselected.count >= _imagePickerVC.maxImagesCount && !_currentAssetModel.selected) {
         
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"你最多只能选择%ld张照片",(long)_imagePickerVC.maxImagesCount] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleCancel handler:nil];
@@ -379,7 +391,8 @@ static NSString *reusedLivePhoto = @"livePhoto";
     if (button.selected) {
         
         //加入到已选数组
-        [_imagePickerVC addAssetModel:_currentAssetModel];
+        [_imagePickerVC addAssetModel:_currentAssetModel updateArr:_arrselected];
+        
         
         [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",_currentAssetModel.index] forState:UIControlStateSelected];
         
@@ -387,13 +400,14 @@ static NSString *reusedLivePhoto = @"livePhoto";
     } else {
         
         //从已选数组中删除
-        [_imagePickerVC removeAssetModel:_currentAssetModel FromDataSource:self.arrAssetModel];
+        [_imagePickerVC removeAssetModel:_currentAssetModel FromDataSource:self.arrAssetModel updateArr:_arrselected];
+        
         
     }
     
     [self refreshBottomView];
     
-    self.bottomView.arrData = _imagePickerVC.arrselected;
+    self.bottomView.arrData = _arrselected;
 }
 
 #pragma mark - 滑动调用
@@ -410,14 +424,15 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     _currentIndex = (self.collectionView.contentOffset.x-margin*self.selectedIndex+KScreen_Width*0.5)/KScreen_Width;
 
-    if (_currentIndex > self.arrAssetModel.count-1 || _currentIndex < 0 || self.arrAssetModel.count <= 0)
+    if (_currentIndex > self.arrAssetModel.count-1 || _currentIndex < 0)
         return;
     
     _currentAssetModel = self.arrAssetModel[_currentIndex];
     
-    _btnSelected.selected = _currentAssetModel.selected;
+//    _btnSelected.selected = _currentAssetModel.selected;
+    _btnSelected.selected = [_arrselected containsObject:_currentAssetModel] ? YES : NO;
     
-    [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)_currentAssetModel.index] forState:UIControlStateSelected];
+    [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)[_arrselected indexOfObject:_currentAssetModel]+1] forState:UIControlStateSelected];
     
     //如果是视频，隐藏编辑和原图按钮
     _bottomView.isVideo = _currentAssetModel.type == DMAssetModelTypeVideo?YES:NO;
@@ -494,13 +509,13 @@ static NSString *reusedLivePhoto = @"livePhoto";
 #pragma mark 发送
 - (void)bottomViewDidClickSendButton {
     
-    NSArray *arrSelected = _imagePickerVC.arrselected;
+    NSArray *arrSelected = _arrselected;
     BOOL isOriginal = _imagePickerVC.isOriginal;
     
     NSMutableArray *arrImage = [NSMutableArray array];
     NSMutableArray *arrInfo = [NSMutableArray array];
     
-    for (int i = 0; i < _imagePickerVC.arrselected.count; i++) {
+    for (int i = 0; i < _arrselected.count; i++) {
         
         //因为获取图片是异步，所以预设一个数组，根据回调时候的i进行有序替换
         [arrImage addObject:@"placeholder"];

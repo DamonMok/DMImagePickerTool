@@ -92,6 +92,17 @@ static NSString *reusedID = @"thumbnail";
     
     [super viewWillAppear:animated];
     
+//    //当预览大图选择了本地相册已经删除的照片，重新返回该控制器时需要将被删除的照片除去
+//    //只有在本地相册内容发生改变需要同步到APP相册的情况下发生
+//    for (DMAssetModel *assetModel in _imagePickerVC.arrselected) {
+//        
+//        if (![self.arrAssetModel containsObject:assetModel]) {
+//            
+//            [_imagePickerVC.arrselected removeObject:assetModel];
+//            [_imagePickerVC resetAssetModelIndexForArrSelected:_imagePickerVC.arrselected];
+//        }
+//    }
+    
     [self refreshBottomView];
     
     [self reloadData];
@@ -231,6 +242,7 @@ static NSString *reusedID = @"thumbnail";
     //同步模型
     [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
     [self.collectionView reloadData];
+    
 }
 
 #pragma mark - UICollectionView dataSource
@@ -266,7 +278,8 @@ static NSString *reusedID = @"thumbnail";
     if (!assetModel.userInteractionEnabled) return;
     
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
-    previewVC.arrAssetModel = [self.arrAssetModel copy];
+    previewVC.arrAssetModel = [self.arrAssetModel mutableCopy];
+    previewVC.arrUpdate = self.arrAssetModel;
     previewVC.selectedIndex = indexPath.row;
     
     [self.navigationController pushViewController:previewVC animated:YES];
@@ -287,11 +300,11 @@ static NSString *reusedID = @"thumbnail";
             return;
         }
         
-        [_imagePickerVC addAssetModel:assetModel];
+        [_imagePickerVC addAssetModel:assetModel updateArr:_imagePickerVC.arrselected];
         
     } else {
         
-        [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel];
+        [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel updateArr:_imagePickerVC.arrselected];
         
     }
     
@@ -398,7 +411,7 @@ static NSString *reusedID = @"thumbnail";
                         //删除
                         [removed enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
                             //已选数组的属性同步
-                            [_imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel];
+                            [_imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel updateArr:_imagePickerVC.arrselected];
                         }];
                         
                         [self.arrAssetModel removeObjectsAtIndexes:removed];

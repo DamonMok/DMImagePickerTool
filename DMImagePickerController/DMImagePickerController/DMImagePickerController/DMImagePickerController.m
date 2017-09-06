@@ -84,30 +84,30 @@
     return self;
 }
 
-- (void)addAssetModel:(DMAssetModel *)assetModel {
+- (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {
     
-    [self.arrselected addObject:assetModel];
-    assetModel.index = self.arrselected.count;
+    [arr addObject:assetModel];
+    assetModel.index = arr.count;
     assetModel.selected = YES;
 }
 
-- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource {
+- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource updateArr:(NSMutableArray *)arr {
     
-    NSArray *arrSelected = [NSArray arrayWithArray:self.arrselected];
+    NSArray *arrSelected = [NSArray arrayWithArray:arr];
     for (DMAssetModel *selectModel in arrSelected) {
         if ([selectModel.asset.localIdentifier isEqualToString:assetModel.asset.localIdentifier]) {
             
-            [self.arrselected removeObject:selectModel];
+            [arr removeObject:selectModel];
             
             //重置
             assetModel.index = 0;
             assetModel.selected = NO;
             
             //更新已选数组元素下标
-            [self resetAssetModelIndexForArrSelected:self.arrselected];
+            [self resetAssetModelIndexForArrSelected:arr];
             
             //根据已选数组同步数据源模型
-            [self syncModelFromSelectedArray:self.arrselected toDataArray:dataSource];
+            [self syncModelFromSelectedArray:arr toDataArray:dataSource];
         }
     }
     
