@@ -110,12 +110,4 @@
 - (BOOL)isExistLocallyAsset:(PHAsset *)asset;
 
 
-
-
-
-
-
-
-
-
 @end

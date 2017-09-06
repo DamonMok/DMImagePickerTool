@@ -139,6 +139,8 @@ static NSString *reusedLivePhoto = @"livePhoto";
             [_imagePickerVC.arrselected removeObject:assetModel];
         }
     }
+    //更新索引
+    [_imagePickerVC resetAssetModelIndexForArrSelected:_imagePickerVC.arrselected];
 }
 
 #pragma mark - 初始化自定义导航栏
@@ -377,6 +379,8 @@ static NSString *reusedLivePhoto = @"livePhoto";
 #pragma mark 导航栏右侧选中按钮
 - (void)didClickSelectedButton:(UIButton *)button {
     
+    if ([self showError]) return;
+    
     if (_arrselected.count >= _imagePickerVC.maxImagesCount && !_currentAssetModel.selected) {
         
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"你最多只能选择%ld张照片",(long)_imagePickerVC.maxImagesCount] preferredStyle:UIAlertControllerStyleAlert];
@@ -430,7 +434,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     _currentAssetModel = self.arrAssetModel[_currentIndex];
     
 //    _btnSelected.selected = _currentAssetModel.selected;
-    _btnSelected.selected = [_arrselected containsObject:_currentAssetModel] ? YES : NO;
+    _btnSelected.selected = ([_arrselected containsObject:_currentAssetModel] && [[DMPhotoManager shareManager] isExistLocallyAsset:_currentAssetModel.asset]) ? YES : NO;
     
     [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)[_arrselected indexOfObject:_currentAssetModel]+1] forState:UIControlStateSelected];
     
@@ -526,6 +530,8 @@ static NSString *reusedLivePhoto = @"livePhoto";
         
         DMAssetModel *assetModel = arrSelected[i];
         
+        if ([self showError]) return;
+        
         [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset isOriginal:isOriginal complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
             
             if (isDegraded) return ;
@@ -556,6 +562,23 @@ static NSString *reusedLivePhoto = @"livePhoto";
 - (void)dealloc {
 
     NSLog(@"dealloc");
+}
+
+#pragma mark - 判断照片是否有错误
+- (BOOL)showError {
+
+    if (![[DMPhotoManager shareManager] isExistLocallyAsset:_currentAssetModel.asset]) {
+        
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"出错了，请稍后再试"] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+        [alertVC addAction:action];
+        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+        
+        return YES;
+    }
+    
+    return NO;
+
 }
 
 @end

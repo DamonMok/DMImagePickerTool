@@ -377,16 +377,18 @@
 
 - (BOOL)isExistLocallyAsset:(PHAsset *)asset {
 
-    __block BOOL isExistLocally = YES;
+    __block BOOL isExistLocally = NO;
     
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     option.networkAccessAllowed = NO;
     option.synchronous = YES;
+    option.version = PHImageRequestOptionsVersionOriginal;
     
     [[PHCachingImageManager defaultManager] requestImageDataForAsset:asset options:option resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
         
         isExistLocally = imageData ? YES : NO;
     }];
+    
     
     return isExistLocally;
 }

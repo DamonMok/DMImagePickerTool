@@ -74,6 +74,8 @@ typedef void(^singleTap)();
 
 @property (nonatomic, copy)singleTap singleTap;
 
+@property (nonatomic, assign)BOOL requestSuccess;
+
 - (void)resume;
 
 - (void)pause;

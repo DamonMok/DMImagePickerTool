@@ -117,9 +117,11 @@
     if (assetModel.type == DMAssetModelTypeVideo) {
 
         self.videoPreviewView.assetModel = assetModel;
+        
+        [self.videoPreviewView clearPlayerLayer];
         [self.videoPreviewView fetchVideoDataWithAssetModel:assetModel];
 //        [self.videoPreviewView replay];
-        [self.videoPreviewView clearPlayerLayer];
+        
     }
 }
 
@@ -639,6 +641,7 @@
     self.playerLayer = nil;
     self.playerItem = nil;
     self.imageView.hidden = YES;
+    self.btnPlay.hidden = YES;
 }
 
 #pragma mark 监听

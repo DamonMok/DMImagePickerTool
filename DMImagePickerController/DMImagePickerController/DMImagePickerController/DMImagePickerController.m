@@ -103,13 +103,14 @@
             assetModel.index = 0;
             assetModel.selected = NO;
             
-            //更新已选数组元素下标
-            [self resetAssetModelIndexForArrSelected:arr];
-            
-            //根据已选数组同步数据源模型
-            [self syncModelFromSelectedArray:arr toDataArray:dataSource];
         }
     }
+    
+    //更新已选数组元素下标
+    [self resetAssetModelIndexForArrSelected:arr];
+    
+    //根据已选数组同步数据源模型
+    [self syncModelFromSelectedArray:arr toDataArray:dataSource];
     
 }
 
