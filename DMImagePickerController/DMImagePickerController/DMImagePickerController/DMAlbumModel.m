@@ -20,12 +20,15 @@
     albumModel.result = result;
     albumModel.collection = collection;
     
-    if ([DMPhotoManager shareManager].sortAscendingByCreationDate) {
-        albumModel.coverImageAsset = result.lastObject;
-    } else {
-        albumModel.coverImageAsset = result.firstObject;
+    if (result.count > 0) {
+        
+        if ([DMPhotoManager shareManager].sortAscendingByCreationDate) {
+            albumModel.coverImageAsset = result.lastObject;
+        } else {
+            albumModel.coverImageAsset = result.firstObject;
+        }
+
     }
-    
     return albumModel;
 }
 

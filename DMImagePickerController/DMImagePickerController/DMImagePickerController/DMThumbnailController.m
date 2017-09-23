@@ -92,17 +92,6 @@ static NSString *reusedID = @"thumbnail";
     
     [super viewWillAppear:animated];
     
-//    //当预览大图选择了本地相册已经删除的照片，重新返回该控制器时需要将被删除的照片除去
-//    //只有在本地相册内容发生改变需要同步到APP相册的情况下发生
-//    for (DMAssetModel *assetModel in _imagePickerVC.arrselected) {
-//        
-//        if (![self.arrAssetModel containsObject:assetModel]) {
-//            
-//            [_imagePickerVC.arrselected removeObject:assetModel];
-//            [_imagePickerVC resetAssetModelIndexForArrSelected:_imagePickerVC.arrselected];
-//        }
-//    }
-    
     [self refreshBottomView];
     
     [self reloadData];
@@ -226,6 +215,8 @@ static NSString *reusedID = @"thumbnail";
 - (void)didClickCancelButton {
     
     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    _imagePickerVC = nil;//解决内存泄露
 }
 
 #pragma mark - 刷新底部栏状态

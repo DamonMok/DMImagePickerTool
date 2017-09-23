@@ -153,6 +153,7 @@
 - (void)didClickCancelButton {
     
     [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 #pragma mark - 相册本地+iCloud监听

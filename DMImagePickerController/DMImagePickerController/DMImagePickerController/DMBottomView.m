@@ -408,6 +408,8 @@
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGColorRef colorref = CGColorCreate(colorSpace,(CGFloat[]){ 81/255.0, 170/255.0, 55/255.0, 1 });
         [_imageView.layer setBorderColor:colorref];//边框颜色
+        CGColorRelease(colorref);
+        CGColorSpaceRelease(colorSpace);
     }
     
     return _imageView;
