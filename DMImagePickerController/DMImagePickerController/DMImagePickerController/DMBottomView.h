@@ -53,7 +53,15 @@
 
 @property (nonatomic, assign)id<DMBottomViewDelegate> delegate;
 
+
+/**滚动到指定位置*/
 - (void)scrollToItemOfIndex:(int)index;
+
+/**插入*/
+- (void)insertImage;
+
+/**删除*/
+- (void)deleteImageOfIndex:(int)index;
 
 @end
 

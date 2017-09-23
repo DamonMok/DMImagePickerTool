@@ -401,17 +401,31 @@ static NSString *reusedLivePhoto = @"livePhoto";
         [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",_currentAssetModel.index] forState:UIControlStateSelected];
         
         [button.layer addAnimation:[UIView animationForSelectPhoto] forKey:nil];
+        
+        if (_imagePickerVC.showInnerPreview) {
+            
+            //内部预览图插入新的照片
+            [self.bottomView insertImage];
+            self.bottomView.arrData = _arrselected;
+        }
+        
     } else {
         
         //从已选数组中删除
+        int index = (int)_currentAssetModel.index-1;
+        
         [_imagePickerVC removeAssetModel:_currentAssetModel FromDataSource:self.arrAssetModel updateArr:_arrselected];
         
-        
+        if (_imagePickerVC.showInnerPreview) {
+            
+            //内部预览图删除照片
+            [self.bottomView deleteImageOfIndex:index];
+            self.bottomView.arrData = _arrselected;
+        }
     }
     
     [self refreshBottomView];
     
-    self.bottomView.arrData = _arrselected;
 }
 
 #pragma mark - 滑动调用

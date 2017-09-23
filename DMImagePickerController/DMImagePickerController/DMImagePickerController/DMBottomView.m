@@ -26,7 +26,7 @@
 @interface DMBottomView ()<UICollectionViewDelegate, UICollectionViewDataSource> {
 
     int _dataCount;//判断是否添加照片
-    BOOL _isInitial;//判断是否初始化
+
 }
 
 @property (nonatomic, strong)UIImageView *bgImageView;
@@ -169,7 +169,6 @@
     
     if (self = [super initWithFrame:frame]) {
         
-        _isInitial = YES;
         [self initViewsWithFrame:frame];
     }
     
@@ -305,24 +304,6 @@
         self.collectionView.backgroundView = nil;
     }
     
-    [self.collectionView reloadData];
-    
-    if (_arrData.count>_dataCount && !_isInitial) {
-        //添加新照片,滚动到新添加图片的位置
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_arrData.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
-        
-        //设置选择框
-        _selectedAssetModel.clicked = NO;
-        DMAssetModel *assetModel = self.arrData.lastObject;
-        assetModel.clicked = YES;
-        _selectedAssetModel = assetModel;
-        
-        //发送通知改变边框
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
-    }
-    
-    _dataCount = (int)_arrData.count;
-    _isInitial = NO;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -377,6 +358,35 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
     
 }
+
+- (void)insertImage {
+
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:_arrData.count-1 inSection:0];
+    
+    [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
+    
+    if (_arrData.count>_dataCount) {
+        //添加新照片,滚动到新添加图片的位置
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_arrData.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+
+        //设置选择框
+        _selectedAssetModel.clicked = NO;
+        DMAssetModel *assetModel = self.arrData.lastObject;
+        assetModel.clicked = YES;
+        _selectedAssetModel = assetModel;
+
+        //发送通知改变边框
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"selectStatusChanged" object:nil];
+    }
+}
+
+- (void)deleteImageOfIndex:(int)index {
+
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
+    
+    [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+}
+
 
 @end
 

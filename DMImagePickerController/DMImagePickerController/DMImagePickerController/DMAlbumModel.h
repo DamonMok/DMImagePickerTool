@@ -50,7 +50,7 @@ typedef NS_ENUM(NSUInteger, DMAssetModelType) {
     
 };
 
-@interface DMAssetModel : NSObject<NSMutableCopying>
+@interface DMAssetModel : NSObject
 
 /**PHAsset*/
 @property (nonatomic, strong)PHAsset *asset;
@@ -74,7 +74,5 @@ typedef NS_ENUM(NSUInteger, DMAssetModelType) {
 @property (nonatomic, assign)BOOL clicked;
 
 + (instancetype)assetModelWithAsset:(PHAsset *)asset medieType:(DMAssetModelType)type;
-
-- (instancetype)assetModelWithAssetModel:(DMAssetModel *)assetModel;
 
 @end
