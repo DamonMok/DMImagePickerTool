@@ -29,7 +29,7 @@
 
 }
 
-@property (nonatomic, strong)UIImageView *bgImageView;
+@property (nonatomic, strong)UIImageView *bgImageView;//工具条背景
 
 //预览
 @property (nonatomic, strong)UIButton *btnPreview;
@@ -45,7 +45,7 @@
 
 //预览View
 @property (nonatomic, strong)UICollectionView *collectionView;
-@property (nonatomic, strong)UIImageView *bgInnerView;
+@property (nonatomic, strong)UIImageView *bgInnerView;//内部预览背景
 
 @end
 
@@ -299,10 +299,16 @@
     if (_arrData.count > 0) {
         
         self.collectionView.backgroundView = self.bgInnerView;
+        
     } else {
     
         self.collectionView.backgroundView = nil;
+        
     }
+    
+    BOOL userInteractionEnabled = _arrData.count;
+    self.collectionView.userInteractionEnabled = userInteractionEnabled;
+    self.userInteractionEnabled = userInteractionEnabled;
     
 }
 
@@ -359,6 +365,7 @@
     
 }
 
+#pragma mark - 增删预览图
 - (void)insertImage {
 
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:_arrData.count-1 inSection:0];
