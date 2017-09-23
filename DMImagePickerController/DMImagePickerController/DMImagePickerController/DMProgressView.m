@@ -10,7 +10,7 @@
 
 @interface DMProgressView ()
 
-@property (nonatomic, strong)DMProgressView *progressView;
+@property (nonatomic, weak)DMProgressView *progressView;
 
 @property (nonatomic, strong)CAShapeLayer *processLayer;
 
@@ -99,6 +99,7 @@
 - (void)dealloc {
 
     NSLog(@"%s",__func__);
+
 }
 
 

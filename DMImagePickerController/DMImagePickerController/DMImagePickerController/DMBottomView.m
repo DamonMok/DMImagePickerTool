@@ -147,6 +147,7 @@
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = [UIColor clearColor];
+        _collectionView.backgroundView = self.bgInnerView;
         _collectionView.showsVerticalScrollIndicator = YES;
         _collectionView.showsHorizontalScrollIndicator = YES;
         [_collectionView registerClass:[DMInnerPreviewCell class] forCellWithReuseIdentifier:@"innerPreview"];
@@ -298,12 +299,17 @@
     
     if (_arrData.count > 0) {
         
-        self.collectionView.backgroundView = self.bgInnerView;
+        [UIView animateWithDuration:0.25 animations:^{
+            
+            self.collectionView.alpha = 1;
+        }];
         
     } else {
     
-        self.collectionView.backgroundView = nil;
-        
+        [UIView animateWithDuration:0.25 animations:^{
+            
+            self.collectionView.alpha = 0;
+        }];
     }
     
     BOOL userInteractionEnabled = _arrData.count;
