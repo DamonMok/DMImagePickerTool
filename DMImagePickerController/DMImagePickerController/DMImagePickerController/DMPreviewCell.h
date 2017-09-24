@@ -30,7 +30,10 @@ typedef void(^singleTap)();
 
 - (void)pause;
 
+//尺寸复位
 - (void)resetZoomScale;
+
+- (void)clearPlayerLayer;
 
 @end
 

@@ -338,6 +338,9 @@ static NSString *reusedLivePhoto = @"livePhoto";
     if (assetModel.type == DMAssetModelTypeGif || assetModel.type == DMAssetModelTypeImage || assetModel.type == DMAssetModelTypeLivePhoto) {
         //重设scrollView的zoomScale=1.0;
         [((DMPreviewCell *)cell) resetZoomScale];
+    } else if (assetModel.type == DMAssetModelTypeVideo) {
+    
+        [((DMPreviewCell *)cell) clearPlayerLayer];
     }
 }
 

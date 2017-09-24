@@ -62,6 +62,11 @@
     self.photoPreviewView.scrollView.zoomScale = 1.0;
 }
 
+- (void)clearPlayerLayer {
+
+    [self.videoPreviewView clearPlayerLayer];
+}
+
 @end
 
 #pragma mark - DMImagePreviewCell
@@ -118,7 +123,7 @@
 
         self.videoPreviewView.assetModel = assetModel;
         
-        [self.videoPreviewView clearPlayerLayer];
+//        [self.videoPreviewView clearPlayerLayer];
         [self.videoPreviewView fetchVideoDataWithAssetModel:assetModel];
 //        [self.videoPreviewView replay];
         
@@ -169,7 +174,6 @@
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         _imageView.clipsToBounds = YES;
         _imageView.userInteractionEnabled = YES;
-        [self addSubview:_imageView];
     }
     
     return _imageView;
@@ -183,7 +187,6 @@
         _livePhotoView.frame = self.bounds;
         _livePhotoView.contentMode = UIViewContentModeScaleAspectFill;
         _livePhotoView.backgroundColor = [UIColor blackColor];
-        [self addSubview:_livePhotoView];
     }
     
     return _livePhotoView;
@@ -477,7 +480,6 @@
     layer.speed = 0.0;
     layer.timeOffset = pausedTime;
 
-    
 }
 
 -(void)resumeLayer:(CALayer*)layer
@@ -521,10 +523,20 @@
         [_btnPlay setBackgroundImage:[UIImage imageNamed:@"Fav_List_Video_Play"] forState:UIControlStateNormal];
         [_btnPlay setBackgroundImage:[UIImage imageNamed:@"Fav_List_Video_Play_HL"] forState:UIControlStateHighlighted];
         [_btnPlay addTarget:self action:@selector(playStatusDidChange) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_btnPlay];
+        
     }
     
     return _btnPlay;
+}
+
+- (AVPlayerLayer *)playerLayer {
+
+    if (!_playerLayer) {
+        
+        _playerLayer = [[AVPlayerLayer alloc] init];
+    }
+    
+    return _playerLayer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -532,14 +544,21 @@
     if (self = [super initWithFrame:frame]) {
         
         self.imageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
-        [self addSubview:self.imageView];
         
         self.btnPlay.frame = CGRectMake(0, 0, 82, 82);
         self.btnPlay.center = CGPointMake(KScreen_Width*0.5, KScreen_Height*0.5);
-        self.btnPlay.hidden = YES;
+        
+        self.playerLayer.frame = self.bounds;
+        
+        [self addSubview:self.imageView];
+        [self addSubview:_btnPlay];
+        [self.layer addSublayer:self.playerLayer];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playStatusDidChange)];
         [self addGestureRecognizer:tap];
+        
+        //播放结束的监听
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
         
     }
     
@@ -556,52 +575,61 @@
         
         self.imageView.image = image;
         self.imageView.hidden = NO;
+        
     } progressHandler:nil];
     
-    //视频
-    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
-    [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            self.playerItem = playerItem;
-            
-            self.player = [AVPlayer playerWithPlayerItem:playerItem];
-            self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-            
-            //加载完成的监听
-            [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
-            //播放结束的监听
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-            //播放期间切换到后台导致暂停的监听
-//            [self.player addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
-            
-            [self.layer addSublayer:self.playerLayer];//播放结束通知
-            self.playerLayer.frame = self.bounds;
-            
-        });
-        
-    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-        
-        if (!error) {
-            
-            progressView.process = progress;
-            
-            if (progress >= 1) {
-                
-                [progressView hideProgressView];
-            }
-        }
-    }];
+    
 }
 
 #pragma mark - 视频播放/暂停控制
 #pragma mark 播放/暂停之间的切换
 - (void)playStatusDidChange {
     
-    if (self.playerItem.status != AVPlayerItemStatusReadyToPlay)
-        return;
+    if (!self.playerItem) {
+        
+        //视频
+        DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
+        [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                self.playerItem = playerItem;
+                
+                self.player = [AVPlayer playerWithPlayerItem:playerItem];
+                self.playerLayer.player = self.player;
+                
+                //加载完成的监听
+                [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+                
+                //播放期间切换到后台导致暂停的监听
+                //            [self.player addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
+                
+                
+                
+                [self playOrPause];
+                
+            });
+            
+        } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+            
+            if (!error) {
+                
+                progressView.process = progress;
+                
+                if (progress >= 1) {
+                    
+                    [progressView hideProgressView];
+                }
+            }
+        }];
+    } else {
     
+        [self playOrPause];
+    }
+}
+
+- (void)playOrPause {
+
     CMTime currentTime = self.player.currentItem.currentTime;
     CMTime durationTime = self.player.currentItem.duration;
     
@@ -618,8 +646,7 @@
         
     } else {
         //暂停
-        [self.player pause];
-        self.btnPlay.hidden = NO;
+        [self pause];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"willPause" object:nil];
     }
 }
@@ -652,13 +679,12 @@
 - (void)clearPlayerLayer {
     
     if (self.playerItem) {
+
+        [self.playerItem seekToTime:kCMTimeZero];
         
-        [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
-        
-        self.playerLayer = nil;
         self.playerItem = nil;
+        self.player = nil;
         self.imageView.hidden = YES;
-        self.btnPlay.hidden = YES;
         
     }
 }
@@ -672,10 +698,11 @@
         
         if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
             
-            self.btnPlay.hidden = NO;
-            [self bringSubviewToFront:self.btnPlay];
+            
             
         }
+        
+        [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
         
     } else if ([keyPath isEqualToString:@"rate"]) {
     
@@ -698,8 +725,6 @@
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-    
-    [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
     
 //    [self.player removeObserver:self forKeyPath:@"rate" context:nil];
     
