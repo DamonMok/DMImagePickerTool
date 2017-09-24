@@ -59,13 +59,19 @@
 #pragma mark 请求相册列表数据
 - (void)fetchData {
         
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
         [[DMPhotoManager shareManager] getAllAlbumsCompletion:^(NSArray<DMAlbumModel *> *arrAblum) {
             
             self.arrAlbumModel = [NSArray arrayWithArray:arrAblum];
             
-                [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
                 
+                [self.tableView reloadData];
+            });
+            
         }];
+    });
 }
 
 #pragma mark 初始化tableView
