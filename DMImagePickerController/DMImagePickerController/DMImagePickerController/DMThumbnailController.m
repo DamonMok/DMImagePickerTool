@@ -121,23 +121,36 @@ static NSString *reusedID = @"thumbnail";
     
     _imagePickerVC = (DMImagePickerController *)self.navigationController;
     
-        if (!_isFromTapAlbum) {
-            //首次进入相册，显示所有的照片
+    if (!_isFromTapAlbum) {
+        //首次进入相册，显示所有的照片
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
             [[DMPhotoManager shareManager] getCameraRollAlbumCompletion:^(DMAlbumModel *albumModel) {
                 
                 self.albumModel = albumModel;
                 self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:albumModel.result];
                 
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
                     [self reloadData];
+                });
                 
             }];
-        } else {
-            //通过点击相册进来
+        });
+        
+    } else {
+        //通过点击相册进来
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
             self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:self.albumModel.result];
             
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
                 [self reloadData];
-            
-        };
+            });
+        });
+        
+    };
     
 }
 
