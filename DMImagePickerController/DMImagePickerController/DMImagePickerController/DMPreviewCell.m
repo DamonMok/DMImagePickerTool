@@ -211,6 +211,14 @@
 - (void)pause {
 }
 
+- (void)dealloc {
+
+    if (_livePhotoView) {
+        
+        _livePhotoView = nil;
+    }
+}
+
 @end
 
 #pragma mark - DMPhotoPreviewView
@@ -643,10 +651,16 @@
 
 - (void)clearPlayerLayer {
     
-    self.playerLayer = nil;
-    self.playerItem = nil;
-    self.imageView.hidden = YES;
-    self.btnPlay.hidden = YES;
+    if (self.playerItem) {
+        
+        [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
+        
+        self.playerLayer = nil;
+        self.playerItem = nil;
+        self.imageView.hidden = YES;
+        self.btnPlay.hidden = YES;
+        
+    }
 }
 
 #pragma mark 监听
@@ -660,9 +674,8 @@
             
             self.btnPlay.hidden = NO;
             [self bringSubviewToFront:self.btnPlay];
+            
         }
-        
-        [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
         
     } else if ([keyPath isEqualToString:@"rate"]) {
     
@@ -679,7 +692,14 @@
 
 - (void)dealloc {
     
+    if (_playerLayer) {
+        
+        self.playerLayer = nil;
+    }
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    
+    [self.playerItem removeObserver:self forKeyPath:@"status" context:nil];
     
 //    [self.player removeObserver:self forKeyPath:@"rate" context:nil];
     
