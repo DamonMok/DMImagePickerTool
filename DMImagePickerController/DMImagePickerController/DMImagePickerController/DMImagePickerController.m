@@ -58,7 +58,6 @@
         
         if ([[DMPhotoManager shareManager] getAuthorizationStatus]) {
             //授权
-            [albumViewController initTableView];
             
             DMThumbnailController *thumbnailController = [[DMThumbnailController alloc] init];
             
@@ -73,7 +72,7 @@
             lab.textColor = [UIColor blackColor];
             lab.font = [UIFont systemFontOfSize:14.0];
             [lab sizeToFit];
-            lab.text = [NSString stringWithFormat:@"请在iPhone的\"设置-隐私-相机\"选项中，\n允许%@访问你的手机相册。", displayName];
+            lab.text = [NSString stringWithFormat:@"请在iPhone的\"设置-隐私-照片\"选项中，\n允许%@访问你的手机相册。", displayName];
             
             lab.frame = CGRectMake(10, 110, KScreen_Width-20, 60);
             

@@ -12,6 +12,7 @@
 #import "DMPhotoManager.h"
 #import "DMAlbumCell.h"
 #import "DMThumbnailController.h"
+#import "DMProgressView.h"
 
 @interface DMAlbumViewController ()<UITableViewDelegate,UITableViewDataSource, PHPhotoLibraryChangeObserver> {
 
@@ -41,7 +42,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//        [self initTableView];
+    [self initTableView];
     [self initNavigationBar];
     [self fetchData];
     
@@ -58,7 +59,8 @@
 
 #pragma mark 请求相册列表数据
 - (void)fetchData {
-        
+    
+    DMProgressView *progressView = [DMProgressView showLoadingViewAddTo:self.view];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[DMPhotoManager shareManager] getAllAlbumsCompletion:^(NSArray<DMAlbumModel *> *arrAblum) {
@@ -68,6 +70,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 [self.tableView reloadData];
+                [progressView hideLoadingView];
             });
             
         }];

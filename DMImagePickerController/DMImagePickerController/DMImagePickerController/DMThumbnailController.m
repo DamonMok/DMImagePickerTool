@@ -11,6 +11,7 @@
 #import "DMBottomView.h"
 #import "DMImagePickerController.h"
 #import "DMPreviewController.h"
+#import "DMProgressView.h"
 
 #define numberOfColumns 4
 #define margin 4
@@ -77,12 +78,11 @@ static NSString *reusedID = @"thumbnail";
     
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     
-    [self fetchData];
-    
     [self initNavigationBar];
     [self initCollectionView];
     [self initBottomView];
     [self scrollToBotton];
+    [self fetchData];
     
     //相册本地+iCloud内容变化监听
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
@@ -121,10 +121,12 @@ static NSString *reusedID = @"thumbnail";
     
     _imagePickerVC = (DMImagePickerController *)self.navigationController;
     
-    if (!_isFromTapAlbum) {
-        //首次进入相册，显示所有的照片
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    DMProgressView *progressView = [DMProgressView showLoadingViewAddTo:self.view];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        if (!_isFromTapAlbum) {
             
+            //首次进入相册，显示所有的照片
             [[DMPhotoManager shareManager] getCameraRollAlbumCompletion:^(DMAlbumModel *albumModel) {
                 
                 self.albumModel = albumModel;
@@ -133,24 +135,25 @@ static NSString *reusedID = @"thumbnail";
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     [self reloadData];
+                    [progressView hideLoadingView];
                 });
                 
             }];
-        });
-        
-    } else {
-        //通过点击相册进来
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
+        } else {
+            
+            //通过点击相册进来
             self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:self.albumModel.result];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 [self reloadData];
+                [progressView hideLoadingView];
             });
-        });
+            
+        };
         
-    };
+    });
     
 }
 

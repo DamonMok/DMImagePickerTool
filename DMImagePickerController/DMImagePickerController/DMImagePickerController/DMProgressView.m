@@ -10,11 +10,15 @@
 
 @interface DMProgressView ()
 
-@property (nonatomic, weak)DMProgressView *progressView;
+@property (nonatomic, weak)DMProgressView *hubView;
 
+//进度圈View
 @property (nonatomic, strong)CAShapeLayer *processLayer;
-
 @property (nonatomic, strong)UILabel *processLabel;
+
+//加载中loadingView
+@property (nonatomic, strong)UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, strong)UILabel *labLoading;
 
 @end
 
@@ -55,52 +59,112 @@
     CGPoint center = CGPointMake(rect.size.width*0.5, rect.size.height*0.5);
     CGFloat radius = rect.size.width*0.5;
     
-    CGFloat progress = self.progress>0.05?self.progress:0.05;
-    
-    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:3*M_PI_2 endAngle:3*M_PI_2+2*M_PI*progress clockwise:YES];
+    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:3*M_PI_2 endAngle:3*M_PI_2+2*M_PI*self.process clockwise:YES];
     self.processLayer.path = [path CGPath];
     
     self.processLabel.frame = CGRectMake(0, 0, rect.size.width, rect.size.height*0.5);
     self.processLabel.center = center;
-    self.processLabel.text = [NSString stringWithFormat:@"%.0f", self.progress*100];
+    self.processLabel.text = [NSString stringWithFormat:@"%.0f", self.process*100];
+    self.processLabel.hidden = self.process>0?NO:YES;
     
 }
 
-- (void)setProgress:(CGFloat)progress {
+- (void)setProcess:(CGFloat)process {
     
-    _progress = progress;
-    
-    self.progressView.hidden = NO;
+    _process = process;
     
     [self setNeedsDisplay];
 }
 
-+ (instancetype)showAddedTo:(UIView *)view {
+#pragma mark - 进度View
+/**【显示】进度View*/
++ (instancetype)showProgressViewAddedTo:(UIView *)view {
+    
+    for (UIView *progressView in view.subviews) {
+        
+        if ([progressView isKindOfClass:[DMProgressView class]]) {
+            
+            return nil;
+        }
+    }
     
     DMProgressView *progressView = [[DMProgressView alloc] init];
-    progressView.progressView = progressView;
+    progressView.hubView = progressView;
     progressView.backgroundColor = [UIColor clearColor];
     
     progressView.frame = CGRectMake(0, 0, 40, 40);
     progressView.center = CGPointMake(view.bounds.size.width*0.5, view.bounds.size.height*0.5);
-    
-    progressView.hidden = YES;
     
     [view addSubview:progressView];
     
     return progressView;
 }
 
-- (void)hide {
+/**【隐藏】进度View*/
+- (void)hideProgressView {
     
-    [self.progressView removeFromSuperview];
+    [self.hubView removeFromSuperview];
+}
+
+#pragma mark - 加载View
+/**【显示】loadingView*/
++ (instancetype)showLoadingViewAddTo:(UIView *)view {
+
+    for (UIView *loadingView in view.subviews) {
+        
+        if ([loadingView isKindOfClass:[DMProgressView class]]) {
+            
+            return nil;
+        }
+    }
+    
+    DMProgressView *progressView = [[DMProgressView alloc] init];
+    progressView.hubView = progressView;
+    progressView.backgroundColor = [UIColor grayColor];
+    progressView.layer.masksToBounds = YES;
+    progressView.layer.cornerRadius = 5;
+    progressView.alpha = 0.7;
+    progressView.frame = CGRectMake(0, 0, 100, 100);
+    progressView.center = CGPointMake(view.bounds.size.width*0.5, view.bounds.size.height*0.5);
+    
+    //加载圈
+    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectZero];
+    progressView.activityIndicatorView = activityIndicatorView;
+    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    activityIndicatorView.center = CGPointMake(view.bounds.size.width*0.5, view.bounds.size.height*0.5-15);
+    
+    [activityIndicatorView startAnimating];
+    
+    //文字
+    UILabel *labLoading = [[UILabel alloc] init];
+    progressView.labLoading = labLoading;
+    labLoading.text = @"正在加载...";
+    labLoading.font = [UIFont systemFontOfSize:14.0];
+    labLoading.textColor = [UIColor whiteColor];
+    labLoading.textAlignment = NSTextAlignmentCenter;
+    [labLoading sizeToFit];
+    labLoading.frame = CGRectMake(0, 0, progressView.bounds.size.width, 30);
+    labLoading.center = CGPointMake(view.bounds.size.width*0.5, view.center.y+30);
+    
+    [view addSubview:progressView];
+    [view addSubview:activityIndicatorView];
+    [view addSubview:labLoading];
+    
+    return progressView;
+}
+
+
+/**【隐藏】loadingView*/
+- (void)hideLoadingView {
+
+    [self.hubView removeFromSuperview];
+    [self.activityIndicatorView removeFromSuperview];
+    [self.labLoading removeFromSuperview];
 }
 
 - (void)dealloc {
 
-    NSLog(@"%s",__func__);
-
+    NSLog(@"%s", __func__);
 }
-
 
 @end

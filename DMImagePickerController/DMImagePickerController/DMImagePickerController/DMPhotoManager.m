@@ -70,9 +70,9 @@
     
     //获取所有相册
     PHFetchResult *smartAlbumResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-    PHFetchResult *albumResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+//    PHFetchResult *albumResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     
-    NSArray *arrAlbumResult = @[smartAlbumResult, albumResult];
+    NSArray *arrAlbumResult = @[smartAlbumResult];
     
     NSMutableArray *arrAlbum = [NSMutableArray array];
     for (PHFetchResult *albumResult in arrAlbumResult) {

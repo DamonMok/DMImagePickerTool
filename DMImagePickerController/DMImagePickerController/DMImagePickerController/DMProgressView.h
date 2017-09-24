@@ -11,12 +11,20 @@
 @interface DMProgressView : UIView
 
 //process
-@property (nonatomic, assign)CGFloat progress;
+@property (nonatomic, assign)CGFloat process;
 
-//show
-+ (instancetype)showAddedTo:(UIView *)view;
+//---------------------进度---------------------
+//【显示】进度View
++ (instancetype)showProgressViewAddedTo:(UIView *)view;
 
-//hide
-- (void)hide;
+//【隐藏】进度View
+- (void)hideProgressView;
+
+//---------------------加载中---------------------
+//【显示】loadingView
++ (instancetype)showLoadingViewAddTo:(UIView *)view;
+
+//【隐藏】loadingView
+- (void)hideLoadingView;
 
 @end

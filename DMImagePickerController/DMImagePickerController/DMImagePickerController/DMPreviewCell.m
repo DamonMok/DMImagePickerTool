@@ -279,7 +279,7 @@
     
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
-    DMProgressView *progressView = [DMProgressView showAddedTo:self];
+    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
     [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
@@ -289,11 +289,11 @@
         //iCloud
         if (!error) {
             
-            progressView.progress = progress;
+            progressView.process = progress;
             
             if (progress >= 1) {
                 
-                [progressView hide];
+                [progressView hideProgressView];
             }
         }
     }];
@@ -305,7 +305,7 @@
     self.livePhotoView.hidden = YES;
     self.imageView.hidden = NO;
     
-    DMProgressView *progressView = [DMProgressView showAddedTo:self];
+    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
     [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
         self.imageView.image = image;
@@ -316,11 +316,11 @@
         //iCloud
         if (!error) {
             
-            progressView.progress = progress;
+            progressView.process = progress;
             
             if (progress >= 1) {
                 
-                [progressView hide];
+                [progressView hideProgressView];
             }
         }
     }];
@@ -332,7 +332,7 @@
     self.imageView.hidden = YES;
     self.livePhotoView.hidden = NO;
     
-    DMProgressView *progressView = [DMProgressView showAddedTo:self];
+    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
     [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
         
         self.livePhotoView.livePhoto = livePhoto;
@@ -342,11 +342,11 @@
         //iCloud
         if (!error) {
             
-            progressView.progress = progress;
+            progressView.process = progress;
             
             if (progress >= 1) {
                 
-                [progressView hide];
+                [progressView hideProgressView];
             }
         }
     }];
@@ -551,7 +551,7 @@
     } progressHandler:nil];
     
     //视频
-    DMProgressView *progressView = [DMProgressView showAddedTo:self];
+    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
     [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -577,11 +577,11 @@
         
         if (!error) {
             
-            progressView.progress = progress;
+            progressView.process = progress;
             
             if (progress >= 1) {
                 
-                [progressView hide];
+                [progressView hideProgressView];
             }
         }
     }];
