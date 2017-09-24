@@ -394,7 +394,7 @@
 }
 
 - (void)doubleTapPreviewView:(UITapGestureRecognizer *)tap {
-    
+    self.containerView.backgroundColor = [UIColor blueColor];
     CGFloat zoomScale = self.scrollView.zoomScale == 1.0 ? 3.0: 1.0;
     
     CGPoint tapPoint = [tap locationInView:tap.view];
@@ -417,7 +417,7 @@
     return self.containerView;
 }
 
-//缩放会调用此方法调整位置
+//缩放后会调用此方法调整位置
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     
     CGFloat offsetX = (scrollView.dm_width > scrollView.contentSize.width) ? (scrollView.dm_width - scrollView.contentSize.width) * 0.5 : 0.0;
