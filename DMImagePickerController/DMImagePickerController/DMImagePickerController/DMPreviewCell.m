@@ -608,6 +608,7 @@
                 
                 [self playOrPause];
                 
+                [progressView hideProgressView];
             });
             
         } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
@@ -616,10 +617,7 @@
                 
                 progressView.process = progress;
                 
-                if (progress >= 1) {
-                    
-                    [progressView hideProgressView];
-                }
+                _btnPlay.hidden = YES;
             }
         }];
     } else {
