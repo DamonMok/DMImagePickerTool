@@ -74,6 +74,7 @@
     _process = process;
     
     [self setNeedsDisplay];
+    
 }
 
 #pragma mark - 进度View

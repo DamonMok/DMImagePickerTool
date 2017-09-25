@@ -273,14 +273,14 @@ static NSString *reusedID = @"thumbnail";
     
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
-    if (![[DMPhotoManager shareManager] isExistLocallyAsset:assetModel.asset]) {
-        
-        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"正在从iCloud同步照片"] preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
-        [alertVC addAction:action];
-        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
-        return;
-    }
+//    if (![[DMPhotoManager shareManager] isExistLocallyAsset:assetModel.asset]) {
+//        
+//        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"正在从iCloud同步照片"] preferredStyle:UIAlertControllerStyleAlert];
+//        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+//        [alertVC addAction:action];
+//        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+//        return;
+//    }
     
     if (!assetModel.userInteractionEnabled) return;
     

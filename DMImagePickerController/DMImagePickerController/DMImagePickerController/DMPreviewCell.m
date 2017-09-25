@@ -296,16 +296,16 @@
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
         
+        if (!isDegraded) {
+            [progressView hideProgressView];
+        }
+        
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         //iCloud
         if (!error) {
             
             progressView.process = progress;
             
-            if (progress >= 1) {
-                
-                [progressView hideProgressView];
-            }
         }
     }];
 }
@@ -322,6 +322,8 @@
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
         
+        [progressView hideProgressView];
+        
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         
         //iCloud
@@ -329,10 +331,6 @@
             
             progressView.process = progress;
             
-            if (progress >= 1) {
-                
-                [progressView hideProgressView];
-            }
         }
     }];
 }
@@ -349,16 +347,18 @@
         self.livePhotoView.livePhoto = livePhoto;
         [self resetSubViewsWithAsset:assetModel.asset];
         
+        [progressView hideProgressView];
+        
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         //iCloud
         if (!error) {
             
             progressView.process = progress;
             
-            if (progress >= 1) {
-                
-                [progressView hideProgressView];
-            }
+//            if (progress >= 1) {
+//                
+//                [progressView hideProgressView];
+//            }
         }
     }];
 }
