@@ -73,6 +73,8 @@
     
     _process = process;
     
+    _process = _process > 0.02 ? _process : 0.02;
+    
     [self setNeedsDisplay];
     
 }
