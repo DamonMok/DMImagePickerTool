@@ -253,7 +253,7 @@
     return phImageRequestID;
 }
 
-- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void (^)(AVPlayerItem *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler {
+- (PHImageRequestID)requestVideoDataForAsset:(PHAsset *)asset complete:(void (^)(AVPlayerItem *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler {
 
     PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
     option.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
@@ -270,7 +270,7 @@
         }
     };
     
-    [[PHCachingImageManager defaultManager] requestAVAssetForVideo:asset options:option resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+    PHImageRequestID requestID = [[PHCachingImageManager defaultManager] requestAVAssetForVideo:asset options:option resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
         
         //判断是否请求完成
         BOOL requestSuccess = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey];
@@ -284,6 +284,8 @@
 //    [[PHCachingImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
 //
 //    }];
+    
+    return requestID;
 }
 
 

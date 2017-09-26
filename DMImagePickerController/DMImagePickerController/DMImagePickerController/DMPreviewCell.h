@@ -76,6 +76,8 @@ typedef void(^singleTap)();
 
 @property (nonatomic, assign)BOOL requestSuccess;
 
+@property (nonatomic, assign)int32_t requestID;
+
 - (void)resume;
 
 - (void)pause;

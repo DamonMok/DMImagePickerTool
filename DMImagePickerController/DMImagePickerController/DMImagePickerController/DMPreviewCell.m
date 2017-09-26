@@ -65,6 +65,7 @@
             break;
         case DMAssetModelTypeGif:
             self.photoPreviewView.scrollView.zoomScale = 1.0;
+            self.photoPreviewView.imageView.image = nil;
             [self.photoPreviewView pause];
             break;
         case DMAssetModelTypeLivePhoto:
@@ -306,7 +307,7 @@
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
     DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
-    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+    self.requestID = [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
@@ -332,7 +333,7 @@
     self.imageView.hidden = NO;
     
     DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
-    [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
+    self.requestID = [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
         self.imageView.image = image.images.firstObject;
         
@@ -360,7 +361,7 @@
     self.livePhotoView.hidden = NO;
     
     DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
-    [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
+    self.requestID = [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
         
         self.livePhotoView.livePhoto = livePhoto;
         [self resetSubViewsWithAsset:assetModel.asset];
@@ -585,7 +586,7 @@
     CGSize posterSize = self.bounds.size;
     
     //封面
-    [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:posterSize complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
+    self.requestID = [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:posterSize complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
         self.imageView.hidden = NO;
@@ -603,7 +604,7 @@
         
         //视频
         DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
-        [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
+        self.requestID = [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 

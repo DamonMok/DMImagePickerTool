@@ -82,7 +82,7 @@
  @param asset PHAsset
  @param complete 用户可在回调中得到AVPlayerItem用来播放
  */
-- (void)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler;
+- (PHImageRequestID)requestVideoDataForAsset:(PHAsset *)asset complete:(void(^)(AVPlayerItem *, NSDictionary *))complete progressHandler:(void (^)(double progress, NSError * error, BOOL *stop, NSDictionary *info))progressHandler;
 
 /**
  请求LivePhoto数据
