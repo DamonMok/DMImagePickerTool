@@ -320,7 +320,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
             break;
         case DMAssetModelTypeLivePhoto:
             ((DMLivePhotoPreviewCell *)cell).assetModel = self.arrAssetModel[indexPath.row];
-            [((DMLivePhotoPreviewCell *)cell) resume];//播放
+//            [((DMLivePhotoPreviewCell *)cell) resume];//播放
             break;
             
         default:
@@ -435,7 +435,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 
     self.selectedIndex = self.collectionView.contentOffset.x/(KScreen_Width+margin);
-
+    
 }
 
 

@@ -192,6 +192,7 @@
     return _livePhotoView;
 }
 
+
 #pragma mark - 子类重写
 - (void)fetchImageWithAssetModel:(DMAssetModel *)assetModel {
 }
@@ -277,6 +278,7 @@
         [self.scrollView addSubview:self.containerView];
         [self.containerView addSubview:self.imageView];
         [self.containerView addSubview:self.livePhotoView];
+        
     }
     
     return self;
@@ -319,7 +321,10 @@
     DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
     [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
-        self.imageView.image = image;
+        self.imageView.image = image.images.firstObject;
+        
+        [self.imageView performSelector:@selector(setImage:) withObject:image afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        
         [self resetSubViewsWithAsset:assetModel.asset];
         
         [progressView hideProgressView];
@@ -354,7 +359,7 @@
         if (!error) {
             
             progressView.process = progress;
-            
+    
         }
     }];
 }
