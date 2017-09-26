@@ -125,7 +125,7 @@
             }
         }
     }];
-    
+        
 }
 
 - (PHImageRequestID)requestPosterImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete

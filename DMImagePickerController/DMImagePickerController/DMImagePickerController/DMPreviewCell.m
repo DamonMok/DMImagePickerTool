@@ -62,15 +62,17 @@
     switch (assetModel.type) {
         case DMAssetModelTypeImage:
             self.photoPreviewView.scrollView.zoomScale = 1.0;
+            self.photoPreviewView.imageView.image = nil;
             break;
         case DMAssetModelTypeGif:
             self.photoPreviewView.scrollView.zoomScale = 1.0;
-            self.photoPreviewView.imageView.image = nil;
             [self.photoPreviewView pause];
+            self.photoPreviewView.imageView.image = nil;
             break;
         case DMAssetModelTypeLivePhoto:
             self.photoPreviewView.scrollView.zoomScale = 1.0;
             [self.photoPreviewView pause];
+            self.photoPreviewView.livePhotoView.livePhoto = nil;
             break;
         case DMAssetModelTypeVideo:
             [self.videoPreviewView resetPlayerLayer];
@@ -79,6 +81,8 @@
         default:
             break;
     }
+    
+    
 }
 
 @end
