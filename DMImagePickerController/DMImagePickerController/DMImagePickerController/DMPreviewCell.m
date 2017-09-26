@@ -57,14 +57,27 @@
 - (void)pause {
 }
 
-- (void)resetZoomScale {
-
-    self.photoPreviewView.scrollView.zoomScale = 1.0;
-}
-
-- (void)clearPlayerLayer {
-
-    [self.videoPreviewView clearPlayerLayer];
+- (void)resetWith:(DMAssetModel *)assetModel {
+    
+    switch (assetModel.type) {
+        case DMAssetModelTypeImage:
+            self.photoPreviewView.scrollView.zoomScale = 1.0;
+            break;
+        case DMAssetModelTypeGif:
+            self.photoPreviewView.scrollView.zoomScale = 1.0;
+            [self.photoPreviewView pause];
+            break;
+        case DMAssetModelTypeLivePhoto:
+            self.photoPreviewView.scrollView.zoomScale = 1.0;
+            [self.photoPreviewView pause];
+            break;
+        case DMAssetModelTypeVideo:
+            [self.videoPreviewView resetPlayerLayer];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 @end
@@ -675,7 +688,7 @@
     [self.playerItem seekToTime:kCMTimeZero];
 }
 
-- (void)clearPlayerLayer {
+- (void)resetPlayerLayer {
     
     if (self.playerItem) {
 

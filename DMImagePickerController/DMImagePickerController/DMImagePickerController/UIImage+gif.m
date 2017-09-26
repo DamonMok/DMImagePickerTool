@@ -6,10 +6,10 @@
 //  Copyright © 2017年 damon. All rights reserved.
 //
 
-#import "UIImage+git.h"
+#import "UIImage+gif.h"
 #import <ImageIO/ImageIO.h>
 
-@implementation UIImage (git)
+@implementation UIImage (gif)
 
 + (UIImage *)sd_animatedGIFWithData:(NSData *)data {
     if (!data) {

@@ -333,15 +333,8 @@ static NSString *reusedLivePhoto = @"livePhoto";
 
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
-    [((DMGifPreviewCell *)cell) pause];//暂停Gif/livePhoto
+    [((DMPreviewCell *)cell) resetWith:assetModel];
     
-    if (assetModel.type == DMAssetModelTypeGif || assetModel.type == DMAssetModelTypeImage || assetModel.type == DMAssetModelTypeLivePhoto) {
-        //重设scrollView的zoomScale=1.0;
-        [((DMPreviewCell *)cell) resetZoomScale];
-    } else if (assetModel.type == DMAssetModelTypeVideo) {
-    
-        [((DMPreviewCell *)cell) clearPlayerLayer];
-    }
 }
 
 #pragma mark - 刷新底部栏

@@ -61,7 +61,7 @@
 		E436AA8D1F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA891F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png */; };
 		E436AA8E1F49BDD100FA9587 /* Fav_List_Video_Play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA8A1F49BDD100FA9587 /* Fav_List_Video_Play@2x.png */; };
 		E436AA8F1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E436AA8B1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png */; };
-		E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */ = {isa = PBXBuildFile; fileRef = E4AE8C141F472B330079E8EB /* UIImage+git.m */; };
+		E4AE8C151F472B330079E8EB /* UIImage+gif.m in Sources */ = {isa = PBXBuildFile; fileRef = E4AE8C141F472B330079E8EB /* UIImage+gif.m */; };
 		E4AE8C171F472F5A0079E8EB /* login.gif in Resources */ = {isa = PBXBuildFile; fileRef = E4AE8C161F472F5A0079E8EB /* login.gif */; };
 /* End PBXBuildFile section */
 
@@ -166,8 +166,8 @@
 		E436AA891F49BDD100FA9587 /* Fav_List_Video_Play_HL@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fav_List_Video_Play_HL@3x.png"; sourceTree = "<group>"; };
 		E436AA8A1F49BDD100FA9587 /* Fav_List_Video_Play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fav_List_Video_Play@2x.png"; sourceTree = "<group>"; };
 		E436AA8B1F49BDD100FA9587 /* Fav_List_Video_Play@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fav_List_Video_Play@3x.png"; sourceTree = "<group>"; };
-		E4AE8C131F472B330079E8EB /* UIImage+git.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+git.h"; sourceTree = "<group>"; };
-		E4AE8C141F472B330079E8EB /* UIImage+git.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+git.m"; sourceTree = "<group>"; };
+		E4AE8C131F472B330079E8EB /* UIImage+gif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+gif.h"; sourceTree = "<group>"; };
+		E4AE8C141F472B330079E8EB /* UIImage+gif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+gif.m"; sourceTree = "<group>"; };
 		E4AE8C161F472F5A0079E8EB /* login.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = login.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -300,8 +300,8 @@
 				CE1F15A11F430BC700CEE568 /* DMPreviewController.m */,
 				E426EBDD1F49539B0059FE25 /* DMPreviewCell.h */,
 				E426EBDE1F49539B0059FE25 /* DMPreviewCell.m */,
-				E4AE8C131F472B330079E8EB /* UIImage+git.h */,
-				E4AE8C141F472B330079E8EB /* UIImage+git.m */,
+				E4AE8C131F472B330079E8EB /* UIImage+gif.h */,
+				E4AE8C141F472B330079E8EB /* UIImage+gif.m */,
 				CE1F15A61F430C5700CEE568 /* UIView+layout.h */,
 				CE1F15A71F430C5700CEE568 /* UIView+layout.m */,
 				CE1F15A91F430CA600CEE568 /* UIButton+category.h */,
@@ -615,7 +615,7 @@
 				E42330FF1F51BE370083002F /* YYWeakProxy.m in Sources */,
 				CE1F15B11F430D1500CEE568 /* UIImage+category.m in Sources */,
 				CE1F15581F43087100CEE568 /* AppDelegate.m in Sources */,
-				E4AE8C151F472B330079E8EB /* UIImage+git.m in Sources */,
+				E4AE8C151F472B330079E8EB /* UIImage+gif.m in Sources */,
 				E426EBDF1F49539B0059FE25 /* DMPreviewCell.m in Sources */,
 				CE1F15AE1F430CD900CEE568 /* DMExpandButton.m in Sources */,
 				CE1F158C1F4309F600CEE568 /* DMAlbumViewController.m in Sources */,

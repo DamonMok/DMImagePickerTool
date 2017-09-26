@@ -30,10 +30,7 @@ typedef void(^singleTap)();
 
 - (void)pause;
 
-//尺寸复位
-- (void)resetZoomScale;
-
-- (void)clearPlayerLayer;
+- (void)resetWith:(DMAssetModel *)assetModel;
 
 @end
 
@@ -117,7 +114,7 @@ typedef void(^singleTap)();
 
 - (void)replay;
 
-- (void)clearPlayerLayer;
+- (void)resetPlayerLayer;
 
 @end
 

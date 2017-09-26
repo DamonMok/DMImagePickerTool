@@ -8,7 +8,7 @@
 
 #import "DMPhotoManager.h"
 #import "DMDefine.h"
-#import "UIImage+git.h"
+#import "UIImage+gif.h"
 
 @interface DMPhotoManager ()
 {

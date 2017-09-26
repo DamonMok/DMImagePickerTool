@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIImage (git)
+@interface UIImage (gif)
 
 //加载保存在本地的gif图片
 + (UIImage *)sd_animatedGIFNamed:(NSString *)name;
