@@ -189,6 +189,18 @@ static NSString *reusedLivePhoto = @"livePhoto";
     self.collectionView.delegate = self;
     
     [self.view addSubview:self.collectionView];
+    
+    //注册3D Touch，判断设备是否支持
+    if ([self respondsToSelector:@selector(traitCollection)]) {
+        
+        if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)]) {
+            
+            if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable) {
+                
+                [self registerForPreviewingWithDelegate:(id)self sourceView:self.collectionView];
+            }
+        }
+    }
 }
 
 #pragma mark - 初始化底部栏
@@ -288,18 +300,6 @@ static NSString *reusedLivePhoto = @"livePhoto";
             [weakself quitFullScreen];
         }
     };
-    
-    //注册3D Touch，判断设备是否支持
-    if ([self respondsToSelector:@selector(traitCollection)]) {
-        
-        if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)]) {
-            
-            if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable) {
-                
-                [self registerForPreviewingWithDelegate:(id)self sourceView:cell];
-            }
-        }
-    }
     
     return cell;
 }
@@ -450,8 +450,9 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     _currentAssetModel = self.arrAssetModel[_currentIndex];
     
-//    _btnSelected.selected = _currentAssetModel.selected;
-    _btnSelected.selected = ([_arrselected containsObject:_currentAssetModel] && [[DMPhotoManager shareManager] isExistLocallyAsset:_currentAssetModel.asset]) ? YES : NO;
+//    _btnSelected.selected = ([_arrselected containsObject:_currentAssetModel] && [[DMPhotoManager shareManager] isExistLocallyAsset:_currentAssetModel.asset]) ? YES : NO;
+    
+    _btnSelected.selected = ([_arrselected containsObject:_currentAssetModel]) ? YES : NO;
     
     [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)[_arrselected indexOfObject:_currentAssetModel]+1] forState:UIControlStateSelected];
     
@@ -571,7 +572,6 @@ static NSString *reusedLivePhoto = @"livePhoto";
 -(UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
 {
     _isFullScreen = !_isFullScreen;
-    NSLog(@"3d touch");
     
     return nil;
 }

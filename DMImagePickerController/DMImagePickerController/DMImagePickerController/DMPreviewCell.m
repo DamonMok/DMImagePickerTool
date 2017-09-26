@@ -355,10 +355,6 @@
             
             progressView.process = progress;
             
-//            if (progress >= 1) {
-//                
-//                [progressView hideProgressView];
-//            }
         }
     }];
 }
