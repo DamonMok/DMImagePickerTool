@@ -375,7 +375,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 #pragma mark 导航栏右侧选中按钮
 - (void)didClickSelectedButton:(UIButton *)button {
     
-    if ([self showError]) return;
+//    if ([self showError]) return;
     
     if (_arrselected.count >= _imagePickerVC.maxImagesCount && !_currentAssetModel.selected) {
         

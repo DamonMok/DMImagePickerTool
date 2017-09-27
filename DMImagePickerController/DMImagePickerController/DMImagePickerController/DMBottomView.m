@@ -400,6 +400,25 @@
     [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+
+    if (CGRectContainsPoint(_btnSend.frame, point)) {
+        
+        return _btnSend;
+    } else if (CGRectContainsPoint(_btnEdit.frame, point)) {
+    
+        return _btnEdit;
+    } else if (CGRectContainsPoint(_btnOriginalPicture.frame, point)) {
+    
+        return _btnOriginalPicture;
+    } else if (CGRectContainsPoint(_btnPreview.frame, point)) {
+    
+        return _btnPreview;
+    }
+    
+    return [super hitTest:point withEvent:event];
+}
+
 
 @end
 
