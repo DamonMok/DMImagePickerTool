@@ -51,7 +51,7 @@
 @property (nonatomic, strong)DMAssetModel *selectedAssetModel;
 
 
-@property (nonatomic, assign)id<DMBottomViewDelegate> delegate;
+@property (nonatomic, weak)id<DMBottomViewDelegate> delegate;
 
 
 /**滚动到指定位置*/

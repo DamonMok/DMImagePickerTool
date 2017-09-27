@@ -177,6 +177,11 @@
     return self;
 }
 
+- (void)dealloc {
+
+    NSLog(@"%s", __func__);
+}
+
 - (void)initViewsWithFrame:(CGRect)frame {
     
     self.bgImageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);

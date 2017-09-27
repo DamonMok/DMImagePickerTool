@@ -23,9 +23,9 @@
 
 @property (nonatomic, strong)DMAssetModel *assetModel;
 
-@property (nonatomic, assign)id<DMThumbnailCellDelegate> delegate;
+@property (nonatomic, weak)id<DMThumbnailCellDelegate> delegate;
 
-@property (nonatomic, assign)BOOL isShowCover;
-
+//是否请求完成
+@property (nonatomic, assign)BOOL requestFinished;
 
 @end

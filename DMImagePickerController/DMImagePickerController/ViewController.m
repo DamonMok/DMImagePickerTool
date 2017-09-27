@@ -45,13 +45,13 @@
     
     DMImagePickerController *imagePickerVC = [[DMImagePickerController alloc] initWithMaxImagesCount:9];
     
-   [imagePickerVC setDidFinishPickImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
+    [imagePickerVC setDidFinishPickImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
        
        for (UIImage *image in images) {
            
            NSLog(@"%f-%f", image.size.width, image.size.height);
        }
-   }];
+    }];
     
     [self presentViewController:imagePickerVC animated:YES completion:nil];
 }

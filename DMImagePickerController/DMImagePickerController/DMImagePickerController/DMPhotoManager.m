@@ -196,7 +196,7 @@
     
     CGFloat scale = (CGFloat)asset.pixelWidth/asset.pixelHeight;
     
-    CGFloat heightPix = targetSize.height == MAXFLOAT ? widthPix/scale : targetSize.height*_screenScale;
+    CGFloat heightPix = targetSize.height == MAXFLOAT ? widthPix/scale : targetSize.height*_screenScale;//等比缩放 : 指定高度
     
     imageSize = CGSizeMake(widthPix, heightPix);
     

@@ -15,6 +15,7 @@
 #import "UIImage+category.h"
 #import "UIColor+category.h"
 #import "DMPhotoManager.h"
+#import <NSObject+MemoryLeak.h>
 
 #define margin 20
 
@@ -92,6 +93,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     [self initCollectionView];
     [self initNavigationBar];
@@ -122,7 +124,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     [super viewWillDisappear:animated];
     
-    self.navigationController.navigationBarHidden = NO;
+//    self.navigationController.navigationBarHidden = NO;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didPlayToEndTime" object:nil];
     
@@ -141,6 +143,8 @@ static NSString *reusedLivePhoto = @"livePhoto";
     }
     //更新索引
     [_imagePickerVC resetAssetModelIndexForArrSelected:_imagePickerVC.arrselected];
+    
+    _imagePickerVC = nil;
 }
 
 #pragma mark - 初始化自定义导航栏
@@ -565,8 +569,15 @@ static NSString *reusedLivePhoto = @"livePhoto";
             if (_imagePickerVC.didFinishPickImageWithHandle) {
                 _imagePickerVC.didFinishPickImageWithHandle(arrImage, arrInfo);
             }
+            
+            [self dismissViewControllerAnimated:YES completion:^{
+                
+                [self.navigationController popToRootViewControllerAnimated:NO];
+            }];
+            
         }];
     }
+    
 }
 
 #pragma mark - 3D Touch代理
@@ -579,7 +590,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 
 - (void)dealloc {
 
-    NSLog(@"dealloc");
+    NSLog(@"%s", __func__);
 }
 
 #pragma mark - 判断资源是否加载完成
@@ -597,6 +608,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     return requestFinished;
 }
+
 
 @end
 

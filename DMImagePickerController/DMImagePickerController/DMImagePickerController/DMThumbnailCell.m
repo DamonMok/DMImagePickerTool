@@ -135,7 +135,15 @@
         self.btnSelect.selected = _assetModel.selected;
         [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", self.assetModel.index] forState:UIControlStateSelected];
         
-    } progressHandler:nil];
+        if (!isDegraded) {
+            
+            self.requestFinished = YES;
+        }
+        
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        
+        self.requestFinished = NO;
+    }];
     
     if (self.assetModel.userInteractionEnabled) {
         self.vCover.hidden = YES;

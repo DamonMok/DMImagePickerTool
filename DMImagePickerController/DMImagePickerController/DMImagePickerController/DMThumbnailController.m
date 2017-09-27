@@ -92,6 +92,8 @@ static NSString *reusedID = @"thumbnail";
     
     [super viewWillAppear:animated];
     
+    self.navigationController.navigationBarHidden = NO;
+    
     [self refreshBottomView];
     
     [self reloadData];
@@ -272,8 +274,10 @@ static NSString *reusedID = @"thumbnail";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
+    DMThumbnailCell *cell = (DMThumbnailCell *)[collectionView cellForItemAtIndexPath:indexPath];
     
-    if (![[DMPhotoManager shareManager] isExistLocallyAsset:assetModel.asset]) {
+    //![[DMPhotoManager shareManager] isExistLocallyAsset:assetModel.asset]
+    if (!cell.requestFinished) {
         
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"正在从iCloud同步照片"] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
@@ -390,6 +394,9 @@ static NSString *reusedID = @"thumbnail";
             if (_imagePickerVC.didFinishPickImageWithHandle) {
                 _imagePickerVC.didFinishPickImageWithHandle(arrImage, arrInfo);
             }
+            
+            [self didClickCancelButton];
+            
         }];
     }
 }
