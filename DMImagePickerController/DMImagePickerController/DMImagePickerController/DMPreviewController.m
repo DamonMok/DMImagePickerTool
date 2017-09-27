@@ -375,7 +375,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 #pragma mark 导航栏右侧选中按钮
 - (void)didClickSelectedButton:(UIButton *)button {
     
-//    if ([self showError]) return;
+    if (![self checkAssetRequestFinish]) return;
     
     if (_arrselected.count >= _imagePickerVC.maxImagesCount && !_currentAssetModel.selected) {
         
@@ -582,21 +582,20 @@ static NSString *reusedLivePhoto = @"livePhoto";
     NSLog(@"dealloc");
 }
 
-#pragma mark - 判断照片是否有错误
-- (BOOL)showError {
+#pragma mark - 判断资源是否加载完成
+- (BOOL)checkAssetRequestFinish {
 
-    if (![[DMPhotoManager shareManager] isExistLocallyAsset:_currentAssetModel.asset]) {
+    _currentPreviewCell = [self.collectionView visibleCells].firstObject;
+    BOOL requestFinished = NO;
+    if (_currentAssetModel.type == DMAssetModelTypeImage || _currentAssetModel.type == DMAssetModelTypeGif || _currentAssetModel.type == DMAssetModelTypeLivePhoto) {
         
-        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"出错了，请稍后再试"] preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
-        [alertVC addAction:action];
-        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+        requestFinished = _currentPreviewCell.photoPreviewView.requestFinished;
+    } else if (_currentAssetModel.type == DMAssetModelTypeVideo) {
         
-        return YES;
+        requestFinished = _currentPreviewCell.videoPreviewView.requestFinished;
     }
     
-    return NO;
-
+    return requestFinished;
 }
 
 @end

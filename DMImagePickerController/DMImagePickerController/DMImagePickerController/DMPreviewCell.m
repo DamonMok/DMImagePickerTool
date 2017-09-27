@@ -97,6 +97,8 @@
     if (assetModel.type == DMAssetModelTypeImage) {
         
         self.photoPreviewView.assetModel = assetModel;
+        self.videoPreviewView.hidden = YES;
+        self.photoPreviewView.hidden = NO;
         [self.photoPreviewView fetchImageWithAssetModel:assetModel];
     }
 }
@@ -113,6 +115,8 @@
     if (assetModel.type == DMAssetModelTypeGif) {
         
         self.photoPreviewView.assetModel = assetModel;
+        self.videoPreviewView.hidden = YES;
+        self.photoPreviewView.hidden = NO;
         [self.photoPreviewView fetchGifWithAssetModel:assetModel];
         
     }
@@ -141,7 +145,8 @@
 
         self.videoPreviewView.assetModel = assetModel;
         
-//        [self.videoPreviewView clearPlayerLayer];
+        self.videoPreviewView.hidden = NO;
+        self.photoPreviewView.hidden = YES;
         [self.videoPreviewView fetchVideoDataWithAssetModel:assetModel];
 //        [self.videoPreviewView replay];
         
@@ -165,6 +170,8 @@
     if (assetModel.type == DMAssetModelTypeLivePhoto) {
         
         self.photoPreviewView.assetModel = assetModel;
+        self.videoPreviewView.hidden = YES;
+        self.photoPreviewView.hidden = NO;
         [self.photoPreviewView fetchLivePhotoWithAssetModel:assetModel];
     }
 }
@@ -320,12 +327,14 @@
             [progressView hideProgressView];
         }
         
+        self.requestFinished = YES;
+        
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         //iCloud
+        self.requestFinished = NO;
         if (!error) {
             
             progressView.process = progress;
-            
         }
     }];
 }
@@ -347,9 +356,12 @@
         
         [progressView hideProgressView];
         
+        self.requestFinished = YES;
+        
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         
         //iCloud
+        self.requestFinished = NO;
         if (!error) {
             
             progressView.process = progress;
@@ -372,8 +384,11 @@
         
         [progressView hideProgressView];
         
+        self.requestFinished = YES;
+        
     } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         //iCloud
+        self.requestFinished = NO;
         if (!error) {
             
             progressView.process = progress;
@@ -595,8 +610,13 @@
         self.imageView.image = image;
         self.imageView.hidden = NO;
         
-    } progressHandler:nil];
-    
+        self.requestFinished = YES;
+        
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        
+        
+        self.requestFinished = NO;
+    }];
     
 }
 
@@ -628,10 +648,12 @@
                 [self playOrPause];
                 
                 [progressView hideProgressView];
+                
             });
             
         } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             
+            //iCloud
             if (!error) {
                 
                 progressView.process = progress;

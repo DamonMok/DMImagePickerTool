@@ -168,9 +168,4 @@
     [self.labLoading removeFromSuperview];
 }
 
-- (void)dealloc {
-
-    NSLog(@"%s", __func__);
-}
-
 @end

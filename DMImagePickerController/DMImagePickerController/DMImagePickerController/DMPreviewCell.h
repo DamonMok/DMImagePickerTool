@@ -12,7 +12,6 @@
 
 @class DMPhotoPreviewView;
 @class DMVideoPreviewView;
-@class DMLivePhotoPreviewView;
 
 typedef void(^singleTap)();
 
@@ -21,8 +20,6 @@ typedef void(^singleTap)();
 @property (nonatomic, strong)DMPhotoPreviewView *photoPreviewView;
 
 @property (nonatomic, strong)DMVideoPreviewView *videoPreviewView;
-
-@property (nonatomic, strong)DMLivePhotoPreviewView *livePhotoPreviewView;
 
 @property (nonatomic, copy)singleTap singleTap;
 
@@ -77,6 +74,8 @@ typedef void(^singleTap)();
 @property (nonatomic, assign)BOOL requestSuccess;
 
 @property (nonatomic, assign)int32_t requestID;
+
+@property (nonatomic, assign)BOOL requestFinished;
 
 - (void)resume;
 

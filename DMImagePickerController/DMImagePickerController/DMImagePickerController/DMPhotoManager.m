@@ -391,7 +391,6 @@
         isExistLocally = imageData ? YES : NO;
     }];
     
-    
     return isExistLocally;
 }
 

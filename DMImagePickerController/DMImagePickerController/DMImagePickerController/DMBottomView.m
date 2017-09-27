@@ -423,7 +423,7 @@
 
 @end
 
-
+#pragma mark - 内部预览Cell
 @interface DMInnerPreviewCell ()
 
 @property (nonatomic, strong)UIImageView *imageView;
@@ -451,6 +451,8 @@
 - (instancetype)initWithFrame:(CGRect)frame {
 
     if (self = [super initWithFrame:frame]) {
+        
+        self.contentView.backgroundColor = [UIColor blackColor];
         
         self.imageView.frame = self.contentView.bounds;
         [self.contentView addSubview:self.imageView];
