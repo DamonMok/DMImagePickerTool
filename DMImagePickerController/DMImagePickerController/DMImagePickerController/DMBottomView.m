@@ -171,6 +171,7 @@
     if (self = [super initWithFrame:frame]) {
         
         [self initViewsWithFrame:frame];
+        
     }
     
     return self;

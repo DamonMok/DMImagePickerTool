@@ -161,7 +161,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     btnBack.dm_centerY = 64*0.5;
     [btnBack addTarget:self action:@selector(didClickBackButton) forControlEvents:UIControlEventTouchUpInside];
     
-    //selectedStatus
+    //selectedBtn
     _btnSelected = [UIButton buttonWithType:UIButtonTypeCustom];
     [_btnSelected setBackgroundImage:[UIImage imageNamed:@"FriendsSendsPicturesSelectBigNIcon"] forState:UIControlStateNormal];
     [_btnSelected setBackgroundImage:[UIImage imageNamed:@"FriendsSendsPicturesNumberIcon"] forState:UIControlStateSelected];
@@ -522,7 +522,14 @@ static NSString *reusedLivePhoto = @"livePhoto";
 #pragma mark 发送
 - (void)bottomViewDidClickSendButton {
     
+    if (_arrselected.count <= 0) {
+        
+        //当已选照片为空，默认发送当前照片
+        [self didClickSelectedButton:_btnSelected];
+    }
+    
     NSArray *arrSelected = _arrselected;
+    
     BOOL isOriginal = _imagePickerVC.isOriginal;
     
     NSMutableArray *arrImage = [NSMutableArray array];
