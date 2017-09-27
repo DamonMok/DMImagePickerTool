@@ -356,6 +356,7 @@ static NSString *reusedID = @"thumbnail";
     _imagePickerVC.isOriginal = originalPictureBtn.selected;
 }
 
+#pragma mark 点击发送按钮
 - (void)bottomViewDidClickSendButton {
 
     NSArray *arrSelected = _imagePickerVC.arrselected;

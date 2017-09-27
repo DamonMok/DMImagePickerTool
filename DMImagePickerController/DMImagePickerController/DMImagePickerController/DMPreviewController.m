@@ -541,11 +541,14 @@ static NSString *reusedLivePhoto = @"livePhoto";
         
         DMAssetModel *assetModel = arrSelected[i];
         
-        if ([self showError]) return;
-        
         [[DMPhotoManager shareManager] requestTargetImageForAsset:assetModel.asset isOriginal:isOriginal complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
             
             if (isDegraded) return ;
+            
+            if (!image) {
+                //当image在浏览过程中被彻底删除
+                image = [[UIImage alloc] init];
+            }
             
             [arrImage replaceObjectAtIndex:i withObject:image];
             [arrInfo replaceObjectAtIndex:i withObject:info];
