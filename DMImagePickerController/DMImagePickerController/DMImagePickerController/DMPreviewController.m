@@ -443,8 +443,6 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     _currentAssetModel = self.arrAssetModel[_currentIndex];
     
-//    _btnSelected.selected = ([_arrselected containsObject:_currentAssetModel] && [[DMPhotoManager shareManager] isExistLocallyAsset:_currentAssetModel.asset]) ? YES : NO;
-    
     _btnSelected.selected = ([_arrselected containsObject:_currentAssetModel]) ? YES : NO;
     
     [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)[_arrselected indexOfObject:_currentAssetModel]+1] forState:UIControlStateSelected];
