@@ -15,7 +15,7 @@
 #import "UIImage+category.h"
 #import "UIColor+category.h"
 #import "DMPhotoManager.h"
-#import <NSObject+MemoryLeak.h>
+
 
 #define margin 20
 
@@ -39,6 +39,9 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
 }
 
+@property (nonatomic, strong)NSArray<DMAssetModel *> *arrAssetModel;//数据源
+@property (nonatomic, strong)NSArray<DMAssetModel *> *arrUpdate;//返回时赋值刷新的数据
+
 @property (nonatomic, strong)UIView *navigationView;
 
 @property (nonatomic, strong)UICollectionView *collectionView;
@@ -52,6 +55,15 @@ static NSString *reusedLivePhoto = @"livePhoto";
 @implementation DMPreviewController
 
 //lazy load
+- (void)setArrData:(NSArray *)arrData {
+
+    _arrData = arrData;
+    
+    _arrAssetModel = [_arrData mutableCopy];
+    
+    _arrUpdate = _arrData;
+}
+
 - (UIView *)navigationView {
     
     if (!_navigationView) {

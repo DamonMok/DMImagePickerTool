@@ -114,7 +114,7 @@ static NSString *reusedID = @"thumbnail";
     }
     
     [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
-    
+        
     NSLog(@"%s", __func__);
 }
 
@@ -289,8 +289,7 @@ static NSString *reusedID = @"thumbnail";
     if (!assetModel.userInteractionEnabled) return;
     
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
-    previewVC.arrAssetModel = [self.arrAssetModel mutableCopy];
-    previewVC.arrUpdate = self.arrAssetModel;
+    previewVC.arrData = self.arrAssetModel;
     previewVC.selectedIndex = indexPath.row;
     
     [self.navigationController pushViewController:previewVC animated:YES];
@@ -348,7 +347,7 @@ static NSString *reusedID = @"thumbnail";
 - (void)bottomViewDidClickPreviewButton {
 
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
-    previewVC.arrAssetModel = [_imagePickerVC.arrselected copy];
+    previewVC.arrData = [_imagePickerVC.arrselected copy];
     previewVC.selectedIndex = 0;
     
     [self.navigationController pushViewController:previewVC animated:YES];

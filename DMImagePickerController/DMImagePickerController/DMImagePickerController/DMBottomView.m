@@ -411,7 +411,7 @@
     if (CGRectContainsPoint(_btnSend.frame, point)) {
         
         return _btnSend;
-    } else if (CGRectContainsPoint(_btnEdit.frame, point)) {
+    } else if (CGRectContainsPoint(_btnEdit.frame, point) && !_btnEdit.hidden) {
     
         return _btnEdit;
     } else if (CGRectContainsPoint(_btnOriginalPicture.frame, point)) {
@@ -508,6 +508,7 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"selectStatusChanged" object:nil];
     self.assetModel.clicked = NO;
+    
 }
 
 

@@ -11,8 +11,7 @@
 
 @interface DMPreviewController : UIViewController
 
-@property (nonatomic, strong)NSArray *arrAssetModel;//数据源
-@property (nonatomic, strong)NSArray *arrUpdate;//返回时赋值刷新的数据
+@property (nonatomic, strong)NSArray<DMAssetModel *> *arrData;
 
 @property (nonatomic, assign)NSInteger selectedIndex;
 
