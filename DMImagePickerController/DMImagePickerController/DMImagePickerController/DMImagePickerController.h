@@ -16,15 +16,17 @@
 
 @property (nonatomic, copy)void (^didFinishPickImageWithHandle)(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos);
 
-/**(跨相册选择)默认不记录之前相册选择的照片，设置为YES则记录*/
-@property (nonatomic, assign)BOOL recordPreviousSelections;
-
 /**限制选择照片的最大张数*/
 @property (nonatomic, assign)NSInteger maxImagesCount;
 
-/**在【大图预览内】显示【已选择的内部小图】预览,默认为YES。当支持跨相册选择(recordPreviousSelections=Yes)时，则不支持内部预览
+/**跨相册选择,YES为开启*/
+@property (nonatomic, assign)BOOL allowCrossSelect;
+
+/**在【大图浏览内】显示【已选择的内部小图】预览,
+   默认为YES
+   当支持跨相册选择(allowCrossSelect=YES)时，则不支持内部预览
  */
-@property (nonatomic, assign)BOOL showInnerPreview;
+@property (nonatomic, assign)BOOL allowInnerPreview;
 
 /**用户是否选择原图 Yes:原图*/
 @property (nonatomic, assign)BOOL isOriginal;

@@ -280,11 +280,11 @@
     }
 }
 
-- (void)setShowInnerPreview:(BOOL)showInnerPreview {
+- (void)setAllowInnerPreview:(BOOL)allowInnerPreview {
 
-    _showInnerPreview = showInnerPreview;
+    _allowInnerPreview = allowInnerPreview;
     
-    if (!_showInnerPreview) return;
+    if (!_allowInnerPreview) return;
     
     self.collectionView.frame = CGRectMake(0, 0, KScreen_Width, KInnerPreviewHeight);
     [self addSubview:self.collectionView];
@@ -301,7 +301,7 @@
 
     _arrData = arrData;
     
-    if (!_showInnerPreview) return;
+    if (!_allowInnerPreview) return;
     
     if (_arrData.count > 0) {
         
@@ -363,7 +363,7 @@
 
 - (void)scrollToItemOfIndex:(int)index {
     
-    if (!self.showInnerPreview) return;
+    if (!self.allowInnerPreview) return;
     
     if (index < 0) return;
     

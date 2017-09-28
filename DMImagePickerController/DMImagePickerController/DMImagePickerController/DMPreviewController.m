@@ -229,10 +229,10 @@ static NSString *reusedLivePhoto = @"livePhoto";
     self.bottomView.delegate = self;
     self.bottomView.showEditButton = YES;
     self.bottomView.sendEnable = YES;
-    self.bottomView.showInnerPreview = _imagePickerVC.showInnerPreview;
+    self.bottomView.allowInnerPreview = _imagePickerVC.allowInnerPreview;
     self.bottomView.arrData = _arrselected;
     
-    if (_imagePickerVC.showInnerPreview) {
+    if (_imagePickerVC.allowInnerPreview) {
         
         self.bottomView.frame = CGRectMake(0, KScreen_Height-bottomViewHeight-KInnerPreviewHeight, KScreen_Width, bottomViewHeight+KInnerPreviewHeight);
         
@@ -414,7 +414,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
         
         [button.layer addAnimation:[UIView animationForSelectPhoto] forKey:nil];
         
-        if (_imagePickerVC.showInnerPreview) {
+        if (_imagePickerVC.allowInnerPreview) {
             
             //内部预览图插入新的照片
             [self.bottomView insertImage];
@@ -428,7 +428,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
         
         [_imagePickerVC removeAssetModel:_currentAssetModel FromDataSource:self.arrAssetModel updateArr:_arrselected];
         
-        if (_imagePickerVC.showInnerPreview) {
+        if (_imagePickerVC.allowInnerPreview) {
             
             //内部预览图删除照片
             [self.bottomView deleteImageOfIndex:index];
@@ -459,15 +459,15 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     _currentAssetModel = self.arrAssetModel[_currentIndex];
     
-    _btnSelected.selected = ([_arrselected containsObject:_currentAssetModel]) ? YES : NO;
+    _btnSelected.selected = _currentAssetModel.selected;
     
-    [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",(long)[_arrselected indexOfObject:_currentAssetModel]+1] forState:UIControlStateSelected];
+    [_btnSelected setTitle:[NSString stringWithFormat:@"%ld",_currentAssetModel.index] forState:UIControlStateSelected];
     
     //如果是视频，隐藏编辑和原图按钮
     _bottomView.isVideo = _currentAssetModel.type == DMAssetModelTypeVideo?YES:NO;
     
     //根据滑动与内部预览View进行照片位置联动
-    if (_imagePickerVC.showInnerPreview) {
+    if (_imagePickerVC.allowInnerPreview) {
         
         BOOL isFind = NO;
         

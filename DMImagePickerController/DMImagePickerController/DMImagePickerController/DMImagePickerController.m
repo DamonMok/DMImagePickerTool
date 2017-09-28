@@ -48,10 +48,10 @@
     
     if (self = [super initWithRootViewController:albumViewController]) {
         
-        self.recordPreviousSelections = NO;
-        self.showInnerPreview = YES;
-        if (self.recordPreviousSelections) {
-            self.showInnerPreview = NO;
+        self.allowCrossSelect = NO;
+        self.allowInnerPreview = YES;
+        if (self.allowCrossSelect) {
+            self.allowInnerPreview = NO;
         }
         
         self.maxImagesCount = maxImagesCount>0?maxImagesCount:9;

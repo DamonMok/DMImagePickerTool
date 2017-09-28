@@ -109,7 +109,7 @@ static NSString *reusedID = @"thumbnail";
 
 - (void)dealloc {
 
-    if (!_imagePickerVC.recordPreviousSelections) {
+    if (!_imagePickerVC.allowCrossSelect) {
         [_imagePickerVC.arrselected removeAllObjects];
     }
     

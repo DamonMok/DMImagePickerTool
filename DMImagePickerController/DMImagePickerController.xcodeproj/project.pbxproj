@@ -49,6 +49,7 @@
 		CE1F15D71F43113400CEE568 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D61F43113400CEE568 /* Security.framework */; };
 		CE1F15D91F43114F00CEE568 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15D81F43114F00CEE568 /* libz.tbd */; };
 		CE1F15DB1F43115900CEE568 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1F15DA1F43115900CEE568 /* libc++.tbd */; };
+		E4047E071F7D12420085C35D /* DMImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E4047E061F7D12420085C35D /* DMImageCell.m */; };
 		E40D97031F5D81A000B43F7D /* fileicon_video_wall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E40D97021F5D81A000B43F7D /* fileicon_video_wall@2x.png */; };
 		E40D970B1F5D986500B43F7D /* Albumtimeline_video_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = E40D970A1F5D986500B43F7D /* Albumtimeline_video_shadow.png */; };
 		E40D970E1F5D9F9500B43F7D /* livePhoto@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E40D970C1F5D9F9500B43F7D /* livePhoto@2x.png */; };
@@ -150,6 +151,8 @@
 		CE1F15D61F43113400CEE568 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		CE1F15D81F43114F00CEE568 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		CE1F15DA1F43115900CEE568 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		E4047E051F7D12420085C35D /* DMImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMImageCell.h; sourceTree = "<group>"; };
+		E4047E061F7D12420085C35D /* DMImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMImageCell.m; sourceTree = "<group>"; };
 		E40D97021F5D81A000B43F7D /* fileicon_video_wall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fileicon_video_wall@2x.png"; sourceTree = "<group>"; };
 		E40D970A1F5D986500B43F7D /* Albumtimeline_video_shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Albumtimeline_video_shadow.png; sourceTree = "<group>"; };
 		E40D970C1F5D9F9500B43F7D /* livePhoto@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "livePhoto@2x.png"; sourceTree = "<group>"; };
@@ -239,6 +242,8 @@
 				CE1F15571F43087100CEE568 /* AppDelegate.m */,
 				CE1F15591F43087100CEE568 /* ViewController.h */,
 				CE1F155A1F43087100CEE568 /* ViewController.m */,
+				E4047E051F7D12420085C35D /* DMImageCell.h */,
+				E4047E061F7D12420085C35D /* DMImageCell.m */,
 				E42330F71F51BE000083002F /* Library */,
 				CE1F15861F43097F00CEE568 /* DMImagePickerController */,
 				CE1F155C1F43087100CEE568 /* Main.storyboard */,
@@ -611,6 +616,7 @@
 				CE1F155B1F43087100CEE568 /* ViewController.m in Sources */,
 				CE1F15961F430AE700CEE568 /* DMPhotoManager.m in Sources */,
 				E42330FE1F51BE370083002F /* YYFPSLabel.m in Sources */,
+				E4047E071F7D12420085C35D /* DMImageCell.m in Sources */,
 				CE1F159F1F430B9200CEE568 /* DMThumbnailCell.m in Sources */,
 				E42330FF1F51BE370083002F /* YYWeakProxy.m in Sources */,
 				CE1F15B11F430D1500CEE568 /* UIImage+category.m in Sources */,
