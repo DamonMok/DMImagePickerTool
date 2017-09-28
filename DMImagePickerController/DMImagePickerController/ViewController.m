@@ -131,7 +131,7 @@ static CGFloat margin = 10;
     
     DMImagePickerController *imagePickerVC = [[DMImagePickerController alloc] initWithMaxImagesCount:9];
     
-    [imagePickerVC setDidFinishPickImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
+    [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
        
 //       for (UIImage *image in images) {
 //           

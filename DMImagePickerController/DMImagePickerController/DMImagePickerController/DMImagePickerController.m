@@ -48,8 +48,8 @@
     
     if (self = [super initWithRootViewController:albumViewController]) {
         
-        self.allowCrossSelect = NO;
-        self.allowInnerPreview = YES;
+        self.allowCrossSelect = YES;
+        self.allowInnerPreview = NO;
         if (self.allowCrossSelect) {
             self.allowInnerPreview = NO;
         }
@@ -81,6 +81,18 @@
     }
     
     return self;
+}
+
+- (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos {
+
+    if (self.didFinishPickingImageWithHandle) {
+        self.didFinishPickingImageWithHandle(images, infos);
+    }
+    
+    if ([self.imagePickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingImages:infos:)]) {
+        
+        [self.imagePickerDelegate imagePickerController:self didFinishPickingImages:images infos:infos];
+    }
 }
 
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {

@@ -251,7 +251,6 @@ static NSString *reusedID = @"thumbnail";
     //同步模型
     [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
     [self.collectionView reloadData];
-    
 }
 
 #pragma mark - UICollectionView dataSource
@@ -390,9 +389,7 @@ static NSString *reusedID = @"thumbnail";
                 if ([asset isKindOfClass:[NSString class]]) return;
             }
             
-            if (_imagePickerVC.didFinishPickImageWithHandle) {
-                _imagePickerVC.didFinishPickImageWithHandle(arrImage, arrInfo);
-            }
+            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo];
             
             [self didClickCancelButton];
             
