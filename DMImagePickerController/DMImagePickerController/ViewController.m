@@ -17,13 +17,13 @@
 static NSString *reusedId = @"showImage";
 static CGFloat margin = 10;
 
-@interface ViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface ViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMImagePickerDelegate>
 
 @property (nonatomic, strong)NSArray *arrData;
 
 @property (nonatomic, strong)UICollectionView *collectionView;
 
-
+@property (nonatomic, assign)BOOL allowRecordSelection;
 
 @end
 
@@ -130,7 +130,10 @@ static CGFloat margin = 10;
 - (void)openImagePickerVC {
     
     DMImagePickerController *imagePickerVC = [[DMImagePickerController alloc] initWithMaxImagesCount:9];
+    //记录上一次的选择
+    imagePickerVC.allowRecordSelection = self.allowRecordSelection;
     
+    //block
     [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
        
 //       for (UIImage *image in images) {
@@ -143,7 +146,24 @@ static CGFloat margin = 10;
         
     }];
     
+    //代理
+    //imagePickerVC.imagePickerDelegate = self;
+    
     [self presentViewController:imagePickerVC animated:YES completion:nil];
 }
 
+#pragma mark 选择完照片代理
+- (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos {
+
+    self.arrData = images;
+    [self.collectionView reloadData];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+
+    self.allowRecordSelection = !self.allowRecordSelection;
+}
+
 @end
+
+

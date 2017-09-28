@@ -106,7 +106,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
     
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+        
     [self initCollectionView];
     [self initNavigationBar];
     [self initBottomView];
@@ -578,7 +578,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
                 if ([asset isKindOfClass:[NSString class]]) return;
             }
             
-            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo];
+            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModel:arrSelected];
             
             [self dismissViewControllerAnimated:YES completion:^{
                 

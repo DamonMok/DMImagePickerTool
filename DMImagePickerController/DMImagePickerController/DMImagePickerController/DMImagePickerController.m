@@ -11,6 +11,9 @@
 #import "DMThumbnailController.h"
 #import "DMPhotoManager.h"
 #import "DMDefine.h"
+#import <objc/runtime.h>
+
+static void *DMAssetModelsKey = "DMAssetModelsKey";
 
 @interface DMImagePickerController ()
 
@@ -22,6 +25,20 @@
 
     _maxImagesCount = maxImagesCount;
     [DMPhotoManager shareManager].maxImagesCount = maxImagesCount;
+}
+
+- (void)setAllowCrossSelect:(BOOL)allowCrossSelect {
+
+    _allowCrossSelect = allowCrossSelect;
+    
+    _allowInnerPreview = _allowCrossSelect ? NO : _allowInnerPreview;
+}
+
+- (void)setAllowInnerPreview:(BOOL)allowInnerPreview {
+
+    _allowInnerPreview = allowInnerPreview;
+    
+    _allowCrossSelect = _allowInnerPreview ? NO : _allowCrossSelect;
 }
 
 - (NSMutableArray<DMAssetModel *> *)arrselected {
@@ -42,17 +59,27 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+
+    [super viewWillAppear:animated];
+    
+    id controller = self.presentingViewController;
+    
+    if (_allowRecordSelection) {
+        //记录上一次的选择
+        self.arrselected = objc_getAssociatedObject(controller, DMAssetModelsKey);
+    }
+}
+
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount {
     
     DMAlbumViewController *albumViewController = [[DMAlbumViewController alloc] init];
     
     if (self = [super initWithRootViewController:albumViewController]) {
         
-        self.allowCrossSelect = YES;
-        self.allowInnerPreview = NO;
-        if (self.allowCrossSelect) {
-            self.allowInnerPreview = NO;
-        }
+        self.allowRecordSelection = NO;
+        self.allowCrossSelect = NO;
+        self.allowInnerPreview = YES;
         
         self.maxImagesCount = maxImagesCount>0?maxImagesCount:9;
         
@@ -83,7 +110,7 @@
     return self;
 }
 
-- (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos {
+- (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos assetModel:(NSArray<DMAssetModel *> *)assetModel {
 
     if (self.didFinishPickingImageWithHandle) {
         self.didFinishPickingImageWithHandle(images, infos);
@@ -93,6 +120,12 @@
         
         [self.imagePickerDelegate imagePickerController:self didFinishPickingImages:images infos:infos];
     }
+    
+    id controller = self.presentingViewController;
+    
+    //保存已选照片的模型
+    objc_setAssociatedObject(controller, DMAssetModelsKey, assetModel, OBJC_ASSOCIATION_RETAIN);
+    
 }
 
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {

@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "DMAlbumModel.h"
 
-@protocol ImagePickerDelegate;
+@protocol DMImagePickerDelegate;
 
 @interface DMImagePickerController : UINavigationController
 
@@ -20,19 +20,23 @@
 /**限制选择照片的最大张数*/
 @property (nonatomic, assign)NSInteger maxImagesCount;
 
-/**跨相册选择,YES为开启*/
+/**跨相册选择,默认为NO
+   当设置为YES，则不支持内部小图预览
+ */
 @property (nonatomic, assign)BOOL allowCrossSelect;
 
-/**在【大图浏览】内显示【已选择的内部小图】列表,
-   默认为YES
-   当支持跨相册选择(allowCrossSelect=YES)时，则不支持内部预览
+/**在【大图浏览】内显示【已选择照片】的小图列表,默认为YES
+   当设置YES，则不支持跨相册选择
  */
 @property (nonatomic, assign)BOOL allowInnerPreview;
+
+/**记录上一次的选择,默认为NO:不记录*/
+@property (nonatomic, assign)BOOL allowRecordSelection;
 
 /**用户是否选择原图 Yes:原图*/
 @property (nonatomic, assign)BOOL isOriginal;
 
-@property (nonatomic, weak)id<ImagePickerDelegate> imagePickerDelegate;
+@property (nonatomic, weak)id<DMImagePickerDelegate> imagePickerDelegate;
 
 /**已选择的照片数组*/
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrselected;
@@ -41,8 +45,8 @@
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount;
 
 
-/**代理/block*/
-- (void)didFinishPickingImages:(NSArray *)images infos:(NSArray *)infos;
+/**查看代理/block是否实现*/
+- (void)didFinishPickingImages:(NSArray *)images infos:(NSArray *)infos assetModel:(NSArray<DMAssetModel *> *)assetModel;
 
 
 ///以下添加/移除照片的方法主要涉及到DMAssetModel下标的更新
@@ -62,7 +66,7 @@
 
 @end
 
-@protocol ImagePickerDelegate <NSObject>
+@protocol DMImagePickerDelegate <NSObject>
 
 @optional
 - (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos;

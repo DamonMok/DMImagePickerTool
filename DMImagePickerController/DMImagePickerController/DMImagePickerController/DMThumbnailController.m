@@ -389,7 +389,7 @@ static NSString *reusedID = @"thumbnail";
                 if ([asset isKindOfClass:[NSString class]]) return;
             }
             
-            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo];
+            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModel:arrSelected];
             
             [self didClickCancelButton];
             
