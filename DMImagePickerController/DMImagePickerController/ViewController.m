@@ -132,6 +132,7 @@ static CGFloat margin = 10;
     DMImagePickerController *imagePickerVC = [[DMImagePickerController alloc] initWithMaxImagesCount:9];
     //记录上一次的选择
     imagePickerVC.allowRecordSelection = self.allowRecordSelection;
+    imagePickerVC.allowCrossSelect = YES;
     
     //block
     [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){

@@ -132,9 +132,6 @@
         
         self.ivImageView.image = image;
         
-        self.btnSelect.selected = _assetModel.selected;
-        [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", self.assetModel.index] forState:UIControlStateSelected];
-        
         if (!isDegraded) {
             
             self.requestFinished = YES;
@@ -145,6 +142,18 @@
         self.requestFinished = NO;
     }];
     
+    //选择按钮
+    self.btnSelect.selected = _assetModel.selected;
+    
+    if (self.btnSelect.selected) {
+        
+        [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", self.assetModel.index] forState:UIControlStateSelected];
+    } else {
+    
+        [self.btnSelect setTitle:nil forState:UIControlStateNormal];
+    }
+    
+    //遮盖
     if (self.assetModel.userInteractionEnabled) {
         self.vCover.hidden = YES;
     } else {
@@ -200,6 +209,7 @@
     }
 }
 
+#pragma mark 设置照片类型(Gif/LivePhoto/Video)
 - (void)configTypeWithAssetModel:(DMAssetModel *)assetModel {
     assetModel.durationTime = @"00:07";
     
