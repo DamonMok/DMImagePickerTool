@@ -69,7 +69,7 @@ static CGFloat margin = 10;
     
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
     }];
-    
+
 }
 
 #pragma mark - 初始化

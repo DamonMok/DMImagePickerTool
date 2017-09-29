@@ -211,7 +211,6 @@
 
 #pragma mark 设置照片类型(Gif/LivePhoto/Video)
 - (void)configTypeWithAssetModel:(DMAssetModel *)assetModel {
-    assetModel.durationTime = @"00:07";
     
     NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] init];
 

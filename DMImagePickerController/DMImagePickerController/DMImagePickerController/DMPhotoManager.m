@@ -348,6 +348,7 @@
     return arrAsset;
 }
 
+#pragma mark 获取照片类型
 - (DMAssetModelType)getAssetMediaTypeFromAsset:(PHAsset *)asset {
     
     switch (asset.mediaType) {
