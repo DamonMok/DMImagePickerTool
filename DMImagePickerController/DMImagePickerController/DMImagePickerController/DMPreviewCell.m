@@ -318,14 +318,14 @@
     
     CGFloat targetWidth = MIN(assetModel.asset.pixelWidth, KScreen_Width);
     
-    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
+    self.progressView = [DMProgressView showProgressViewAddedTo:self];
     self.requestID = [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
         self.imageView.image = image;
         [self resetSubViewsWithAsset:assetModel.asset];
         
         if (!isDegraded) {
-            [progressView hideProgressView];
+            [self.progressView hideProgressView];
         }
         
         self.requestFinished = YES;
@@ -335,7 +335,7 @@
         self.requestFinished = NO;
         if (!error) {
             
-            progressView.process = progress;
+            self.progressView.process = progress;
         }
     }];
 }
@@ -346,7 +346,7 @@
     self.livePhotoView.hidden = YES;
     self.imageView.hidden = NO;
     
-    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
+    self.progressView = [DMProgressView showProgressViewAddedTo:self];
     self.requestID = [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
         self.imageView.image = image.images.firstObject;
@@ -355,7 +355,7 @@
         
         [self resetSubViewsWithAsset:assetModel.asset];
         
-        [progressView hideProgressView];
+        [self.progressView hideProgressView];
         
         self.requestFinished = YES;
         
@@ -365,7 +365,7 @@
         self.requestFinished = NO;
         if (!error) {
             
-            progressView.process = progress;
+            self.progressView.process = progress;
             
         }
     }];
@@ -377,13 +377,13 @@
     self.imageView.hidden = YES;
     self.livePhotoView.hidden = NO;
     
-    DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
+    self.progressView = [DMProgressView showProgressViewAddedTo:self];
     self.requestID = [[DMPhotoManager shareManager] requestLivePhotoForAsset:assetModel.asset targetSize:self.bounds.size complete:^(PHLivePhoto *livePhoto, NSDictionary *info) {
         
         self.livePhotoView.livePhoto = livePhoto;
         [self resetSubViewsWithAsset:assetModel.asset];
         
-        [progressView hideProgressView];
+        [self.progressView hideProgressView];
         
         self.requestFinished = YES;
         
@@ -392,7 +392,7 @@
         self.requestFinished = NO;
         if (!error) {
             
-            progressView.process = progress;
+            self.progressView.process = progress;
     
         }
     }];
@@ -531,6 +531,7 @@
 - (void)stopRequest {
     
     [[PHCachingImageManager defaultManager] cancelImageRequest:self.requestID];
+    [self.progressView hideProgressView];
 }
 
 - (void)dealloc {
@@ -611,6 +612,8 @@
     
     CGSize posterSize = self.bounds.size;
     
+    self.btnPlay.hidden = NO;
+    
     //封面
     self.requestID = [[DMPhotoManager shareManager] requestImageForAsset:assetModel.asset targetSize:posterSize complete:^(UIImage *image, NSDictionary *info, BOOL isDegraded) {
         
@@ -633,8 +636,7 @@
     
     if (!self.playerItem) {
         
-        //视频
-        DMProgressView *progressView = [DMProgressView showProgressViewAddedTo:self];
+        self.progressView = [DMProgressView showProgressViewAddedTo:self];
         self.requestID = [[DMPhotoManager shareManager] requestVideoDataForAsset:self.assetModel.asset complete:^(AVPlayerItem *playerItem, NSDictionary *info) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -654,7 +656,7 @@
                 
                 [self playOrPause];
                 
-                [progressView hideProgressView];
+                [self.progressView hideProgressView];
                 
             });
             
@@ -663,7 +665,7 @@
             //iCloud
             if (!error) {
                 
-                progressView.process = progress;
+                self.progressView.process = progress;
                 
                 _btnPlay.hidden = YES;
             }
@@ -776,6 +778,7 @@
 - (void)stopRequest {
 
     [[PHCachingImageManager defaultManager] cancelImageRequest:self.requestID];
+    [self.progressView hideProgressView];
     
 }
 

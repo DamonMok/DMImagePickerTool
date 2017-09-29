@@ -108,7 +108,10 @@
 /**【隐藏】进度View*/
 - (void)hideProgressView {
     
-    [self.hubView removeFromSuperview];
+    if (self.hubView) {
+        
+        [self.hubView removeFromSuperview];
+    }
 
 }
 

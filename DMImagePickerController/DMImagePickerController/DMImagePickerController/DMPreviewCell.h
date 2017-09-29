@@ -12,6 +12,7 @@
 
 @class DMPhotoPreviewView;
 @class DMVideoPreviewView;
+@class DMProgressView;
 
 typedef void(^singleTap)();
 
@@ -71,9 +72,13 @@ typedef void(^singleTap)();
 
 @property (nonatomic, copy)singleTap singleTap;
 
+//请求ID
 @property (nonatomic, assign)int32_t requestID;
 
+//请求是否结束
 @property (nonatomic, assign)BOOL requestFinished;
+
+@property (nonatomic, strong)DMProgressView *progressView;
 
 - (void)resume;
 
