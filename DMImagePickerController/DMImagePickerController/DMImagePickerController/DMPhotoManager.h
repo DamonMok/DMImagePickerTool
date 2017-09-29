@@ -30,8 +30,6 @@
 @property(nonatomic, assign)NSInteger maxImagesCount;
 
 
-
-
 /**获取所有相册*/
 - (void)getAllAlbumsCompletion:(void(^)(NSArray<DMAlbumModel *> *))completion;
 

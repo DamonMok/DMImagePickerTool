@@ -32,6 +32,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     _allowCrossSelect = allowCrossSelect;
     
     _allowInnerPreview = _allowCrossSelect ? NO : _allowInnerPreview;
+    
 }
 
 - (void)setAllowInnerPreview:(BOOL)allowInnerPreview {
@@ -67,7 +68,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
     if (_allowRecordSelection) {
         //记录上一次的选择
-        self.arrselected = objc_getAssociatedObject(controller, DMAssetModelsKey);
+        self.arrselected = [objc_getAssociatedObject(controller, DMAssetModelsKey) mutableCopy];
     }
 }
 
@@ -124,7 +125,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     id controller = self.presentingViewController;
     
     //保存已选照片的模型
-    objc_setAssociatedObject(controller, DMAssetModelsKey, assetModel, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(controller, DMAssetModelsKey, [assetModel mutableCopy], OBJC_ASSOCIATION_RETAIN);
     
 }
 

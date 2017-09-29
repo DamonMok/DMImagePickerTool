@@ -109,9 +109,9 @@ static NSString *reusedID = @"thumbnail";
 
 - (void)dealloc {
 
-    if (!_imagePickerVC.allowCrossSelect) {
-        [_imagePickerVC.arrselected removeAllObjects];
-    }
+//    if (!_imagePickerVC.allowCrossSelect) {
+//        [_imagePickerVC.arrselected removeAllObjects];
+//    }
     
     [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
         
@@ -225,12 +225,20 @@ static NSString *reusedID = @"thumbnail";
 //返回
 - (void)didClickBackButton {
     
+    if (!_imagePickerVC.allowCrossSelect) {
+        [_imagePickerVC.arrselected removeAllObjects];
+    }
+    
     [self.navigationController popViewControllerAnimated:YES];
     
 }
 
 //取消
 - (void)didClickCancelButton {
+    
+    if (!_imagePickerVC.allowCrossSelect) {
+        [_imagePickerVC.arrselected removeAllObjects];
+    }
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
@@ -390,7 +398,7 @@ static NSString *reusedID = @"thumbnail";
             }
             
             [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModel:arrSelected];
-            
+           
             [self didClickCancelButton];
             
         }];
