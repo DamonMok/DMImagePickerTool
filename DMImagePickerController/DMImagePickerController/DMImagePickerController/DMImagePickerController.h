@@ -60,7 +60,7 @@
 - (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;
 
 
-/**当从已选照片数组中删除元素后，重新调整assetModel的index*/
+/**重新调整assetModel的index*/
 - (void)resetAssetModelIndexForArrSelected:(NSArray *)arrSelected;
 
 

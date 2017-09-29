@@ -69,6 +69,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     if (_allowRecordSelection) {
         //记录上一次的选择
         self.arrselected = [objc_getAssociatedObject(controller, DMAssetModelsKey) mutableCopy];
+        [self resetAssetModelIndexForArrSelected:self.arrselected];
     }
 }
 

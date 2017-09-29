@@ -305,7 +305,8 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark - DMThumbnailCell代理方法
 #pragma mark 选择/取消选择图片
 - (void)thumbnailCell:(DMThumbnailCell *)cell DidClickSelecteButtonWithAsset:(DMAssetModel *)assetModel {
-    
+    //62D2B104-F81A-44B6-96FE-8318E192288E/L0/001
+    //789F1226-9115-4030-828B-4D782ECEAD7A/L0/001
     if (!assetModel.selected) {
         //添加到已选数组
         if (_imagePickerVC.arrselected.count >= _imagePickerVC.maxImagesCount) {
