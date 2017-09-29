@@ -71,8 +71,6 @@ typedef void(^singleTap)();
 
 @property (nonatomic, copy)singleTap singleTap;
 
-@property (nonatomic, assign)BOOL requestSuccess;
-
 @property (nonatomic, assign)int32_t requestID;
 
 @property (nonatomic, assign)BOOL requestFinished;
@@ -82,16 +80,19 @@ typedef void(^singleTap)();
 - (void)pause;
 
 
-//获取图片数据
+/**停止请求*/
+- (void)stopRequest;
+
+/**获取图片数据*/
 - (void)fetchImageWithAssetModel:(DMAssetModel *)assetModel;
 
-//获取Gif数据
+/**获取Gif数据*/
 - (void)fetchGifWithAssetModel:(DMAssetModel *)assetModel;
 
-//获取视频数据
+/**获取视频数据*/
 - (void)fetchVideoDataWithAssetModel:(DMAssetModel *)assetModel;
 
-//获取LivePhoto数据
+/**获取LivePhoto数据*/
 - (void)fetchLivePhotoWithAssetModel:(DMAssetModel *)assetModel;
 
 /**单击预览View*/

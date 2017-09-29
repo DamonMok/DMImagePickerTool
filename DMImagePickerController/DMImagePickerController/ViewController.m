@@ -137,10 +137,10 @@ static CGFloat margin = 10;
     //block
     [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
        
-//       for (UIImage *image in images) {
-//           
-//           NSLog(@"%f-%f", image.size.width, image.size.height);
-//       }
+       for (UIImage *image in images) {
+           
+           NSLog(@"%f-%f", image.size.width, image.size.height);
+       }
         
         self.arrData = images;
         [self.collectionView reloadData];

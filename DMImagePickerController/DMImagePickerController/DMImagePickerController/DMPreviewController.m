@@ -349,6 +349,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
 
     DMAssetModel *assetModel = self.arrAssetModel[indexPath.row];
     
+    //视图、内存、请求还原
     [((DMPreviewCell *)cell) resetWith:assetModel];
     
 }
@@ -384,6 +385,9 @@ static NSString *reusedLivePhoto = @"livePhoto";
 - (void)didClickBackButton {
     
     self.collectionView.backgroundColor = [UIColor clearColor];
+    
+    //停止请求
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DMPrevieStopRequest" object:nil];
     
     [self.navigationController popViewControllerAnimated:YES];
 }

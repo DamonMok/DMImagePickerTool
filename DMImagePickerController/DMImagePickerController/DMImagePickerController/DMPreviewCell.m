@@ -63,19 +63,23 @@
         case DMAssetModelTypeImage:
             self.photoPreviewView.scrollView.zoomScale = 1.0;
             self.photoPreviewView.imageView.image = nil;
+            [self.photoPreviewView stopRequest];
             break;
         case DMAssetModelTypeGif:
             self.photoPreviewView.scrollView.zoomScale = 1.0;
             [self.photoPreviewView pause];
             self.photoPreviewView.imageView.image = nil;
+            [self.photoPreviewView stopRequest];
             break;
         case DMAssetModelTypeLivePhoto:
             self.photoPreviewView.scrollView.zoomScale = 1.0;
             [self.photoPreviewView pause];
             self.photoPreviewView.livePhotoView.livePhoto = nil;
+            [self.photoPreviewView stopRequest];
             break;
         case DMAssetModelTypeVideo:
             [self.videoPreviewView resetPlayerLayer];
+            [self.videoPreviewView stopRequest];
             break;
             
         default:
@@ -240,12 +244,7 @@
 - (void)pause {
 }
 
-- (void)dealloc {
-
-    if (_livePhotoView) {
-        
-        _livePhotoView = nil;
-    }
+- (void)stopRequest{
 }
 
 @end
@@ -303,6 +302,8 @@
         [self.scrollView addSubview:self.containerView];
         [self.containerView addSubview:self.imageView];
         [self.containerView addSubview:self.livePhotoView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopRequest) name:@"DMPrevieStopRequest" object:nil];
         
     }
     
@@ -527,6 +528,16 @@
     
 }
 
+- (void)stopRequest {
+    
+    [[PHCachingImageManager defaultManager] cancelImageRequest:self.requestID];
+}
+
+- (void)dealloc {
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DMPrevieStopRequest" object:nil];
+}
+
 @end
 
 
@@ -589,6 +600,7 @@
         //播放结束的监听
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopRequest) name:@"DMPrevieStopRequest" object:nil];
     }
     
     return self;
@@ -753,14 +765,17 @@
 
 - (void)dealloc {
     
-    if (_playerLayer) {
-        
-        self.playerLayer = nil;
-    }
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DMPrevieStopRequest" object:nil];
+    
 //    [self.player removeObserver:self forKeyPath:@"rate" context:nil];
+    
+}
+
+- (void)stopRequest {
+
+    [[PHCachingImageManager defaultManager] cancelImageRequest:self.requestID];
     
 }
 
