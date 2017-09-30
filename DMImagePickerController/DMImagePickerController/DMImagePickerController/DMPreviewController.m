@@ -582,7 +582,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
                 if ([asset isKindOfClass:[NSString class]]) return;
             }
             
-            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModel:arrSelected];
+            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModels:arrSelected];
             
             [self dismissViewControllerAnimated:YES completion:^{
                 

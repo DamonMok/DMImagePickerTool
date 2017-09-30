@@ -17,6 +17,9 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
 
 @interface DMImagePickerController ()
 
+/**记录上一次选择的模型数组*/
+@property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrRecord;
+
 @end
 
 @implementation DMImagePickerController
@@ -68,8 +71,8 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
     if (_allowRecordSelection) {
         //记录上一次的选择
-        self.arrselected = [objc_getAssociatedObject(controller, DMAssetModelsKey) mutableCopy];
-        [self resetAssetModelIndexForArrSelected:self.arrselected];
+        self.arrRecord = objc_getAssociatedObject(controller, DMAssetModelsKey);
+        self.arrselected = [self.arrRecord mutableCopy];
     }
 }
 
@@ -112,10 +115,10 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     return self;
 }
 
-- (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos assetModel:(NSArray<DMAssetModel *> *)assetModel {
+- (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels {
 
     if (self.didFinishPickingImageWithHandle) {
-        self.didFinishPickingImageWithHandle(images, infos);
+        self.didFinishPickingImageWithHandle(images, infos, [assetModels mutableCopy]);
     }
     
     if ([self.imagePickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingImages:infos:)]) {
@@ -126,8 +129,36 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     id controller = self.presentingViewController;
     
     //保存已选照片的模型
-    objc_setAssociatedObject(controller, DMAssetModelsKey, [assetModel mutableCopy], OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(controller, DMAssetModelsKey, [assetModels mutableCopy], OBJC_ASSOCIATION_RETAIN);
     
+}
+
+//删除已经不存在的记录(每次打开相册的时候调用)
+- (void)deleteExtraRecordModelByAllModels:(NSMutableArray *)arrAll {
+
+    __block BOOL isFind = NO;
+    [_arrRecord enumerateObjectsUsingBlock:^(DMAssetModel * _Nonnull recordAssetModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        isFind = NO;
+        
+        [arrAll enumerateObjectsUsingBlock:^(DMAssetModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if ([recordAssetModel.asset.localIdentifier isEqualToString:obj.asset.localIdentifier]) {
+                
+                isFind = YES;
+            }
+        }];
+        
+        if (!isFind) {
+            
+            //删除不存在的记录
+            [self.arrRecord removeObject:recordAssetModel];
+            [self.arrselected removeObject:recordAssetModel];
+        }
+    }];
+    
+    //更新下标
+    [self resetAssetModelIndexForArrSelected:_arrselected];
 }
 
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {

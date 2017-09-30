@@ -15,7 +15,7 @@
 @interface DMImagePickerController : UINavigationController
 
 /**选择完照片的回调*/
-@property (nonatomic, copy)void (^didFinishPickingImageWithHandle)(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos);
+@property (nonatomic, copy)void (^didFinishPickingImageWithHandle)(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels);
 
 /**限制选择照片的最大张数*/
 @property (nonatomic, assign)NSInteger maxImagesCount;
@@ -38,7 +38,7 @@
 
 @property (nonatomic, weak)id<DMImagePickerDelegate> imagePickerDelegate;
 
-/**已选择的照片数组*/
+/**已选择的模型数组*/
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrselected;
 
 
@@ -46,10 +46,15 @@
 
 
 /**查看代理/block是否实现*/
-- (void)didFinishPickingImages:(NSArray *)images infos:(NSArray *)infos assetModel:(NSArray<DMAssetModel *> *)assetModel;
+- (void)didFinishPickingImages:(NSArray *)images infos:(NSArray *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels;
 
+/**
+ 删除已经不存在的记录
+ @param arrAll 所有照片的模型数组
+ */
+- (void)deleteExtraRecordModelByAllModels:(NSMutableArray *)arrAll;
 
-///以下添加/移除照片的方法主要涉及到DMAssetModel下标的更新
+///DMAssetModel数组的添加/移除照片方法
 /**向已选择照片数组(arrselected)中添加元素调用的方法：1.更新assetModel的index*/
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr;
 

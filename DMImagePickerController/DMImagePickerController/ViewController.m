@@ -13,13 +13,16 @@
 #import "UIView+layout.h"
 #import "DMDefine.h"
 #import "DMImageCell.h"
+#import "DMPreviewController.h"
 
 static NSString *reusedId = @"showImage";
 static CGFloat margin = 10;
 
 @interface ViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMImagePickerDelegate>
 
-@property (nonatomic, strong)NSArray *arrData;
+@property (nonatomic, strong)NSArray *arrImage;
+
+@property (nonatomic, strong)NSArray *arrAssetModel;
 
 @property (nonatomic, strong)UICollectionView *collectionView;
 
@@ -30,14 +33,24 @@ static CGFloat margin = 10;
 @implementation ViewController
 
 #pragma mark - lazy load
-- (NSArray *)arrData {
+- (NSArray *)arrImage {
 
-    if (!_arrData) {
+    if (!_arrImage) {
         
-        _arrData = [NSArray array];
+        _arrImage = [NSArray array];
     }
     
-    return _arrData;
+    return _arrImage;
+}
+
+- (NSArray *)arrAssetModel {
+
+    if (!_arrAssetModel) {
+        
+        _arrAssetModel = [NSArray array];
+    }
+    
+    return _arrAssetModel;
 }
 
 - (UICollectionView *)collectionView {
@@ -114,16 +127,25 @@ static CGFloat margin = 10;
 #pragma mark - collection dataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 
-    return self.arrData.count;
+    return self.arrImage.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 
     DMImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reusedId forIndexPath:indexPath];
     
-    cell.image = self.arrData[indexPath.row];
+    cell.image = self.arrImage[indexPath.row];
     
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    DMPreviewController *previewVC = [[DMPreviewController alloc] init];
+    previewVC.arrData = self.arrAssetModel;
+    previewVC.selectedIndex = indexPath.row;
+    
+    [self.navigationController pushViewController:previewVC animated:YES];
 }
 
 #pragma mark 打开相册
@@ -135,14 +157,15 @@ static CGFloat margin = 10;
     imagePickerVC.allowCrossSelect = YES;
     
     //block
-    [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos){
+    [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels){
        
        for (UIImage *image in images) {
            
            NSLog(@"%f-%f", image.size.width, image.size.height);
        }
         
-        self.arrData = images;
+        self.arrImage = images;
+        self.arrAssetModel = assetModels;
         [self.collectionView reloadData];
         
     }];
@@ -156,7 +179,7 @@ static CGFloat margin = 10;
 #pragma mark 选择完照片代理
 - (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos {
 
-    self.arrData = images;
+    self.arrImage = images;
     [self.collectionView reloadData];
 }
 

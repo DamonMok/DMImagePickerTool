@@ -94,8 +94,6 @@ static NSString *reusedID = @"thumbnail";
     
     self.navigationController.navigationBarHidden = NO;
     
-    [self refreshBottomView];
-    
     [self reloadData];
     
 }
@@ -133,6 +131,9 @@ static NSString *reusedID = @"thumbnail";
                 
                 self.albumModel = albumModel;
                 self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:albumModel.result];
+            
+                //首次进入相册，把上次选择记录中多余的元素删除
+                [_imagePickerVC deleteExtraRecordModelByAllModels:self.arrAssetModel];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
@@ -258,7 +259,10 @@ static NSString *reusedID = @"thumbnail";
 
     //同步模型
     [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
+    
     [self.collectionView reloadData];
+    
+    [self refreshBottomView];
 }
 
 #pragma mark - UICollectionView dataSource
@@ -399,7 +403,7 @@ static NSString *reusedID = @"thumbnail";
                 if ([asset isKindOfClass:[NSString class]]) return;
             }
             
-            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModel:arrSelected];
+            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModels:arrSelected];
            
             [self didClickCancelButton];
             
