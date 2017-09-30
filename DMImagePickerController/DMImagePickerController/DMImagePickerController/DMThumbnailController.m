@@ -290,10 +290,7 @@ static NSString *reusedID = @"thumbnail";
     //![[DMPhotoManager shareManager] isExistLocallyAsset:assetModel.asset]
     if (!cell.requestFinished) {
         
-        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"正在从iCloud同步照片"] preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
-        [alertVC addAction:action];
-        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+        [self showICloudTips];
         return;
     }
     
@@ -310,7 +307,11 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 选择/取消选择图片
 - (void)thumbnailCell:(DMThumbnailCell *)cell DidClickSelecteButtonWithAsset:(DMAssetModel *)assetModel {
     
-    if (!cell.requestFinished) return;
+    if (!cell.requestFinished) {
+    
+        [self showICloudTips];
+        return;
+    };
     
     if (!assetModel.selected) {
         //添加到已选数组
@@ -494,6 +495,15 @@ static NSString *reusedID = @"thumbnail";
     }];
     
     return indexPaths;
+}
+
+#pragma mark iCloud同步提示
+- (void)showICloudTips {
+
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"正在从iCloud同步照片"] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+    [alertVC addAction:action];
+    [self.navigationController presentViewController:alertVC animated:YES completion:nil];
 }
 
 @end
