@@ -18,10 +18,7 @@
 
 static NSString *reusedID = @"thumbnail";
 
-@interface DMThumbnailController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMThumbnailCellDelegate, DMBottomViewDelegate, PHPhotoLibraryChangeObserver> {
-    
-    DMImagePickerController *_imagePickerVC;
-}
+@interface DMThumbnailController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMThumbnailCellDelegate, DMBottomViewDelegate, PHPhotoLibraryChangeObserver>
 
 //push进来传进来的数组
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrAssetModel;
@@ -119,7 +116,7 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark - 获取数据
 - (void)fetchData {
     
-    _imagePickerVC = (DMImagePickerController *)self.navigationController;
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
     
     DMProgressView *progressView = [DMProgressView showLoadingViewAddTo:self.view];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -133,7 +130,7 @@ static NSString *reusedID = @"thumbnail";
                 self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:albumModel.result];
             
                 //把上次选择记录数组中已经不存在的元素删除
-                [_imagePickerVC deleteExtraRecordModelByAllModels:self.arrAssetModel];
+                [imagePickerVC deleteExtraRecordModelByAllModels:self.arrAssetModel];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
@@ -225,42 +222,47 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 导航栏按钮
 //返回
 - (void)didClickBackButton {
-    
-    if (!_imagePickerVC.allowCrossSelect) {
-        [_imagePickerVC.arrselected removeAllObjects];
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    if (!imagePickerVC.allowCrossSelect) {
+        [imagePickerVC.arrselected removeAllObjects];
     }
     
-    [self.navigationController popViewControllerAnimated:YES];
+    [imagePickerVC popViewControllerAnimated:YES];
     
 }
 
 //取消
 - (void)didClickCancelButton {
     
-    if (!_imagePickerVC.allowCrossSelect) {
-        [_imagePickerVC.arrselected removeAllObjects];
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
+    if (!imagePickerVC.allowCrossSelect) {
+        [imagePickerVC.arrselected removeAllObjects];
     }
     
-    [_imagePickerVC didCancelPickingImage];
+    [imagePickerVC didCancelPickingImage];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [imagePickerVC dismissViewControllerAnimated:YES completion:nil];
     
-    _imagePickerVC = nil;//解决内存泄露
 }
 
 #pragma mark - 刷新底部栏状态
 - (void)refreshBottomView {
     
-    self.bottomView.count = _imagePickerVC.arrselected.count;
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
     
-    self.bottomView.isOriginal = _imagePickerVC.isOriginal;
+    self.bottomView.count = imagePickerVC.arrselected.count;
+    
+    self.bottomView.isOriginal = imagePickerVC.isOriginal;
 }
 
 #pragma mark - 同步并刷新数据
 - (void)reloadData {
 
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
     //同步模型
-    [_imagePickerVC syncModelFromSelectedArray:_imagePickerVC.arrselected toDataArray:self.arrAssetModel];
+    [imagePickerVC syncModelFromSelectedArray:imagePickerVC.arrselected toDataArray:self.arrAssetModel];
     
     [self.collectionView reloadData];
     
@@ -309,6 +311,8 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 选择/取消选择图片
 - (void)thumbnailCell:(DMThumbnailCell *)cell DidClickSelecteButtonWithAsset:(DMAssetModel *)assetModel {
     
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
     if (!cell.requestFinished) {
     
         [self showICloudTips];
@@ -317,20 +321,20 @@ static NSString *reusedID = @"thumbnail";
     
     if (!assetModel.selected) {
         //添加到已选数组
-        if (_imagePickerVC.arrselected.count >= _imagePickerVC.maxImagesCount) {
+        if (imagePickerVC.arrselected.count >= imagePickerVC.maxImagesCount) {
         
-            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"你最多只能选择%ld张照片",(long)_imagePickerVC.maxImagesCount] preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"你最多只能选择%ld张照片",(long)imagePickerVC.maxImagesCount] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleCancel handler:nil];
             [alertVC addAction:action];
             [self.navigationController presentViewController:alertVC animated:YES completion:nil];
             return;
         }
         
-        [_imagePickerVC addAssetModel:assetModel updateArr:_imagePickerVC.arrselected];
+        [imagePickerVC addAssetModel:assetModel updateArr:imagePickerVC.arrselected];
         
     } else {
         
-        [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel arrSelected:_imagePickerVC.arrselected];
+        [imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel arrSelected:imagePickerVC.arrselected];
         
     }
     
@@ -341,7 +345,9 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark - 刷新数据
 - (void)reflashData {
 
-    if (_imagePickerVC.arrselected.count < _imagePickerVC.maxImagesCount) {
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
+    if (imagePickerVC.arrselected.count < imagePickerVC.maxImagesCount) {
         
         //移除蒙版
         [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationShowCover" object:nil userInfo:@{@"remove":@"remove"}];
@@ -362,8 +368,10 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 点击预览按钮
 - (void)bottomViewDidClickPreviewButton {
 
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
-    previewVC.arrData = [_imagePickerVC.arrselected copy];
+    previewVC.arrData = [imagePickerVC.arrselected copy];
     previewVC.selectedIndex = 0;
     
     [self.navigationController pushViewController:previewVC animated:YES];
@@ -372,19 +380,23 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 点击原图按钮
 - (void)bottomViewDidClickOriginalPicture:(UIButton *)originalPictureBtn {
     
-    _imagePickerVC.isOriginal = originalPictureBtn.selected;
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
+    imagePickerVC.isOriginal = originalPictureBtn.selected;
 }
 
 #pragma mark 点击发送按钮
 - (void)bottomViewDidClickSendButton {
 
-    NSArray *arrSelected = _imagePickerVC.arrselected;
-    BOOL isOriginal = _imagePickerVC.isOriginal;
+    __block DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
+    NSArray *arrSelected = imagePickerVC.arrselected;
+    BOOL isOriginal = imagePickerVC.isOriginal;
     
     NSMutableArray *arrImage = [NSMutableArray array];
     NSMutableArray *arrInfo = [NSMutableArray array];
 
-    for (int i = 0; i < _imagePickerVC.arrselected.count; i++) {
+    for (int i = 0; i < imagePickerVC.arrselected.count; i++) {
         
         //因为获取图片是异步，所以预设一个数组，根据回调时候的i进行有序替换
         [arrImage addObject:@"placeholder"];
@@ -406,12 +418,10 @@ static NSString *reusedID = @"thumbnail";
                 if ([asset isKindOfClass:[NSString class]]) return;
             }
             
-            [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModels:arrSelected];
+            [imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModels:arrSelected];
            
-            [self dismissViewControllerAnimated:YES completion:nil];
-            
-            _imagePickerVC = nil;//解决内存泄露
-            
+            [imagePickerVC dismissViewControllerAnimated:YES completion:nil];
+                        
         }];
     }
 }
@@ -422,6 +432,9 @@ static NSString *reusedID = @"thumbnail";
  https://developer.apple.com/documentation/photos/phphotolibrarychangeobserver?language=objc
  */
 - (void)photoLibraryDidChange:(PHChange *)changeInfo {
+    
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
     // Photos may call this method on a background queue;
     // switch to the main queue to update the UI.
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -441,7 +454,7 @@ static NSString *reusedID = @"thumbnail";
                         //删除
                         [removed enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
                             //已选数组的属性同步
-                            [_imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel arrSelected:_imagePickerVC.arrselected];
+                            [imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel arrSelected:imagePickerVC.arrselected];
                         }];
                         
                         [self.arrAssetModel removeObjectsAtIndexes:removed];
@@ -456,7 +469,7 @@ static NSString *reusedID = @"thumbnail";
                         NSArray *arrInsert = [arrNewAssetModel objectsAtIndexes:inserted];
                         [self.arrAssetModel insertObjects:arrInsert atIndexes:inserted];
                         
-                        if (_imagePickerVC.arrselected.count == _imagePickerVC.maxImagesCount) {
+                        if (imagePickerVC.arrselected.count == imagePickerVC.maxImagesCount) {
                             //判断是否已经等于最大可选数量，如果是，则插入进来的元素不可交互
                             [arrInsert enumerateObjectsUsingBlock:^(DMAssetModel  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                 

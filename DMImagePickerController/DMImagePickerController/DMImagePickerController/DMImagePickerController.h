@@ -48,9 +48,11 @@
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount;
 
 
-/**查看代理/block是否实现*/
+/**查看【选择完成】代理/block是否实现*/
 - (void)didFinishPickingImages:(NSArray *)images infos:(NSArray *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels;
 
+
+/**查看【取消选择】代理/block是否实现*/
 - (void)didCancelPickingImage;
 
 /**
@@ -69,7 +71,6 @@
 /**根据selectArray同步dataArray模型*/
 - (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;
 
-
 @end
 
 
@@ -81,6 +82,8 @@
 /**选择照片完成*/
 - (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos;
 
+
+/**取消选择*/
 - (void)imagePickerControllerDidCancel:(DMImagePickerController *)imagePicker;
 
 @end

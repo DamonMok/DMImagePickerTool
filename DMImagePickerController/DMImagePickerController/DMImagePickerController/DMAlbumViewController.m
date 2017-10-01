@@ -166,7 +166,7 @@
     
     [imagePickerController didCancelPickingImage];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     
 }
 

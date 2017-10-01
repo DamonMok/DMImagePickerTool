@@ -189,6 +189,7 @@ static CGFloat margin = 10;
     imagePickerVC.imagePickerDelegate = self;
     
     [self presentViewController:imagePickerVC animated:YES completion:nil];
+    
 }
 
 #pragma mark 选择照片完成代理
