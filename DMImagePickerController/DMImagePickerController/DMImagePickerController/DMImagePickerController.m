@@ -24,6 +24,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
 
 @implementation DMImagePickerController
 
+#pragma mark - lazy load
 - (void)setMaxImagesCount:(NSInteger)maxImagesCount {
 
     _maxImagesCount = maxImagesCount;
@@ -56,6 +57,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     return _arrselected;
 }
 
+#pragma mark - cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -81,6 +83,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     NSLog(@"%s", __func__);
 }
 
+#pragma mark - 初始化
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount {
     
     DMAlbumViewController *albumViewController = [[DMAlbumViewController alloc] init];
@@ -120,6 +123,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     return self;
 }
 
+#pragma mark - 选择完成回调
 - (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels {
 
     if (self.didFinishPickingImageWithHandle) {
@@ -138,7 +142,8 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
 }
 
-//删除已经不存在的记录(每次打开相册的时候调用)
+#pragma mark - 数据处理
+#pragma mark 删除已经不存在的记录(每次打开相册的时候调用)
 - (void)deleteExtraRecordModelByAllModels:(NSMutableArray *)arrAll {
 
     __block BOOL isFind = NO;
@@ -169,6 +174,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
 }
 
+#pragma mark 新增
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {
     
     [arr addObject:assetModel];
@@ -176,6 +182,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     assetModel.selected = YES;
 }
 
+#pragma mark 删除
 - (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource arrSelected:(NSMutableArray *)arrSelected {
     
     NSArray *arrSlt = [NSArray arrayWithArray:arrSelected];
@@ -192,6 +199,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
 }
 
+#pragma mark 根据已选择数组同步模型数组
 - (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray {
     
     for (DMAssetModel *assetModel in dataArray) {

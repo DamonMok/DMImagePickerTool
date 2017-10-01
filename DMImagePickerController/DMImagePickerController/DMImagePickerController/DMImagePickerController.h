@@ -33,14 +33,13 @@
 /**记录上一次的选择,默认为NO:不记录*/
 @property (nonatomic, assign)BOOL allowRecordSelection;
 
-/**用户是否选择原图 Yes:原图*/
+/**用户是否选择原图 YES:原图*/
 @property (nonatomic, assign)BOOL isOriginal;
 
 @property (nonatomic, weak)id<DMImagePickerDelegate> imagePickerDelegate;
 
-/**已选择的模型数组*/
+/**已选择照片的模型数组*/
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrselected;
-
 
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount;
 
@@ -54,7 +53,7 @@
  */
 - (void)deleteExtraRecordModelByAllModels:(NSMutableArray *)arrAll;
 
-///DMAssetModel数组的添加/移除照片方法
+///照片模型(DMAssetModel)数组的添加/移除照片方法
 /**向已选择照片数组(arrselected)中添加元素调用的方法：1.更新assetModel的index*/
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr;
 
@@ -67,9 +66,13 @@
 
 @end
 
+
+#pragma mark - 代理
 @protocol DMImagePickerDelegate <NSObject>
 
 @optional
+
+/**选择完照片的代理*/
 - (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos;
 
 @end
