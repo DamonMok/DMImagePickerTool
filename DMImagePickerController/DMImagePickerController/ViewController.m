@@ -180,6 +180,11 @@ static CGFloat margin = 10;
         
     }];
     
+    imagePickerVC.didCancelPickingImageWithHandle = ^{
+        
+        NSLog(@"取消");
+    };
+    
     //代理
     //imagePickerVC.imagePickerDelegate = self;
     

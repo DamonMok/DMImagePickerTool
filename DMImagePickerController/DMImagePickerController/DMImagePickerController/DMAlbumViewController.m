@@ -13,6 +13,7 @@
 #import "DMAlbumCell.h"
 #import "DMThumbnailController.h"
 #import "DMProgressView.h"
+#import "DMImagePickerController.h"
 
 @interface DMAlbumViewController ()<UITableViewDelegate,UITableViewDataSource, PHPhotoLibraryChangeObserver> {
 
@@ -160,6 +161,13 @@
 
 #pragma mark 导航栏取消按钮
 - (void)didClickCancelButton {
+    
+    DMImagePickerController *imagePickerController = (DMImagePickerController *)self.navigationController;
+    
+    if (imagePickerController.didCancelPickingImageWithHandle) {
+        
+        imagePickerController.didCancelPickingImageWithHandle();
+    }
     
     [self dismissViewControllerAnimated:YES completion:nil];
     

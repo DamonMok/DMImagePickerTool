@@ -241,6 +241,8 @@ static NSString *reusedID = @"thumbnail";
         [_imagePickerVC.arrselected removeAllObjects];
     }
     
+    [_imagePickerVC didCancelPickingImage];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
     
     _imagePickerVC = nil;//解决内存泄露
@@ -406,7 +408,9 @@ static NSString *reusedID = @"thumbnail";
             
             [_imagePickerVC didFinishPickingImages:arrImage infos:arrInfo assetModels:arrSelected];
            
-            [self didClickCancelButton];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            
+            _imagePickerVC = nil;//解决内存泄露
             
         }];
     }

@@ -123,7 +123,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     return self;
 }
 
-#pragma mark - 选择完成回调
+#pragma mark - 选择照片完成回调
 - (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels {
 
     if (self.didFinishPickingImageWithHandle) {
@@ -140,6 +140,15 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     //保存已选照片的模型
     objc_setAssociatedObject(controller, DMAssetModelsKey, [assetModels mutableCopy], OBJC_ASSOCIATION_RETAIN);
     
+}
+
+#pragma mark - 取消选择照片回调
+- (void)didCancelPickingImage {
+
+    if (self.didCancelPickingImageWithHandle) {
+        
+        self.didCancelPickingImageWithHandle();
+    }
 }
 
 #pragma mark - 数据处理

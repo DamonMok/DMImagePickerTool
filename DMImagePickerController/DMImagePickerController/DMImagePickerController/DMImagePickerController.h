@@ -17,6 +17,8 @@
 /**选择完照片的回调*/
 @property (nonatomic, copy)void (^didFinishPickingImageWithHandle)(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels);
 
+@property (nonatomic, copy)void (^didCancelPickingImageWithHandle)();
+
 /**限制选择照片的最大张数*/
 @property (nonatomic, assign)NSInteger maxImagesCount;
 
@@ -41,11 +43,15 @@
 /**已选择照片的模型数组*/
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrselected;
 
+
+/**初始化*/
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount;
 
 
 /**查看代理/block是否实现*/
 - (void)didFinishPickingImages:(NSArray *)images infos:(NSArray *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels;
+
+- (void)didCancelPickingImage;
 
 /**
  删除已经不存在的记录
