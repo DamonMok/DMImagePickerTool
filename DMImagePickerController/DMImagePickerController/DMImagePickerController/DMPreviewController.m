@@ -153,8 +153,6 @@ static NSString *reusedLivePhoto = @"livePhoto";
             [_imagePickerVC.arrselected removeObject:assetModel];
         }
     }
-    //更新索引
-    [_imagePickerVC resetAssetModelIndexForArrSelected:_imagePickerVC.arrselected];
     
     _imagePickerVC = nil;
 }
@@ -389,7 +387,14 @@ static NSString *reusedLivePhoto = @"livePhoto";
     //停止请求
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DMPrevieStopRequest" object:nil];
     
-    [self.navigationController popViewControllerAnimated:YES];
+    if (self.navigationController.childViewControllers.count == 1) {
+        
+        //当前控制器是根控制器
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    } else {
+    
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 #pragma mark 导航栏右侧选中按钮
@@ -430,7 +435,7 @@ static NSString *reusedLivePhoto = @"livePhoto";
         //从已选数组中删除
         int index = (int)_currentAssetModel.index-1;
         
-        [_imagePickerVC removeAssetModel:_currentAssetModel FromDataSource:self.arrAssetModel updateArr:_arrselected];
+        [_imagePickerVC removeAssetModel:_currentAssetModel FromDataSource:self.arrAssetModel arrSelected:_arrselected];
         
         if (_imagePickerVC.allowInnerPreview) {
             

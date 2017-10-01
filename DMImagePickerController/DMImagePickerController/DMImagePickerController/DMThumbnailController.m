@@ -132,7 +132,7 @@ static NSString *reusedID = @"thumbnail";
                 self.albumModel = albumModel;
                 self.arrAssetModel = (NSMutableArray *)[[DMPhotoManager shareManager] getAssetModelArrayFromResult:albumModel.result];
             
-                //首次进入相册，把上次选择记录中多余的元素删除
+                //把上次选择记录数组中已经不存在的元素删除
                 [_imagePickerVC deleteExtraRecordModelByAllModels:self.arrAssetModel];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -328,7 +328,7 @@ static NSString *reusedID = @"thumbnail";
         
     } else {
         
-        [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel updateArr:_imagePickerVC.arrselected];
+        [_imagePickerVC removeAssetModel:assetModel FromDataSource:self.arrAssetModel arrSelected:_imagePickerVC.arrselected];
         
     }
     
@@ -437,7 +437,7 @@ static NSString *reusedID = @"thumbnail";
                         //删除
                         [removed enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
                             //已选数组的属性同步
-                            [_imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel updateArr:_imagePickerVC.arrselected];
+                            [_imagePickerVC removeAssetModel:self.arrAssetModel[idx] FromDataSource:self.arrAssetModel arrSelected:_imagePickerVC.arrselected];
                         }];
                         
                         [self.arrAssetModel removeObjectsAtIndexes:removed];

@@ -59,14 +59,10 @@
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr;
 
 /**从已选择照片数组(arrselected)中移除元素调用的方法：1.更新已选照片(arrselected)的index;2.同步数据源模型*/
-- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource updateArr:(NSMutableArray *)arr;
+- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource arrSelected:(NSMutableArray *)arrSelected;
 
 /**根据selectArray同步dataArray模型*/
 - (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;
-
-
-/**重新调整assetModel的index*/
-- (void)resetAssetModelIndexForArrSelected:(NSArray *)arrSelected;
 
 
 @end

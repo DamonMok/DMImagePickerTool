@@ -51,7 +51,7 @@
 
  @param asset PHAsset
  @param isOriginal 是否需要原图
- @param complete 返回的照片不大于默认宽度414
+ @param complete 返回的照片不大于默认宽度414pt
  @return 请求照片的标识
  */
 - (PHImageRequestID)requestTargetImageForAsset:(PHAsset *)asset isOriginal:(BOOL)isOriginal complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;

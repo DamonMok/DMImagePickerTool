@@ -76,6 +76,11 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     }
 }
 
+- (void)dealloc {
+
+    NSLog(@"%s", __func__);
+}
+
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount {
     
     DMAlbumViewController *albumViewController = [[DMAlbumViewController alloc] init];
@@ -137,28 +142,31 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
 - (void)deleteExtraRecordModelByAllModels:(NSMutableArray *)arrAll {
 
     __block BOOL isFind = NO;
-    [_arrRecord enumerateObjectsUsingBlock:^(DMAssetModel * _Nonnull recordAssetModel, NSUInteger idx, BOOL * _Nonnull stop) {
+
+    NSMutableArray *arrRecord = [NSMutableArray arrayWithArray:_arrRecord];
+    
+    for (DMAssetModel *recordAssetModel in arrRecord) {
         
         isFind = NO;
         
-        [arrAll enumerateObjectsUsingBlock:^(DMAssetModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        for (DMAssetModel *assetModel in arrAll) {
             
-            if ([recordAssetModel.asset.localIdentifier isEqualToString:obj.asset.localIdentifier]) {
+            if ([recordAssetModel.asset.localIdentifier isEqualToString:assetModel.asset.localIdentifier]) {
                 
                 isFind = YES;
+                break;
             }
-        }];
+        }
         
         if (!isFind) {
             
             //删除不存在的记录
+            recordAssetModel.index = 0;
             [self.arrRecord removeObject:recordAssetModel];
             [self.arrselected removeObject:recordAssetModel];
         }
-    }];
+    }
     
-    //更新下标
-    [self resetAssetModelIndexForArrSelected:_arrselected];
 }
 
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {
@@ -168,26 +176,19 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     assetModel.selected = YES;
 }
 
-- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource updateArr:(NSMutableArray *)arr {
+- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource arrSelected:(NSMutableArray *)arrSelected {
     
-    NSArray *arrSelected = [NSArray arrayWithArray:arr];
-    for (DMAssetModel *selectModel in arrSelected) {
+    NSArray *arrSlt = [NSArray arrayWithArray:arrSelected];
+    for (DMAssetModel *selectModel in arrSlt) {
         if ([selectModel.asset.localIdentifier isEqualToString:assetModel.asset.localIdentifier]) {
             
-            [arr removeObject:selectModel];
-            
-            //重置
-            assetModel.index = 0;
-            assetModel.selected = NO;
-            
+            [arrSelected removeObject:selectModel];
+        
         }
     }
     
-    //更新已选数组元素下标
-    [self resetAssetModelIndexForArrSelected:arr];
-    
     //根据已选数组同步数据源模型
-    [self syncModelFromSelectedArray:arr toDataArray:dataSource];
+    [self syncModelFromSelectedArray:arrSelected toDataArray:dataSource];
     
 }
 
@@ -195,32 +196,45 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
     for (DMAssetModel *assetModel in dataArray) {
         
-        for (DMAssetModel *assetModelSelected in selectArray) {
+        if (selectArray.count == 0) {
+            //已选择照片数组为0，不需要同步，属性重置
+            assetModel.selected = NO;
+            assetModel.index = 0;
+            assetModel.userInteractionEnabled = YES;
             
+            continue;
+        }
+        
+        for (DMAssetModel *assetModelSelected in selectArray) {
+            //已选择照片数组>0，同步
             if ([assetModel.asset.localIdentifier isEqualToString:assetModelSelected.asset.localIdentifier]) {
                 
                 assetModel.selected = YES;
+                assetModel.index = [selectArray indexOfObject:assetModelSelected]+1;
                 assetModel.userInteractionEnabled = YES;
-                assetModel.index = assetModelSelected.index;
+                
+                assetModelSelected.selected = YES;
+                assetModelSelected.index = [selectArray indexOfObject:assetModelSelected]+1;
+                assetModelSelected.userInteractionEnabled = YES;
+                
                 break;
             } else {
                 
                 assetModel.selected = NO;
+                assetModel.index = 0;
                 //少于照片最大张数，为可交互
                 assetModel.userInteractionEnabled = self.arrselected.count< self.maxImagesCount;
+
             }
         }
+        
     }
 }
 
-- (void)resetAssetModelIndexForArrSelected:(NSArray *)arrSelected {
-    
-    for (int i=0; i<arrSelected.count; i++) {
-        
-        DMAssetModel *assetModel = arrSelected[i];
-        assetModel.index = i+1;
-    }
-}
+
+
+
+
 
 
 

@@ -141,11 +141,21 @@ static CGFloat margin = 10;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
+    //根据DMAssetModel进行预览
     DMPreviewController *previewVC = [[DMPreviewController alloc] init];
     previewVC.arrData = self.arrAssetModel;
     previewVC.selectedIndex = indexPath.row;
     
-    [self.navigationController pushViewController:previewVC animated:YES];
+    DMImagePickerController *imagePicker = [[DMImagePickerController alloc] initWithRootViewController:previewVC];
+    imagePicker.arrselected = (NSMutableArray *)self.arrAssetModel;
+    imagePicker.didFinishPickingImageWithHandle = ^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels) {
+        
+        self.arrAssetModel = assetModels;
+        self.arrImage = images;
+        [self.collectionView reloadData];
+    };
+    
+    [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
 }
 
 #pragma mark 打开相册
