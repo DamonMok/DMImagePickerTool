@@ -388,7 +388,7 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 点击发送按钮
 - (void)bottomViewDidClickSendButton {
 
-    __block DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
     
     NSArray *arrSelected = imagePickerVC.arrselected;
     BOOL isOriginal = imagePickerVC.isOriginal;

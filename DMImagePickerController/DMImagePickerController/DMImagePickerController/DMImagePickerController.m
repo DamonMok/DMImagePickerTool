@@ -25,12 +25,6 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
 @implementation DMImagePickerController
 
 #pragma mark - lazy load
-- (void)setMaxImagesCount:(NSInteger)maxImagesCount {
-
-    _maxImagesCount = maxImagesCount;
-    [DMPhotoManager shareManager].maxImagesCount = maxImagesCount;
-}
-
 - (void)setAllowCrossSelect:(BOOL)allowCrossSelect {
 
     _allowCrossSelect = allowCrossSelect;
@@ -44,6 +38,13 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     _allowInnerPreview = allowInnerPreview;
     
     _allowCrossSelect = _allowInnerPreview ? NO : _allowCrossSelect;
+}
+
+- (void)setMaxImagesCount:(NSInteger)maxImagesCount {
+    
+    _maxImagesCount = maxImagesCount;
+    
+    [DMPhotoManager shareManager].maxImagesCount = maxImagesCount;
 }
 
 - (NSMutableArray<DMAssetModel *> *)arrselected {

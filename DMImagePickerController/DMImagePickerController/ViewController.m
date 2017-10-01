@@ -192,14 +192,15 @@ static CGFloat margin = 10;
     
 }
 
-#pragma mark 选择照片完成代理
+#pragma mark - 相册操作相关代理
+#pragma mark 选择照片完成
 - (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos {
 
     self.arrImage = images;
     [self.collectionView reloadData];
 }
 
-#pragma mark 取消选择照片代理
+#pragma mark 取消选择照片
 - (void)imagePickerControllerDidCancel:(DMImagePickerController *)imagePicker {
 
     NSLog(@"%s", __func__);
