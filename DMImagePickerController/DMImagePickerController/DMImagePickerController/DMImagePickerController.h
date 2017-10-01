@@ -78,8 +78,10 @@
 
 @optional
 
-/**选择完照片的代理*/
+/**选择照片完成*/
 - (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos;
+
+- (void)imagePickerControllerDidCancel:(DMImagePickerController *)imagePicker;
 
 @end
 

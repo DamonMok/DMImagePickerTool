@@ -186,16 +186,22 @@ static CGFloat margin = 10;
     };
     
     //代理
-    //imagePickerVC.imagePickerDelegate = self;
+    imagePickerVC.imagePickerDelegate = self;
     
     [self presentViewController:imagePickerVC animated:YES completion:nil];
 }
 
-#pragma mark 选择完照片代理
+#pragma mark 选择照片完成代理
 - (void)imagePickerController:(DMImagePickerController *)imagePicker didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos {
 
     self.arrImage = images;
     [self.collectionView reloadData];
+}
+
+#pragma mark 取消选择照片代理
+- (void)imagePickerControllerDidCancel:(DMImagePickerController *)imagePicker {
+
+    NSLog(@"%s", __func__);
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

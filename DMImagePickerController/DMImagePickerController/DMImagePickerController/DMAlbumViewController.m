@@ -164,10 +164,7 @@
     
     DMImagePickerController *imagePickerController = (DMImagePickerController *)self.navigationController;
     
-    if (imagePickerController.didCancelPickingImageWithHandle) {
-        
-        imagePickerController.didCancelPickingImageWithHandle();
-    }
+    [imagePickerController didCancelPickingImage];
     
     [self dismissViewControllerAnimated:YES completion:nil];
     

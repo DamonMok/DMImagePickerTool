@@ -149,6 +149,11 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
         
         self.didCancelPickingImageWithHandle();
     }
+    
+    if ([self.imagePickerDelegate respondsToSelector:@selector(imagePickerControllerDidCancel:)]) {
+        
+        [self.imagePickerDelegate imagePickerControllerDidCancel:self];
+    }
 }
 
 #pragma mark - 数据处理
