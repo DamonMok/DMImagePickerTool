@@ -192,6 +192,28 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
 #pragma mark 新增
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {
     
+    if (_allowRadio) {
+        //单选
+        if (arr.count >= 1) {
+            
+            DMAssetModel *exModel = arr[0];
+            exModel.index = 0;
+            exModel.selected = NO;
+            
+            [arr replaceObjectAtIndex:0 withObject:assetModel];
+            
+        } else {
+        
+            [arr addObject:assetModel];
+        }
+        
+        assetModel.index = 1;
+        assetModel.selected = YES;
+        
+        return;
+    }
+    
+    //多选
     [arr addObject:assetModel];
     assetModel.index = arr.count;
     assetModel.selected = YES;
@@ -215,7 +237,9 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
 }
 
 #pragma mark 根据已选择数组同步模型数组
-- (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray {
+- (void)syncModelFromSelectedArray:(NSMutableArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray {
+    
+    NSMutableArray *arrSelected = selectArray;
     
     for (DMAssetModel *assetModel in dataArray) {
         
@@ -228,7 +252,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
             continue;
         }
         
-        for (DMAssetModel *assetModelSelected in selectArray) {
+        for (DMAssetModel *assetModelSelected in arrSelected) {
             //已选择照片数组>0，同步
             if ([assetModel.asset.localIdentifier isEqualToString:assetModelSelected.asset.localIdentifier]) {
                 
@@ -239,6 +263,11 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
                 assetModelSelected.selected = YES;
                 assetModelSelected.index = [selectArray indexOfObject:assetModelSelected]+1;
                 assetModelSelected.userInteractionEnabled = YES;
+                
+                if (_allowRadio) {
+                    //单选元素同步
+                    [selectArray replaceObjectAtIndex:0 withObject:assetModel];
+                }
                 
                 break;
             } else {

@@ -165,6 +165,7 @@ static CGFloat margin = 10;
     //记录上一次的选择
     imagePickerVC.allowRecordSelection = self.allowRecordSelection;
     imagePickerVC.allowCrossSelect = YES;
+//    imagePickerVC.allowRadio = YES;
     
     //block
     [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels){

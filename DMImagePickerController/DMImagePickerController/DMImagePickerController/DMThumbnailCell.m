@@ -172,18 +172,23 @@
     }
     
     if (self.assetModel.selected) {
-        btn.selected = YES;
+        
         [btn.layer addAnimation:[UIView animationForSelectPhoto] forKey:nil];
         
-    } else {
-        
-        btn.selected = NO;
     }
     
 }
 
 //更新已选择的索引
 - (void)updateSelectionIndex {
+    
+    if (self.assetModel.selected) {
+        _btnSelect.selected = YES;
+        
+    } else {
+        
+        _btnSelect.selected = NO;
+    }
     
     [self.btnSelect setTitle:[NSString stringWithFormat:@"%ld", (long)self.assetModel.index] forState:UIControlStateSelected];
 }

@@ -24,6 +24,9 @@
 /**取消选择的回调*/
 @property (nonatomic, copy)void (^didCancelPickingImageWithHandle)();
 
+/**相册单选,默认为NO*/
+@property (nonatomic, assign)BOOL allowRadio;
+
 /**跨相册选择,默认为NO。当设置为YES，则不支持内部小图预览*/
 @property (nonatomic, assign)BOOL allowCrossSelect;
 
@@ -64,10 +67,10 @@
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr;
 
 /**从已选择照片数组(arrselected)中移除元素调用的方法：1.更新已选照片(arrselected)的index;2.同步数据源模型*/
-- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource arrSelected:(NSMutableArray *)arrSelected;
+- (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource arrSelected:(NSArray *)arrSelected;
 
 /**根据selectArray同步dataArray模型*/
-- (void)syncModelFromSelectedArray:(NSArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;
+- (void)syncModelFromSelectedArray:(NSMutableArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray;
 
 @end
 
