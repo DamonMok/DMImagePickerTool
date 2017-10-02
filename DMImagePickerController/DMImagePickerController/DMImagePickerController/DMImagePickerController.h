@@ -14,10 +14,11 @@
 
 @interface DMImagePickerController : UINavigationController
 
-#pragma mark - 初始化方法
+#pragma mark - ------------------初始化方法------------------
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount;
 
-#pragma mark - 可配置参数
+#pragma mark - ------------------可配置参数------------------
+#pragma mark 相册参数
 /**选择完照片的回调*/
 @property (nonatomic, copy)void (^didFinishPickingImageWithHandle)(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels);
 
@@ -33,10 +34,27 @@
 /**在【大图浏览】内显示【已选择照片】的小图列表,默认为YES。当设置YES，则不支持跨相册选择*/
 @property (nonatomic, assign)BOOL allowInnerPreview;
 
-/**记录上一次的选择,默认为NO:不记录*/
+/**记录上一次的选择,默认为不记录NO*/
 @property (nonatomic, assign)BOOL allowRecordSelection;
 
-#pragma mark - other
+#pragma mark 照片参数
+/**允许选择照片,默认为可选择:YES*/
+@property (nonatomic, assign)BOOL allowImage;
+
+/**允许选择Gif,默认为可选择:YES。当设置为NO，Gif将以照片形式显示*/
+@property (nonatomic, assign)BOOL allowGif;
+
+/**允许选择Livephoto,默认为可选择:YES。当设置为NO，LivePhoto将以照片形式显示*/
+@property (nonatomic, assign)BOOL allowLivePhoto;
+
+/**允许选择视频,默认为可选择:YES*/
+@property (nonatomic, assign)BOOL allowVideo;
+
+/**将视频以照片的形式显示，默认为NO*/
+@property (nonatomic, assign)BOOL showVideoAsImage;
+
+
+#pragma mark - ------------------other------------------
 /**限制选择照片的最大张数，默认9张*/
 @property (nonatomic, assign)NSInteger maxImagesCount;
 
@@ -49,7 +67,7 @@
 @property (nonatomic, weak)id<DMImagePickerDelegate> imagePickerDelegate;
 
 
-#pragma mark - 内部实现调用的方法
+#pragma mark - ------------------内部实现调用的方法------------------
 /**查看【选择完成】代理/block是否实现*/
 - (void)didFinishPickingImages:(NSArray *)images infos:(NSArray *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels;
 
@@ -75,7 +93,7 @@
 @end
 
 
-#pragma mark - 相关操作代理方法
+#pragma mark - ------------------相关操作代理方法------------------
 @protocol DMImagePickerDelegate <NSObject>
 
 @optional

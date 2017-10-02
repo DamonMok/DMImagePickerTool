@@ -26,9 +26,21 @@
 /**默认返回照片的最大宽度为414*/
 @property(nonatomic, assign)CGFloat maxWidth;
 
-/**限制选择照片的最大张数*/
-@property(nonatomic, assign)NSInteger maxImagesCount;
 
+/**允许选择照片,默认为可选择:YES*/
+@property (nonatomic, assign)BOOL allowImage;
+
+/**允许选择Gif,默认为可选择:YES。当设置为NO，Gif将以照片形式显示*/
+@property (nonatomic, assign)BOOL allowGif;
+
+/**允许选择Livephoto,默认为可选择:YES。当设置为NO，LivePhoto将以照片形式显示*/
+@property (nonatomic, assign)BOOL allowLivePhoto;
+
+/**允许选择视频,默认为可选择:YES*/
+@property (nonatomic, assign)BOOL allowVideo;
+
+/**将视频以照片的形式显示，默认为NO*/
+@property (nonatomic, assign)BOOL showVideoAsImage;
 
 /**获取所有相册*/
 - (void)getAllAlbumsCompletion:(void(^)(NSArray<DMAlbumModel *> *))completion;

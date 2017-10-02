@@ -166,6 +166,12 @@ static CGFloat margin = 10;
     imagePickerVC.allowRecordSelection = self.allowRecordSelection;
     imagePickerVC.allowCrossSelect = YES;
 //    imagePickerVC.allowRadio = YES;
+//    imagePickerVC.allowVideo = NO;
+//    imagePickerVC.allowImage = NO;
+//    imagePickerVC.allowGif = NO;
+//    imagePickerVC.allowLivePhoto = NO;
+//    imagePickerVC.showVideoAsImage = YES;
+    
     
     //block
     [imagePickerVC setDidFinishPickingImageWithHandle:^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels){

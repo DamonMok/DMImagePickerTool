@@ -13,6 +13,7 @@
 @interface DMPhotoManager ()
 {
     CGFloat _screenScale;
+
 }
 
 @end
@@ -44,6 +45,12 @@
     self.sortAscendingByCreationDate = YES;
     self.maxWidth = 414;
     
+    self.allowVideo = YES;
+    self.allowImage = YES;
+    self.allowGif = YES;
+    self.allowLivePhoto = YES;
+    self.showVideoAsImage = NO;
+    
     //配置音频会话，不配置播放视频将没有声音
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayAndRecord
@@ -67,6 +74,8 @@
     
     PHFetchOptions *fetchOptions = [PHFetchOptions new];
     fetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:self.sortAscendingByCreationDate]];
+    if (!_allowImage) fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeVideo];
+    if (!_allowVideo) fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
     
     //获取所有相册
     PHFetchResult *smartAlbumResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
@@ -109,6 +118,13 @@
     
     PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
     fetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:self.sortAscendingByCreationDate]];
+    
+    if (!_allowImage)
+        fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeVideo];
+    if (!_allowVideo)
+        fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
+//    if (!_allowImage && !_allowVideo)
+//        fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %ld && mediaType != %ld", PHAssetMediaTypeImage, PHAssetMediaTypeVideo];
     
     PHFetchResult *userAlbum = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
     
@@ -338,6 +354,15 @@
     [result enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
         
         DMAssetModelType type = [self getAssetMediaTypeFromAsset:asset];
+        
+        if (!_allowGif && type == DMAssetModelTypeGif)
+            type = DMAssetModelTypeImage;
+        
+        if (!_allowLivePhoto && type == DMAssetModelTypeLivePhoto)
+            type = DMAssetModelTypeImage;
+        
+        if (_showVideoAsImage && type == DMAssetModelTypeVideo)
+            type = DMAssetModelTypeImage;
         
         DMAssetModel *photoModel = [DMAssetModel assetModelWithAsset:asset medieType:type];
         

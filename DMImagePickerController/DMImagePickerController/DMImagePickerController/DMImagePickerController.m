@@ -9,9 +9,9 @@
 #import "DMImagePickerController.h"
 #import "DMAlbumViewController.h"
 #import "DMThumbnailController.h"
-#import "DMPhotoManager.h"
 #import "DMDefine.h"
 #import <objc/runtime.h>
+#import "DMPhotoManager.h"
 
 static void *DMAssetModelsKey = "DMAssetModelsKey";
 
@@ -40,11 +40,45 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     _allowCrossSelect = _allowInnerPreview ? NO : _allowCrossSelect;
 }
 
+- (void)setAllowImage:(BOOL)allowImage {
+
+    _allowImage = allowImage;
+    
+    [DMPhotoManager shareManager].allowImage = allowImage;
+}
+
+- (void)setAllowGif:(BOOL)allowGif {
+
+    _allowGif = allowGif;
+    
+    [DMPhotoManager shareManager].allowGif = allowGif;
+}
+
+- (void)setAllowLivePhoto:(BOOL)allowLivePhoto {
+
+    _allowLivePhoto = allowLivePhoto;
+    
+    [DMPhotoManager shareManager].allowLivePhoto = allowLivePhoto;
+}
+
+- (void)setAllowVideo:(BOOL)allowVideo {
+
+    _allowVideo = allowVideo;
+    
+    [DMPhotoManager shareManager].allowVideo = allowVideo;
+}
+
+- (void)setShowVideoAsImage:(BOOL)showVideoAsImage {
+
+    _showVideoAsImage = showVideoAsImage;
+    
+    [DMPhotoManager shareManager].showVideoAsImage = showVideoAsImage;
+}
+
 - (void)setMaxImagesCount:(NSInteger)maxImagesCount {
     
     _maxImagesCount = maxImagesCount;
     
-    [DMPhotoManager shareManager].maxImagesCount = maxImagesCount;
 }
 
 - (NSMutableArray<DMAssetModel *> *)arrselected {
@@ -63,6 +97,14 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     [super viewDidLoad];
     
     self.navigationBar.barStyle = UIBarStyleBlack;
+    
+    self.allowRadio = NO;
+    self.allowCrossSelect = NO;
+    self.allowInnerPreview = YES;
+    self.allowRecordSelection = NO;
+    self.allowGif = YES;
+    
+    self.maxImagesCount = _maxImagesCount>0?_maxImagesCount:9;
     
 }
 
@@ -91,12 +133,6 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
     if (self = [super initWithRootViewController:albumViewController]) {
         
-        self.allowRecordSelection = NO;
-        self.allowCrossSelect = NO;
-        self.allowInnerPreview = YES;
-        
-        self.maxImagesCount = maxImagesCount>0?maxImagesCount:9;
-        
         if ([[DMPhotoManager shareManager] getAuthorizationStatus]) {
             //授权
             
@@ -124,7 +160,8 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     return self;
 }
 
-#pragma mark - 选择照片完成回调
+#pragma mark - 选择照片完成/取消 回调
+//选择照片完成回调
 - (void)didFinishPickingImages:(NSArray<UIImage *> *)images infos:(NSArray<NSDictionary *> *)infos assetModels:(NSArray<DMAssetModel *> *)assetModels {
 
     if (self.didFinishPickingImageWithHandle) {
@@ -143,7 +180,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
 }
 
-#pragma mark - 取消选择照片回调
+//取消选择照片回调
 - (void)didCancelPickingImage {
 
     if (self.didCancelPickingImageWithHandle) {
@@ -158,7 +195,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
 }
 
 #pragma mark - 数据处理
-#pragma mark 删除已经不存在的记录(每次打开相册的时候调用)
+// 删除已经不存在的记录(每次打开相册的时候调用)
 - (void)deleteExtraRecordModelByAllModels:(NSMutableArray *)arrAll {
 
     __block BOOL isFind = NO;
@@ -189,7 +226,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
 }
 
-#pragma mark 新增
+//新增
 - (void)addAssetModel:(DMAssetModel *)assetModel updateArr:(NSMutableArray *)arr {
     
     if (_allowRadio) {
@@ -219,7 +256,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     assetModel.selected = YES;
 }
 
-#pragma mark 删除
+//删除
 - (void)removeAssetModel:(DMAssetModel *)assetModel FromDataSource:(NSArray *)dataSource arrSelected:(NSMutableArray *)arrSelected {
     
     NSArray *arrSlt = [NSArray arrayWithArray:arrSelected];
@@ -236,7 +273,7 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     
 }
 
-#pragma mark 根据已选择数组同步模型数组
+//根据已选择数组同步模型数组
 - (void)syncModelFromSelectedArray:(NSMutableArray<DMAssetModel *> *)selectArray toDataArray:(NSArray<DMAssetModel *> *)dataArray {
     
     NSMutableArray *arrSelected = selectArray;
@@ -282,10 +319,6 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
         
     }
 }
-
-
-
-
 
 
 
