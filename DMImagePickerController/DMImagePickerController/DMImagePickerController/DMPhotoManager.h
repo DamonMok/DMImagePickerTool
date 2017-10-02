@@ -14,10 +14,10 @@
 
 + (instancetype)shareManager;
 
-/**默认不隐藏空的相册*/
-@property(nonatomic, assign)BOOL hideEmptyAlbum;
+/**默认隐藏空的相册*/
+@property(nonatomic, assign)BOOL showEmptyAlbum;
 
-/**默认显示【已隐藏】相册*/
+/**默认隐藏【已隐藏】相册*/
 @property(nonatomic, assign)BOOL showHiddenAlbum;
 
 /**默认照片根据日期升序排列*/

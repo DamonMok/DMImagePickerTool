@@ -37,7 +37,11 @@
 /**记录上一次的选择,默认为不记录NO*/
 @property (nonatomic, assign)BOOL allowRecordSelection;
 
+
 #pragma mark 照片参数
+/**默认照片根据日期升序排列*/
+@property(nonatomic, assign)BOOL sortAscendingByCreationDate;
+
 /**允许选择照片,默认为可选择:YES*/
 @property (nonatomic, assign)BOOL allowImage;
 

@@ -40,7 +40,7 @@
 #pragma mark 在这里设置相关默认参数
 - (void)configParameter {
     
-    self.hideEmptyAlbum = NO;
+    self.showEmptyAlbum = NO;
     self.showHiddenAlbum = YES;
     self.sortAscendingByCreationDate = YES;
     self.maxWidth = 414;
@@ -90,7 +90,7 @@
             
             PHFetchResult *result = [PHAsset fetchAssetsInAssetCollection:collection options:fetchOptions];
             
-            if (!result.count && self.hideEmptyAlbum) return ;
+            if (!result.count && !self.showEmptyAlbum) return ;
             
             
             //转成DMAlbumModel对象

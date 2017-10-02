@@ -18,7 +18,10 @@
 
 static NSString *reusedID = @"thumbnail";
 
-@interface DMThumbnailController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMThumbnailCellDelegate, DMBottomViewDelegate, PHPhotoLibraryChangeObserver>
+@interface DMThumbnailController ()<UICollectionViewDelegate, UICollectionViewDataSource, DMThumbnailCellDelegate, DMBottomViewDelegate, PHPhotoLibraryChangeObserver> {
+
+    BOOL _push;
+}
 
 //push进来传进来的数组
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrAssetModel;
@@ -78,8 +81,8 @@ static NSString *reusedID = @"thumbnail";
     [self initNavigationBar];
     [self initCollectionView];
     [self initBottomView];
-    [self scrollToBotton];
     [self fetchData];
+    [self scrollToBotton];
     
     //相册本地+iCloud内容变化监听
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
@@ -212,9 +215,11 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 滚到底部
 - (void)scrollToBotton {
     
-    if ([DMPhotoManager shareManager].sortAscendingByCreationDate) {
+    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
+    if (imagePickerVC.sortAscendingByCreationDate) {
         
-        if (self.arrAssetModel.count <= 0) return;
+        if (self.arrAssetModel.count <= 0 || _push) return;
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.arrAssetModel.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:NO];
     }
 }
@@ -267,6 +272,8 @@ static NSString *reusedID = @"thumbnail";
     [self.collectionView reloadData];
     
     [self refreshBottomView];
+    
+    [self scrollToBotton];
 }
 
 #pragma mark - UICollectionView dataSource
@@ -305,6 +312,8 @@ static NSString *reusedID = @"thumbnail";
     previewVC.selectedIndex = indexPath.row;
     
     [self.navigationController pushViewController:previewVC animated:YES];
+    
+    _push = YES;
 }
 
 #pragma mark - DMThumbnailCell代理方法
@@ -375,6 +384,8 @@ static NSString *reusedID = @"thumbnail";
     previewVC.selectedIndex = 0;
     
     [self.navigationController pushViewController:previewVC animated:YES];
+    
+    _push = YES;
 }
 
 #pragma mark 点击原图按钮

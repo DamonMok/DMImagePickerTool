@@ -40,6 +40,13 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     _allowCrossSelect = _allowInnerPreview ? NO : _allowCrossSelect;
 }
 
+- (void)setSortAscendingByCreationDate:(BOOL)sortAscendingByCreationDate {
+
+    _sortAscendingByCreationDate = sortAscendingByCreationDate;
+    
+    [DMPhotoManager shareManager].sortAscendingByCreationDate = sortAscendingByCreationDate;
+}
+
 - (void)setAllowImage:(BOOL)allowImage {
 
     _allowImage = allowImage;
