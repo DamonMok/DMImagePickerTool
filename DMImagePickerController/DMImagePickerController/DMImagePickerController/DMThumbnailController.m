@@ -106,10 +106,6 @@ static NSString *reusedID = @"thumbnail";
 }
 
 - (void)dealloc {
-
-//    if (!_imagePickerVC.allowCrossSelect) {
-//        [_imagePickerVC.arrselected removeAllObjects];
-//    }
     
     [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
         
@@ -120,6 +116,11 @@ static NSString *reusedID = @"thumbnail";
 - (void)fetchData {
     
     DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
+    
+    if (!imagePickerVC.allowCrossSelect) {
+        //不允许跨相册选择，把已选删除
+        [imagePickerVC.arrselected removeAllObjects];
+    }
     
     DMProgressView *progressView = [DMProgressView showLoadingViewAddTo:self.view];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -227,12 +228,8 @@ static NSString *reusedID = @"thumbnail";
 #pragma mark 导航栏按钮
 //返回
 - (void)didClickBackButton {
-    DMImagePickerController *imagePickerVC = (DMImagePickerController *)self.navigationController;
-    if (!imagePickerVC.allowCrossSelect) {
-        [imagePickerVC.arrselected removeAllObjects];
-    }
     
-    [imagePickerVC popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
     
 }
 

@@ -171,7 +171,7 @@ static CGFloat margin = 10;
 //    imagePickerVC.allowGif = NO;
 //    imagePickerVC.allowLivePhoto = NO;
 //    imagePickerVC.showVideoAsImage = YES;
-    imagePickerVC.sortAscendingByCreationDate = NO;
+//    imagePickerVC.sortAscendingByCreationDate = NO;
     
     
     //block

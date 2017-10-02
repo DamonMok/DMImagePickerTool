@@ -15,7 +15,7 @@
 
 static void *DMAssetModelsKey = "DMAssetModelsKey";
 
-@interface DMImagePickerController ()
+@interface DMImagePickerController ()<UIGestureRecognizerDelegate>
 
 /**记录上一次选择的模型数组*/
 @property (nonatomic, strong)NSMutableArray<DMAssetModel *> *arrRecord;
@@ -104,6 +104,9 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     [super viewDidLoad];
     
     self.navigationBar.barStyle = UIBarStyleBlack;
+    
+    //解决右滑返回失效
+    self.interactivePopGestureRecognizer.delegate = self;
     
     self.allowRadio = NO;
     self.allowCrossSelect = NO;
@@ -327,8 +330,12 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     }
 }
 
-
-
+#pragma mark 右滑返回判断
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    
+    return self.childViewControllers.count > 1;
+}
 
 
 @end
