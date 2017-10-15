@@ -95,7 +95,7 @@
     
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"AlbumPhotoImageViewBottomBK123"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTranslucent:YES];

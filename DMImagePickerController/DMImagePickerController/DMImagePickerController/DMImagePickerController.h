@@ -34,7 +34,7 @@
 /**在【大图浏览】内显示【已选择照片】的小图列表,默认为YES。当设置YES，则不支持跨相册选择*/
 @property (nonatomic, assign)BOOL allowInnerPreview;
 
-/**记录上一次的选择,默认为不记录NO*/
+/**记录上一次的选择,默认为不记录:NO*/
 @property (nonatomic, assign)BOOL allowRecordSelection;
 
 

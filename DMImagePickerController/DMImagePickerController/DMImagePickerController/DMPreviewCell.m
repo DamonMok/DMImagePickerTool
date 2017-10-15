@@ -269,7 +269,6 @@
         _scrollView.scrollsToTop = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = YES;
-        _scrollView.delaysContentTouches = NO;
     }
     
     return _scrollView;
@@ -295,7 +294,7 @@
         UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapPreviewView:)];
         doubleTap.numberOfTapsRequired = 2;
         [singleTap requireGestureRecognizerToFail:doubleTap];
-        [self addGestureRecognizer:doubleTap];
+        [self.containerView addGestureRecognizer:doubleTap];
         
         
         [self addSubview:self.scrollView];
@@ -349,9 +348,13 @@
     self.progressView = [DMProgressView showProgressViewAddedTo:self];
     self.requestID = [[DMPhotoManager shareManager] requestGifImageForAsset:assetModel.asset complete:^(UIImage *image, NSDictionary *info) {
         
-        self.imageView.image = image.images.firstObject;
+        self.imageView.image = image;
         
-        [self.imageView performSelector:@selector(setImage:) withObject:image afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        if (image.images.count >1) {
+            
+            //相册中有的Gif格式的图片有可能只是一张静态图
+            [self.imageView performSelector:@selector(setImage:) withObject:image afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        }
         
         [self resetSubViewsWithAsset:assetModel.asset];
         

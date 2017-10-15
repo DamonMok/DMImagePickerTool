@@ -42,14 +42,7 @@
     
     self.showEmptyAlbum = NO;
     self.showHiddenAlbum = YES;
-    self.sortAscendingByCreationDate = YES;
     self.maxWidth = 414;
-    
-    self.allowVideo = YES;
-    self.allowImage = YES;
-    self.allowGif = YES;
-    self.allowLivePhoto = YES;
-    self.showVideoAsImage = NO;
     
     //配置音频会话，不配置播放视频将没有声音
     AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -144,6 +137,31 @@
     
 }
 
+#pragma mark - 请求返回给用户展示的结果
+//照片
+- (PHImageRequestID)requestTargetImageForAsset:(PHAsset *)asset isOriginal:(BOOL)isOriginal complete:(void (^)(UIImage *image, NSDictionary *info, BOOL isDegraded))complete {
+
+    CGFloat targetWidth = asset.pixelWidth;
+    if (targetWidth>self.maxWidth && !isOriginal) {
+        targetWidth = self.maxWidth;
+    }
+    
+    return [self requestImageForAsset:asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:complete progressHandler:nil];
+    
+}
+
+//Gif
+- (PHImageRequestID)requestTargetGifForAsset:(PHAsset *)asset complete:(void (^)(UIImage *image, NSDictionary *info))complete {
+
+    return [self requestGifImageForAsset:asset complete:complete progressHandler:nil];
+}
+
+//livePhoto
+- (PHImageRequestID)requestTargetLivePhotoForAsset:(PHAsset *)asset complete:(void (^)(PHLivePhoto *, NSDictionary *))complete {
+
+    return [self requestLivePhotoForAsset:asset targetSize:CGSizeMake(KScreen_Width, KScreen_Height) complete:complete progressHandler:nil];
+}
+
 - (PHImageRequestID)requestPosterImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete
 {
     
@@ -155,17 +173,6 @@
         }
         
     } progressHandler:nil];
-    
-}
-
-- (PHImageRequestID)requestTargetImageForAsset:(PHAsset *)asset isOriginal:(BOOL)isOriginal complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete {
-
-    CGFloat targetWidth = asset.pixelWidth;
-    if (targetWidth>self.maxWidth && !isOriginal) {
-        targetWidth = self.maxWidth;
-    }
-    
-    return [self requestImageForAsset:asset targetSize:CGSizeMake(targetWidth, MAXFLOAT) complete:complete progressHandler:nil];
     
 }
 

@@ -111,8 +111,14 @@ static void *DMAssetModelsKey = "DMAssetModelsKey";
     self.allowRadio = NO;
     self.allowCrossSelect = NO;
     self.allowInnerPreview = YES;
-    self.allowRecordSelection = NO;
+    self.allowRecordSelection = YES;
+    
+    self.allowVideo = YES;
+    self.allowImage = YES;
     self.allowGif = YES;
+    self.allowLivePhoto = YES;
+    self.showVideoAsImage = NO;
+    self.sortAscendingByCreationDate = YES;
     
     self.maxImagesCount = _maxImagesCount>0?_maxImagesCount:9;
     

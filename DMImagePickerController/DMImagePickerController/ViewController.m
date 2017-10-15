@@ -147,6 +147,7 @@ static CGFloat margin = 10;
     previewVC.selectedIndex = indexPath.row;
     
     DMImagePickerController *imagePicker = [[DMImagePickerController alloc] initWithRootViewController:previewVC];
+    imagePicker.allowInnerPreview = YES;
     imagePicker.arrselected = (NSMutableArray *)self.arrAssetModel;
     imagePicker.didFinishPickingImageWithHandle = ^(NSArray<UIImage *> *images, NSArray<NSDictionary *> *infos, NSArray<DMAssetModel *> *assetModels) {
         

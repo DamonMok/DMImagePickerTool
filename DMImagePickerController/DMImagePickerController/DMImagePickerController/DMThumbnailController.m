@@ -82,7 +82,6 @@ static NSString *reusedID = @"thumbnail";
     [self initCollectionView];
     [self initBottomView];
     [self fetchData];
-    [self scrollToBotton];
     
     //相册本地+iCloud内容变化监听
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];

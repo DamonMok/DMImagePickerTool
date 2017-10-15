@@ -27,19 +27,19 @@
 @property(nonatomic, assign)CGFloat maxWidth;
 
 
-/**允许选择照片,默认为可选择:YES*/
+/**是否允许选择照片*/
 @property (nonatomic, assign)BOOL allowImage;
 
-/**允许选择Gif,默认为可选择:YES。当设置为NO，Gif将以照片形式显示*/
+/**是否允许选择Gif。当设置为NO，Gif将以照片形式显示*/
 @property (nonatomic, assign)BOOL allowGif;
 
-/**允许选择Livephoto,默认为可选择:YES。当设置为NO，LivePhoto将以照片形式显示*/
+/**是否允许选择Livephoto。当设置为NO，LivePhoto将以照片形式显示*/
 @property (nonatomic, assign)BOOL allowLivePhoto;
 
-/**允许选择视频,默认为可选择:YES*/
+/**是否允许选择视频*/
 @property (nonatomic, assign)BOOL allowVideo;
 
-/**将视频以照片的形式显示，默认为NO*/
+/**是否将视频以照片的形式显示*/
 @property (nonatomic, assign)BOOL showVideoAsImage;
 
 /**获取所有相册*/
@@ -51,14 +51,6 @@
 
 
 /**
- 获取相册封面图
- @param albumModel 相册模型
- @param complete 回调
- @return 图片异步请求标识符
- */
-- (PHImageRequestID)requestPosterImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete;
-
-/**
  返回给用户的图片
 
  @param asset PHAsset
@@ -66,7 +58,19 @@
  @param complete 返回的照片不大于默认宽度414pt
  @return 请求照片的标识
  */
-- (PHImageRequestID)requestTargetImageForAsset:(PHAsset *)asset isOriginal:(BOOL)isOriginal complete:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))complete;
+- (PHImageRequestID)requestTargetImageForAsset:(PHAsset *)asset isOriginal:(BOOL)isOriginal complete:(void (^)(UIImage *image, NSDictionary *info, BOOL isDegraded))complete;
+
+- (PHImageRequestID)requestTargetGifForAsset:(PHAsset *)asset complete:(void (^)(UIImage *image, NSDictionary *info))complete;
+
+- (PHImageRequestID)requestTargetLivePhotoForAsset:(PHAsset *)asset complete:(void(^)(PHLivePhoto *livePhoto, NSDictionary *info))complete;
+
+/**
+ 获取相册封面图
+ @param albumModel 相册模型
+ @param complete 回调
+ @return 图片异步请求标识符
+ */
+- (PHImageRequestID)requestPosterImageWithAlbumModel:(DMAlbumModel *)albumModel complete:(void (^)(UIImage *, NSDictionary *))complete;
 
 /**
  通过PHAsset请求照片
